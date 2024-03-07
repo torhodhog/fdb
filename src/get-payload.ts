@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+
 import type { InitOptions } from "payload/config";
 import payload, { Payload } from "payload";
 import nodemailer from "nodemailer";
@@ -46,7 +47,7 @@ export const getPayloadClient = async ({
     cached.promise = payload.init({
       email: {
         transport: transporter,
-        fromAddress: "hogheim@gmail.com",
+        fromAddress: "fdb@fotballdraktbutikken.com",
         fromName: "Fotballdraktbutikken",
       },
       secret: process.env.PAYLOAD_SECRET,
