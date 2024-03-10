@@ -44,7 +44,7 @@ export default function Home() {
           />
 
           {/* Logo */}
-          <img src="/herologo.png" alt="Hero Logo" className="absolute z-20" />
+          <img src="/herotest.png" alt="Hero Logo" className="absolute z-20" />
 
           {/* Radial Gradient to prevent sharp edges */}
           <div className="absolute inset-0 w-full h-full bg-white [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>

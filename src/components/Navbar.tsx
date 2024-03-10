@@ -1,11 +1,12 @@
-import Link from "next/link";
-import MaxWidthWrapper from "./MaxWidthWrapper";
-import { Icons } from "./Icons";
-import NavItems from "./NavItems";
-import { buttonVariants } from "./ui/button";
-import Cart from "./Cart";
 import { getServerSideUser } from "@/lib/payload-utils";
 import { cookies } from "next/headers";
+import Link from "next/link";
+
+import Cart from "./Cart";
+import { Icons } from "./Icons";
+import MaxWidthWrapper from "./MaxWidthWrapper";
+import NavItems from "./NavItems";
+import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 
 const Navbar = async () => {
@@ -13,7 +14,7 @@ const Navbar = async () => {
   const { user } = await getServerSideUser(nextCookies);
 
   return (
-    <div className="bg-transparent sticky z-50 top-0 inset-x-0 h-16">
+    <div className="bg-transparent sticky z-50 top-0 inset-x-0 h-20">
       <header className="relative bg-white">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">

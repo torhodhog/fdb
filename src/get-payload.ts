@@ -48,7 +48,7 @@ export const getPayloadClient = async ({
       email: {
         transport: transporter,
         fromAddress: "fdb@fotballdraktbutikken.com",
-        fromName: "Fotballdraktbutikken",
+        fromName: "Fotballdraktbutikken AS",
       },
       secret: process.env.PAYLOAD_SECRET,
       local: initOptions?.express ? false : true,
