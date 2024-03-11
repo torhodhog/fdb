@@ -1,11 +1,12 @@
 import express from "express"
-import { getPayloadClient } from "./get-payload"
-import { Product } from "./payload-types"
-import { stripe } from "./lib/stripe"
-import Stripe from "stripe"
-import { WebhookRequest } from "./server"
 import { Resend } from 'resend'
+import Stripe from "stripe"
 
+import{ ReceiptEmailHtml } from "./components/emails/ReceiptEmail"
+import { getPayloadClient } from "./get-payload"
+import { stripe } from "./lib/stripe"
+import { Product } from "./payload-types"
+import { WebhookRequest } from "./server"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 export const stripeWebhookHandler = async (
@@ -82,9 +83,9 @@ export const stripeWebhookHandler = async (
    // send receipt
    try {
        const data = await resend.emails.send({
-       from: 'DigitalHippo <hello@joshtriedcoding.com>',
+       from: 'Fotballdraktbutikken <fdb@fotballdraktbutikken.com>',
        to: [user.email],
-       subject: 'Thanks for your order! This is your receipt.',
+       subject: 'Takk for din bestilling! Dette er din kvittering.',
        html: ReceiptEmailHtml({
            date: new Date(),
            email: user.email,
