@@ -43,7 +43,9 @@ export default function Home() {
             particleColor="#0000ff" // Set particle color to blue
           />
 
+
           {/* Logo */}
+      
           <img src="/herotest.png" alt="Hero Logo" className="absolute z-20" />
 
           {/* Radial Gradient to prevent sharp edges */}
