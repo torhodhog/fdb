@@ -46,6 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -74,10 +83,14 @@ if (!cached) {
         promise: null,
     };
 }
-var getPayloadClient = function (_a) {
-    var _b = _a === void 0 ? {} : _a, initOptions = _b.initOptions;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var _c, e_1;
+var getPayloadClient = function () {
+    var args_1 = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args_1[_i] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([], args_1, true), void 0, function (_a) {
+        var _b, e_1;
+        var _c = _a === void 0 ? {} : _a, initOptions = _c.initOptions;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
@@ -97,10 +110,10 @@ var getPayloadClient = function (_a) {
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 3, , 4]);
-                    _c = cached;
+                    _b = cached;
                     return [4 /*yield*/, cached.promise];
                 case 2:
-                    _c.client = _d.sent();
+                    _b.client = _d.sent();
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _d.sent();

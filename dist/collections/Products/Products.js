@@ -59,50 +59,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Products = void 0;
 var config_1 = require("../../config");
 var stripe_1 = require("../../lib/stripe");
-var addUser = function (_a) {
-    var req = _a.req, data = _a.data;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var user;
-        return __generator(this, function (_b) {
-            user = req.user;
-            return [2 /*return*/, __assign(__assign({}, data), { user: user.id })];
-        });
+var addUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var user;
+    var req = _b.req, data = _b.data;
+    return __generator(this, function (_c) {
+        user = req.user;
+        return [2 /*return*/, __assign(__assign({}, data), { user: user.id })];
     });
-};
-var syncUser = function (_a) {
-    var req = _a.req, doc = _a.doc;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var fullUser, products, allIDs_1, createdProductIDs, dataToUpdate;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, req.payload.findByID({
+}); };
+var syncUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var fullUser, products, allIDs_1, createdProductIDs, dataToUpdate;
+    var req = _b.req, doc = _b.doc;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0: return [4 /*yield*/, req.payload.findByID({
+                    collection: 'users',
+                    id: req.user.id,
+                })];
+            case 1:
+                fullUser = _c.sent();
+                if (!(fullUser && typeof fullUser === 'object')) return [3 /*break*/, 3];
+                products = fullUser.products;
+                allIDs_1 = __spreadArray([], ((products === null || products === void 0 ? void 0 : products.map(function (product) {
+                    return typeof product === 'object' ? product.id : product;
+                })) || []), true);
+                createdProductIDs = allIDs_1.filter(function (id, index) { return allIDs_1.indexOf(id) === index; });
+                dataToUpdate = __spreadArray(__spreadArray([], createdProductIDs, true), [doc.id], false);
+                return [4 /*yield*/, req.payload.update({
                         collection: 'users',
-                        id: req.user.id,
+                        id: fullUser.id,
+                        data: {
+                            products: dataToUpdate,
+                        },
                     })];
-                case 1:
-                    fullUser = _b.sent();
-                    if (!(fullUser && typeof fullUser === 'object')) return [3 /*break*/, 3];
-                    products = fullUser.products;
-                    allIDs_1 = __spreadArray([], ((products === null || products === void 0 ? void 0 : products.map(function (product) {
-                        return typeof product === 'object' ? product.id : product;
-                    })) || []), true);
-                    createdProductIDs = allIDs_1.filter(function (id, index) { return allIDs_1.indexOf(id) === index; });
-                    dataToUpdate = __spreadArray(__spreadArray([], createdProductIDs, true), [doc.id], false);
-                    return [4 /*yield*/, req.payload.update({
-                            collection: 'users',
-                            id: fullUser.id,
-                            data: {
-                                products: dataToUpdate,
-                            },
-                        })];
-                case 2:
-                    _b.sent();
-                    _b.label = 3;
-                case 3: return [2 /*return*/];
-            }
-        });
+            case 2:
+                _c.sent();
+                _c.label = 3;
+            case 3: return [2 /*return*/];
+        }
     });
-};
+}); };
 var isAdminOrHasAccess = function () {
     return function (_a) {
         var _user = _a.req.user;

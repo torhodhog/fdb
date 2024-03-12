@@ -45,113 +45,109 @@ var trpc_1 = require("./trpc");
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
         .input(zod_1.z.object({ productIds: zod_1.z.array(zod_1.z.string()) }))
-        .mutation(function (_a) {
-        var ctx = _a.ctx, input = _a.input;
-        return __awaiter(void 0, void 0, void 0, function () {
-            var user, productIds, payload, products, filteredProducts, order, line_items, stripeSession, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        user = ctx.user;
-                        productIds = input.productIds;
-                        if (productIds.length === 0) {
-                            throw new server_1.TRPCError({ code: 'BAD_REQUEST' });
-                        }
-                        return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
-                    case 1:
-                        payload = _b.sent();
-                        return [4 /*yield*/, payload.find({
-                                collection: 'products',
-                                where: {
-                                    id: {
-                                        in: productIds,
-                                    },
+        .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+        var user, productIds, payload, products, filteredProducts, order, line_items, stripeSession, err_1;
+        var ctx = _b.ctx, input = _b.input;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    user = ctx.user;
+                    productIds = input.productIds;
+                    if (productIds.length === 0) {
+                        throw new server_1.TRPCError({ code: 'BAD_REQUEST' });
+                    }
+                    return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+                case 1:
+                    payload = _c.sent();
+                    return [4 /*yield*/, payload.find({
+                            collection: 'products',
+                            where: {
+                                id: {
+                                    in: productIds,
                                 },
-                            })];
-                    case 2:
-                        products = (_b.sent()).docs;
-                        filteredProducts = products.filter(function (prod) {
-                            return Boolean(prod.priceId);
-                        });
-                        return [4 /*yield*/, payload.create({
-                                collection: 'orders',
-                                data: {
-                                    _isPaid: false,
-                                    products: filteredProducts.map(function (prod) { return prod.id; }),
-                                    user: user.id,
-                                },
-                            })];
-                    case 3:
-                        order = _b.sent();
-                        line_items = [];
-                        filteredProducts.forEach(function (product) {
-                            line_items.push({
-                                price: product.priceId,
-                                quantity: 1,
-                            });
-                        });
-                        line_items.push({
-                            price: 'price_1OqaFxFj2nzD3wjPAHUtyH5C',
-                            quantity: 1,
-                            adjustable_quantity: {
-                                enabled: false,
                             },
+                        })];
+                case 2:
+                    products = (_c.sent()).docs;
+                    filteredProducts = products.filter(function (prod) {
+                        return Boolean(prod.priceId);
+                    });
+                    return [4 /*yield*/, payload.create({
+                            collection: 'orders',
+                            data: {
+                                _isPaid: false,
+                                products: filteredProducts.map(function (prod) { return prod.id; }),
+                                user: user.id,
+                            },
+                        })];
+                case 3:
+                    order = _c.sent();
+                    line_items = [];
+                    filteredProducts.forEach(function (product) {
+                        line_items.push({
+                            price: product.priceId,
+                            quantity: 1,
                         });
-                        _b.label = 4;
-                    case 4:
-                        _b.trys.push([4, 6, , 7]);
-                        return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
-                                success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
-                                cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
-                                payment_method_types: ['card', 'paypal'],
-                                mode: 'payment',
-                                metadata: {
-                                    userId: user.id,
-                                    orderId: order.id,
-                                },
-                                line_items: line_items,
-                            })];
-                    case 5:
-                        stripeSession = _b.sent();
-                        return [2 /*return*/, { url: stripeSession.url }];
-                    case 6:
-                        err_1 = _b.sent();
-                        return [2 /*return*/, { url: null }];
-                    case 7: return [2 /*return*/];
-                }
-            });
+                    });
+                    line_items.push({
+                        price: 'price_1OqaFxFj2nzD3wjPAHUtyH5C',
+                        quantity: 1,
+                        adjustable_quantity: {
+                            enabled: false,
+                        },
+                    });
+                    _c.label = 4;
+                case 4:
+                    _c.trys.push([4, 6, , 7]);
+                    return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
+                            success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
+                            cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
+                            payment_method_types: ['card', 'paypal'],
+                            mode: 'payment',
+                            metadata: {
+                                userId: user.id,
+                                orderId: order.id,
+                            },
+                            line_items: line_items,
+                        })];
+                case 5:
+                    stripeSession = _c.sent();
+                    return [2 /*return*/, { url: stripeSession.url }];
+                case 6:
+                    err_1 = _c.sent();
+                    return [2 /*return*/, { url: null }];
+                case 7: return [2 /*return*/];
+            }
         });
-    }),
+    }); }),
     pollOrderStatus: trpc_1.privateProcedure
         .input(zod_1.z.object({ orderId: zod_1.z.string() }))
-        .query(function (_a) {
-        var input = _a.input;
-        return __awaiter(void 0, void 0, void 0, function () {
-            var orderId, payload, orders, order;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        orderId = input.orderId;
-                        return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
-                    case 1:
-                        payload = _b.sent();
-                        return [4 /*yield*/, payload.find({
-                                collection: 'orders',
-                                where: {
-                                    id: {
-                                        equals: orderId,
-                                    },
+        .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+        var orderId, payload, orders, order;
+        var input = _b.input;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    orderId = input.orderId;
+                    return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+                case 1:
+                    payload = _c.sent();
+                    return [4 /*yield*/, payload.find({
+                            collection: 'orders',
+                            where: {
+                                id: {
+                                    equals: orderId,
                                 },
-                            })];
-                    case 2:
-                        orders = (_b.sent()).docs;
-                        if (!orders.length) {
-                            throw new server_1.TRPCError({ code: 'NOT_FOUND' });
-                        }
-                        order = orders[0];
-                        return [2 /*return*/, { isPaid: order._isPaid }];
-                }
-            });
+                            },
+                        })];
+                case 2:
+                    orders = (_c.sent()).docs;
+                    if (!orders.length) {
+                        throw new server_1.TRPCError({ code: 'NOT_FOUND' });
+                    }
+                    order = orders[0];
+                    return [2 /*return*/, { isPaid: order._isPaid }];
+            }
         });
-    }),
+    }); }),
 });
