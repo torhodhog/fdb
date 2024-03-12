@@ -7,9 +7,9 @@ exports.PRODUCT_CATEGORIES = [
         value: "ui_kits",
         featured: [
             {
-                name: "Våre Favoritter",
-                href: "#",
-                imageSrc: "/ui-kits/mixed.jpg",
+                name: "Alle produkter",
+                href: "/products",
+                imageSrc: "/ui-kits/products.png",
             },
             {
                 name: "Nye Drakter",
