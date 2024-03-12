@@ -5,7 +5,7 @@ export const PRODUCT_CATEGORIES = [
     featured: [
       {
         name: "Alle produkter",
-        href: "#",
+        href: "/products",
         imageSrc: "/ui-kits/products.png",
       },
       {
