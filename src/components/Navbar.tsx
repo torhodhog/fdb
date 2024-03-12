@@ -8,6 +8,7 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
+import MobileNav from "./MobildeNav";
 
 const Navbar = async () => {
   const nextCookies = cookies();
@@ -18,12 +19,12 @@ const Navbar = async () => {
       <header className="relative bg-white">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
-            <div className="flex h-16 items-center">
-              {/* <MobileNav /> */}
+            <div className="flex h-28 items-center">
+             <MobileNav /> 
 
               <div className="ml-4 flex lg:ml-0">
                 <Link href="/">
-                  <Icons.logo className="h-10 w-10" />
+                  <Icons.logo className="h-8 w-10" />
                 </Link>
               </div>
 
