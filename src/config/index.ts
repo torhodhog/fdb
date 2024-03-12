@@ -4,9 +4,9 @@ export const PRODUCT_CATEGORIES = [
     value: "ui_kits" as const,
     featured: [
       {
-        name: "Våre Favoritter",
+        name: "Alle produkter",
         href: "#",
-        imageSrc: "/ui-kits/mixed.jpg",
+        imageSrc: "/ui-kits/products.png",
       },
       {
         name: "Nye Drakter",
