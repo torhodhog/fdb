@@ -16,6 +16,17 @@ export const getServerSideUser = async (
     }
   );
 
+  // Sjekk om responsen er ok
+  if (!meRes.ok) {
+    throw new Error(`An error occurred: ${meRes.statusText}`);
+  }
+
+  // Sjekk om responsen er JSON
+  const contentType = meRes.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error(`Expected JSON but received ${contentType}`);
+  }
+
   const { user } = (await meRes.json()) as {
     user: User | null;
   };
