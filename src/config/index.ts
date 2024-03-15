@@ -25,8 +25,8 @@ export const PRODUCT_CATEGORIES = [
     value: "icons" as const,
     featured: [
       {
-        name: "Favorite Icon Picks",
-        href: "#",
+        name: "Kontakt Oss",
+        href: "/contact",
         imageSrc: "/icons/picks.jpg",
       },
       {

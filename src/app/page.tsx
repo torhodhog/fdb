@@ -29,13 +29,13 @@ export default function Home() {
   return (
     <>
       <MaxWidthWrapper>
-        <div className="h-[40rem] w-full bg-white flex flex-col items-center justify-center overflow-hidden rounded-md">
+        <div className="h-[40rem] w-full  flex flex-col items-center justify-center overflow-hidden rounded-md">
         
       
           <img src="/herotest.png" alt="Hero Logo" className="absolute z-20" />
 
           {/* Radial Gradient to prevent sharp edges */}
-          <div className="absolute inset-0 w-full h-full bg-white [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+          <div className="absolute inset-0 w-full h-full  [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
         </div>
         
         
@@ -45,11 +45,12 @@ export default function Home() {
           href="/products"
           title="Nye produkter"
         />
+     
       </MaxWidthWrapper>
-      <section>
-        <PlayVideo />
-      </section>
-      <section className='border-t border-gray-200 bg-gray-50'>
+     
+        
+      
+      <section className='border-t border-gray-200 '>
         <MaxWidthWrapper className='py-20'>
           <div className='grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0 z-30'>
             {perks.map((perk) => (

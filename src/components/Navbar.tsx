@@ -9,14 +9,15 @@ import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 import MobileNav from "./MobildeNav";
+import { ModeToggle } from "./ModeToggle";
 
 const Navbar = async () => {
   const nextCookies = cookies();
   const { user } = await getServerSideUser(nextCookies);
 
   return (
-    <div className="bg-transparent sticky z-50 top-0 inset-x-0 h-20">
-      <header className="relative bg-white">
+    <div className=" sticky z-50 top-0 inset-x-0 h-20">
+      <header className="relative bg-background">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-28 items-center">
@@ -78,6 +79,7 @@ const Navbar = async () => {
                   <div className="ml-4 flow-root lg:ml-6">
                     <Cart />
                   </div>
+                  <ModeToggle />
                 </div>
               </div>
             </div>
