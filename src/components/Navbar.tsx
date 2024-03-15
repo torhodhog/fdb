@@ -23,9 +23,9 @@ const Navbar = async () => {
             <div className="flex h-28 items-center">
              <MobileNav /> 
 
-              <div className="ml-4 flex lg:ml-0">
+              <div className="ml-4 hidden lg:flex lg:ml-0">
                 <Link href="/">
-                  <Icons.logo className="h-8 w-10" />
+                  <Icons.logo className=" h-8 w-10" />
                 </Link>
               </div>
 
@@ -34,7 +34,7 @@ const Navbar = async () => {
               </div>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? null : (
                     <Link
                       href="/sign-in"
@@ -42,7 +42,7 @@ const Navbar = async () => {
                         variant: "ghost",
                       })}
                     >
-                      Sign in
+                      Logg inn
                     </Link>
                   )}
 
@@ -59,7 +59,7 @@ const Navbar = async () => {
                         variant: "ghost",
                       })}
                     >
-                      Create account
+                      Opprett konto
                     </Link>
                   )}
 
@@ -76,10 +76,11 @@ const Navbar = async () => {
                     </div>
                   )}
 
-                  <div className="ml-4 flow-root lg:ml-6">
+                  <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6">
                     <Cart />
+                    <ModeToggle />
                   </div>
-                  <ModeToggle />
+                  
                 </div>
               </div>
             </div>

@@ -9,14 +9,9 @@ export const PRODUCT_CATEGORIES = [
         imageSrc: "/ui-kits/products.png",
       },
       {
-        name: "Nye Drakter",
-        href: "#",
-        imageSrc: "/ui-kits/blue.jpg",
-      },
-      {
         name: "Salg",
         href: "#",
-        imageSrc: "/ui-kits/purple.jpg",
+        imageSrc: "/salg.jpeg",
       },
     ],
   },
@@ -27,18 +22,9 @@ export const PRODUCT_CATEGORIES = [
       {
         name: "Kontakt Oss",
         href: "/contact",
-        imageSrc: "/icons/picks.jpg",
-      },
-      {
-        name: "Nye Drakter",
-        href: "#",
-        imageSrc: "/icons/new.jpg",
-      },
-      {
-        name: "Salg Icons",
-        href: "#",
         imageSrc: "/icons/bestsellers.jpg",
       },
+      
     ],
   },
 ];

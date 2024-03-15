@@ -96,9 +96,9 @@ const Cart = () => {
           <div className="flex h-full flex-col items-center justify-center space-y-1">
             <div
               aria-hidden="true"
-              className="relative mb-40 h-80 w-60 text-muted-foreground"
+              className="relative mb-40 h-60 w-60  text-muted-foreground"
             >
-              <Image src="/cart.jpg" fill alt="empty shopping cart" />
+              <Image src="/empty-cart.png" className="rounded-md" fill alt="empty shopping cart" />
             </div>
             <div className="text-xl font-semibold">Handlekurven er tom</div>
             <SheetTrigger asChild>

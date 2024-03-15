@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+
+
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -55,7 +57,7 @@ const MobileNav = () => {
               <button
                 type='button'
                 onClick={() => setIsOpen(false)}
-                className='relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400'>
+                className='relative mr-20 inline-flex items-center justify-center rounded-md p-2 text-gray-400'>
                 <X className='h-6 w-6' aria-hidden='true' />
               </button>
             </div>
@@ -106,7 +108,7 @@ const MobileNav = () => {
                   onClick={() => closeOnCurrent('/sign-in')}
                   href='/sign-in'
                   className='-m-2 block p-2 font-medium text-gray-900'>
-                  Sign in
+                  Logg inn
                 </Link>
               </div>
               <div className='flow-root'>
@@ -114,7 +116,7 @@ const MobileNav = () => {
                   onClick={() => closeOnCurrent('/sign-up')}
                   href='/sign-up'
                   className='-m-2 block p-2 font-medium text-gray-900'>
-                  Sign up
+                  Opprett konto
                 </Link>
               </div>
             </div>
