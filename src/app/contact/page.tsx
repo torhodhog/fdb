@@ -2,31 +2,31 @@
 import React from "react";
 
 export default function Contact() {
-  // Denne funksjonen vil håndtere innsending av skjemaet
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // // Denne funksjonen vil håndtere innsending av skjemaet
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    // Pakk ut data fra skjemaet
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+  //   // Pakk ut data fra skjemaet
+  //   const formData = new FormData(event.target);
+  //   const data = Object.fromEntries(formData.entries());
 
-    // Send data til serveren
-    const response = await fetch("/api/sendEmail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  //   // Send data til serveren
+  //   const response = await fetch("/api/sendEmail", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(data),
+  //   });
 
-    if (response.ok) {
-      console.log("Email sent successfully");
-      // Eventuell kode for å vise suksessmelding
-    } else {
-      console.log("Failed to send email");
-      // Eventuell kode for å vise feilmelding
-    }
-  };
+  //   if (response.ok) {
+  //     console.log("Email sent successfully");
+  //     // Eventuell kode for å vise suksessmelding
+  //   } else {
+  //     console.log("Failed to send email");
+  //     // Eventuell kode for å vise feilmelding
+  //   }
+  // };
 
   return (
     <form
@@ -97,7 +97,7 @@ export default function Contact() {
         </label>
         <textarea
           id="frm-message"
-          rows="4"
+          
           name="message"
           className="p-2 rounded bg-gray-700 text-white border border-gray-600"
         ></textarea>
@@ -107,7 +107,7 @@ export default function Contact() {
         type="submit"
         className="px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-600 transition duration-300"
       >
-        Send
+        Submit
       </button>
     </form>
   );
