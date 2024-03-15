@@ -86,17 +86,13 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
         slidesPerView={1}
         className='h-full w-full'>
         {urls.map((url, i) => (
-          <SwiperSlide
-            key={i}
-            className='-z-10 relative h-full w-full'>
-            <Image
-              fill
-              loading='eager'
-              className='-z-10 h-full w-full  object-center'
-              src={url}
-              alt='Product image'
-            />
-          </SwiperSlide>
+          <SwiperSlide key={i} className='-z-10 relative h-full w-full'>
+          <img
+            className='-z-10 h-full w-full object-center'
+            src={url}
+            alt='Product image'
+          />
+        </SwiperSlide>
         ))}
       </Swiper>
     </div>
