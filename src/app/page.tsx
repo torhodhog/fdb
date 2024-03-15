@@ -32,7 +32,8 @@ export default function Home() {
         <div className="h-[40rem] w-full  flex flex-col items-center justify-center overflow-hidden rounded-md">
         
       
-          <img src="/herotest.png" alt="Hero Logo" className="absolute z-20" />
+          <img src="/herotest.png" alt="Hero Logo" className="absolute z-20 block lg:block hidden" />
+          <img src="/logo.png" alt="Hero Logo Mobile" className="absolute pl-12 pr-12 z-20 block lg:hidden" />
 
           {/* Radial Gradient to prevent sharp edges */}
           <div className="absolute inset-0 w-full h-full  [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>

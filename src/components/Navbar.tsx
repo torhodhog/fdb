@@ -36,14 +36,16 @@ const Navbar = async () => {
               <div className="ml-auto flex items-center">
                 <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? null : (
-                    <Link
-                      href="/sign-in"
-                      className={buttonVariants({
-                        variant: "ghost",
-                      })}
-                    >
-                      Logg inn
-                    </Link>
+                    <div className="hidden lg:flex">
+                      <Link
+                        href="/sign-in"
+                        className={buttonVariants({
+                          variant: "ghost",
+                        })}
+                      >
+                        Logg inn
+                      </Link>
+                    </div>
                   )}
 
                   {user ? null : (
@@ -53,14 +55,16 @@ const Navbar = async () => {
                   {user ? (
                     <UserAccountNav user={user} />
                   ) : (
-                    <Link
-                      href="/sign-up"
-                      className={buttonVariants({
-                        variant: "ghost",
-                      })}
-                    >
-                      Opprett konto
-                    </Link>
+                    <div className="hidden lg:flex">
+                      <Link
+                        href="/sign-up"
+                        className={buttonVariants({
+                          variant: "ghost",
+                        })}
+                      >
+                        Opprett konto
+                      </Link>
+                    </div>
                   )}
 
                   {user ? (
