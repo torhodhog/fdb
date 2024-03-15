@@ -7,7 +7,6 @@ import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import { PRODUCT_CATEGORIES } from "@/config";
 import ImageSlider from "./ImageSlider";
-import Image from "next/image";
 
 interface ProductListingProps {
   product: Product | null;
@@ -46,33 +45,23 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
   if (isVisible && product) {
     return (
       <Link
-    className={cn("invisible h-full w-full cursor-pointer group/main", {
-      "visible animate-in fade-in-5": isVisible,
-    })}
-    href={`/product/${product.id}`}
-  >
-    <div className="flex flex-col w-full">
-      {/* Bruk Image-komponenten her for å vise det første bildet */}
-      {validUrls.length > 0 && (
-        <div className="relative w-full aspect-square overflow-hidden rounded-xl">
-          <Image 
-            src={validUrls[0]} 
-            alt={product.name} 
-            layout="fill"
-            objectFit="cover" // eller en annen objectFit etter behov
-          />
-        </div>
-      )}
+        className={cn("invisible h-full w-full cursor-pointer group/main", {
+          "visible animate-in fade-in-5": isVisible,
+        })}
+        href={`/product/${product.id}`}
+      >
+        <div className="flex flex-col w-full">
+          <ImageSlider urls={validUrls} />
 
-      <h3 className="mt-4 font-medium text-sm text-gray-700">
-        {product.name}
-      </h3>
-      <p className="mt-1 text-sm text-gray-500">{label}</p>
-      <p className="mt-1 font-medium text-sm text-gray-900">
-        {formatPrice(product.price)}
-      </p>
-    </div>
-  </Link>
+          <h3 className="mt-4 font-medium text-sm text-gray-700">
+            {product.name}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">{label}</p>
+          <p className="mt-1 font-medium text-sm text-gray-900">
+            {formatPrice(product.price)}
+          </p>
+        </div>
+      </Link>
     );
   }
 };
