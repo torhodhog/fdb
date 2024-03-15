@@ -100,7 +100,7 @@ export const Products: CollectionConfig = {
             name: data.name,
             default_price_data: {
               currency: 'NOK',
-              unit_amount: Math.round(data.price * 1000),
+              unit_amount: Math.round(data.price * 100),
             },
           })
 
