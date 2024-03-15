@@ -5,18 +5,18 @@ import Link from "next/link";
 import Cart from "./Cart";
 import { Icons } from "./Icons";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import MobileNav from "./MobildeNav";
+import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
-import MobileNav from "./MobildeNav";
-import { ModeToggle } from "./ModeToggle";
 
 const Navbar = async () => {
   const nextCookies = cookies();
   const { user } = await getServerSideUser(nextCookies);
 
   return (
-    <div className=" sticky z-50 top-0 mt-4 mb-8 inset-x-0 h-20">
+    <div className=" sticky z-50 top-0  pb-8 inset-x-0 h-20">
       <header className="relative bg-background">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">

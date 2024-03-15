@@ -3,7 +3,6 @@ import { useCart } from '@/hooks/use-cart'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@/payload-types'
 import { ImageIcon, X } from 'lucide-react'
-import Image from 'next/image'
 
 const CartItem = ({ product }: { product: Product }) => {
   const { image } = product.images[0]
@@ -20,12 +19,11 @@ const CartItem = ({ product }: { product: Product }) => {
         <div className='flex items-center space-x-4'>
           <div className='relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded'>
             {typeof image !== 'string' && image.url ? (
-              <Image
-                src={image.url}
-                alt={product.name}
-                fill
-                className='absolute object-cover'
-              />
+              <img
+              className='-z-10 h-full w-full object-center'
+              src={image.url}
+              alt='Product image'
+            />
             ) : (
               <div className='flex h-full items-center justify-center bg-secondary'>
                 <ImageIcon
@@ -50,7 +48,7 @@ const CartItem = ({ product }: { product: Product }) => {
                 onClick={() => removeItem(product.id)}
                 className='flex items-center gap-0.5'>
                 <X className='w-3 h-4' />
-                Remove
+                Slett
               </button>
             </div>
           </div>
