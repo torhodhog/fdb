@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -90,17 +89,17 @@ const Page = () => {
 
                   return (
                     <li key={product.id} className="flex py-6 sm:py-10">
-                      <div className="flex-shrink-0">
-                        <div className="relative h-24 w-24">
-                          {typeof image !== "string" && image.url ? (
-                            <img
-                              className="-z-10 h-full w-full object-center"
-                              src={url}
-                              alt="Produkt-kjøpt"
-                            />
-                          ) : null}
-                        </div>
-                      </div>
+  <div className="flex-shrink-0">
+    <div className="relative h-24 w-24">
+      {typeof image !== "string" && image.url ? (
+        <img
+          className="-z-10 h-full w-full object-center"
+          src={image.url} // Use image.url instead of url
+          alt="Produkt-kjøpt"
+        />
+      ) : null}
+    </div>
+  </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
                         <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
