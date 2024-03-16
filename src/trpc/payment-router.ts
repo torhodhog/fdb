@@ -47,10 +47,16 @@ export const paymentRouter = router({
         []
 
       filteredProducts.forEach((product) => {
-        line_items.push({
-          price: product.priceId!,
-          quantity: 1,
-        })
+         line_items.push({
+            price_data: {
+               currency: 'nok',
+               product_data: {
+                  name: product.name,
+               },
+               unit_amount: product.price * 100, // Convert price to øre
+            },
+            quantity: 1,
+         })
       })
 
       line_items.push({
@@ -73,6 +79,9 @@ export const paymentRouter = router({
               orderId: order.id,
             },
             line_items,
+            shipping_address_collection: {
+              allowed_countries: ['NO'], // Only allow shipping to Norway
+            },
           })
 
         return { url: stripeSession.url }

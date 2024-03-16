@@ -7,6 +7,8 @@ export const PRODUCT_CATEGORIES = [
         name: "Alle produkter",
         href: "/products",
         imageSrc: "/ui-kits/products.png",
+        
+
       },
       {
         name: "Salg",
