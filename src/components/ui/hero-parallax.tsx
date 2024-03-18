@@ -44,19 +44,18 @@ export const HeroParallax = () => {
       useTransform(scrollYProgress, [0, 0.2], [20, 0]),
       springConfig
    );
-   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.35], [-700, 500]),
+  const translateY = useSpring(
+    useTransform(scrollYProgress, [0, 0.2], [-600, -100]),
     springConfig
   );
 
    const firstRow: Product[] = []; // Definer første rad med produkter
-   const secondRow: Product[] = []; // Definer andre rad med produkter
-   const thirdRow: Product[] = []; // Definer tredje rad med produkter
+   
 
    return (
       <div
          ref={ref}
-         className="h-[300vh] py-40 overflow-hidden antialiased relative flex flex-col self-auto perspective:1000px transform-style:preserve-3d"
+         className=" py-40 overflow-hidden antialiased relative flex flex-col self-auto perspective:1000px transform-style:preserve-3d"
       >
          <Header />
          <motion.div
@@ -70,24 +69,6 @@ export const HeroParallax = () => {
             <ProductReel query={{ sort: "desc", limit: 8 }} href="/products" title="Nye produkter"/>
             <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
                {firstRow.map((product: Product, index: number) => (
-                  <CustomProductCard
-                     product={product}
-                     translate={translateX}
-                     key={`product-${index}`}
-                  />
-               ))}
-            </motion.div>
-            <motion.div className="flex flex-row mb-20 space-x-20 ">
-               {secondRow.map((product: Product, index: number) => (
-                  <CustomProductCard
-                     product={product}
-                     translate={translateXReverse}
-                     key={`product-${index}`}
-                  />
-               ))}
-            </motion.div>
-            <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
-               {thirdRow.map((product: Product, index: number) => (
                   <CustomProductCard
                      product={product}
                      translate={translateX}

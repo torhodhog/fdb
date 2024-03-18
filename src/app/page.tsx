@@ -32,14 +32,14 @@ const perks = [
 export default function Home() {
   return (
     <>
-      <MaxWidthWrapper>
+      <MaxWidthWrapper className="overflow-visable z-10">
         <HeroParallax />
      
       </MaxWidthWrapper>
      
         
       
-      <section className='border-t border-gray-200 '>
+      <section className='border-t border-gray-200  z-0'>
         <MaxWidthWrapper className='py-20'>
           <div className='grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0 z-30'>
             {perks.map((perk) => (
