@@ -1,8 +1,11 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
+import { HeroParallax } from "@/components/ui/hero-parallax";
+
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import React from "react";
 
+import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 
 const perks = [
@@ -29,23 +32,7 @@ export default function Home() {
   return (
     <>
       <MaxWidthWrapper>
-        <div className="h-[40rem] w-full  flex flex-col items-center justify-center overflow-hidden rounded-md mt-8 ">
-        
-      
-         <img src="/herotest.png" alt="Hero Logo" className="absolute z-20 block lg:block hidden mt-6" style={{ height: '85vh', objectFit: 'cover' }} />
-          <img src="/logo.png" alt="Hero Logo Mobile" className="absolute pl-12 pr-12 z-20 block lg:hidden" />
-
-          {/* Radial Gradient to prevent sharp edges */}
-          <div className="absolute inset-0 w-full h-full  [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
-        </div>
-        
-        
-        
-        <ProductReel
-          query={{ sort: "desc", limit: 4 }}
-          href="/products"
-          title="Nye produkter"
-        />
+        <HeroParallax />
      
       </MaxWidthWrapper>
      

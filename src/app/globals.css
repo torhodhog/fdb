@@ -26,7 +26,23 @@
     --input: 240 5.9% 90%;
     --ring: 346.8 77.2% 49.8%;
     --radius: 0.75rem;
+    --strong-pink: #ee3893; /* Add this line */
   }
+
+  body {
+    color: var(--strong-pink); /* Add this line */
+  }
+}
+
+.bowlby-one sc-regular {
+  font-family: "Bowlby One SC", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.stretched {
+  transform: scaleY(4.5);
+}
 
   .dark {
     --background: 20 14.3% 4.1%;
@@ -49,7 +65,7 @@
     --input: 240 3.7% 15.9%;
     --ring: 346.8 77.2% 49.8%;
   }
-}
+
 
 
 /* @layer base {

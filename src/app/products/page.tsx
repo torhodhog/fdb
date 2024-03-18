@@ -1,42 +1,58 @@
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import ProductReel from '@/components/ProductReel'
-import { PRODUCT_CATEGORIES } from '@/config'
+"use client";
 
-type Param = string | string[] | undefined
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import ProductReel from "@/components/ProductReel";
+import { PRODUCT_CATEGORIES } from "@/config";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+type Param = string | string[] | undefined;
 
 interface ProductsPageProps {
-  searchParams: { [key: string]: Param }
+  searchParams: { [key: string]: Param };
 }
 
 const parse = (param: Param) => {
-  return typeof param === 'string' ? param : undefined
-}
+  return typeof param === "string" ? param : undefined;
+};
 
-const ProductsPage = ({
-  searchParams,
-}: ProductsPageProps) => {
-  const sort = parse(searchParams.sort)
-  const category = parse(searchParams.category)
+const ProductsPage = ({ searchParams }: ProductsPageProps) => {
+  const sort = parse(searchParams.sort);
+  const category = parse(searchParams.category);
 
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === category
-  )?.label
+  )?.label;
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <MaxWidthWrapper>
-      <ProductReel
-        title={label ?? 'Finn din favoritt'}
-        query={{
-          category,
-          limit: 40,
-          sort:
-            sort === 'desc' || sort === 'asc'
-              ? sort
-              : undefined,
-        }}
-      />
-    </MaxWidthWrapper>
-  )
-}
+    <>
+      <MaxWidthWrapper>
+        <div className="flex w-full max-w-sm items-center mt-14 space-x-2">
+          <Input
+            type="search"
+            placeholder="Søk etter drakter"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button type="submit" onClick={() => console.log(searchTerm)}>
+            Søk
+          </Button>
+        </div>
+        <ProductReel
+          title={label ?? "Finn din favoritt"}
+          query={{
+            category,
+            limit: 40,
+            sort: sort === "desc" || sort === "asc" ? sort : undefined,
+            // searchTerm: searchTerm,
+          }}
+        />
+      </MaxWidthWrapper>
+    </>
+  );
+};
 
-export default ProductsPage
+export default ProductsPage;
