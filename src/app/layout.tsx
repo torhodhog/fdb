@@ -24,11 +24,10 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body
         className={cn(
-          "relative h-full font-sans antialiased dark:bg-black bg-opacity-50 bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2]",
+          "relative h-full font-sans antialiased dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2]",
           inter.className
         )}
       >
-        <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
         <ThemeProvider attribute="class" defaultTheme="system">
           <main className="relative flex flex-col min-h-screen">
             <Providers>
