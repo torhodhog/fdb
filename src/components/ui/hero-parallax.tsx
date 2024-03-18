@@ -45,9 +45,9 @@ export const HeroParallax = () => {
       springConfig
    );
    const translateY = useSpring(
-      useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
-      springConfig
-   );
+    useTransform(scrollYProgress, [0, 0.35], [-700, 500]),
+    springConfig
+  );
 
    const firstRow: Product[] = []; // Definer første rad med produkter
    const secondRow: Product[] = []; // Definer andre rad med produkter
