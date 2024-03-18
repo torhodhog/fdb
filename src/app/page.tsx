@@ -1,6 +1,4 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import PlayVideo from "@/components/PlayVideo";
-import { HeroParallax } from "@/components/ui/hero-parallax";
 
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import React from "react";
@@ -32,9 +30,14 @@ const perks = [
 export default function Home() {
   return (
     <>
-      <MaxWidthWrapper className="overflow-visable z-10">
-        <HeroParallax />
+      <MaxWidthWrapper className="overflow-visable">
+        <Hero />
      
+        <ProductReel
+          query={{ sort: "desc", limit: 4 }}
+          href="/products"
+          title="Nye produkter"
+        />
       </MaxWidthWrapper>
      
         
