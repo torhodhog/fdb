@@ -154,5 +154,34 @@ exports.ProductFiles = {
             hasMany: false,
             required: true,
         },
+        {
+            name: 'liga_system',
+            label: 'Liga System',
+            type: 'text',
+        },
+        {
+            name: 'tilstand',
+            label: 'Tilstand',
+            type: 'select',
+            options: [
+                { label: "10 - Utmerket", value: "10" },
+                { label: "9 - Bra", value: "9" },
+                { label: "8 - Små feil", value: "8" },
+                { label: "7 - Synlige feil/skader", value: "7" },
+                // Legg til flere tilstandsnivåer etter behov
+            ],
+        },
+        {
+            name: 'size',
+            label: 'Størrelse',
+            type: 'select',
+            options: [
+                { label: "S", value: "S" },
+                { label: "M", value: "M" },
+                { label: "L", value: "L" },
+                { label: "XL", value: "XL" },
+                // Legg til flere størrelser etter behov
+            ],
+        },
     ],
 };

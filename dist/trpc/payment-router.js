@@ -85,7 +85,13 @@ exports.paymentRouter = (0, trpc_1.router)({
                     line_items = [];
                     filteredProducts.forEach(function (product) {
                         line_items.push({
-                            price: product.priceId,
+                            price_data: {
+                                currency: 'nok',
+                                product_data: {
+                                    name: product.name,
+                                },
+                                unit_amount: product.price * 100, // Convert price to øre
+                            },
                             quantity: 1,
                         });
                     });
@@ -109,6 +115,9 @@ exports.paymentRouter = (0, trpc_1.router)({
                                 orderId: order.id,
                             },
                             line_items: line_items,
+                            shipping_address_collection: {
+                                allowed_countries: ['NO'], // Only allow shipping to Norway
+                            },
                         })];
                 case 5:
                     stripeSession = _c.sent();

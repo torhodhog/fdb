@@ -150,7 +150,7 @@ exports.Products = {
                                     name: data.name,
                                     default_price_data: {
                                         currency: 'NOK',
-                                        unit_amount: Math.round(data.price * 1000),
+                                        unit_amount: Math.round(data.price),
                                     },
                                 })];
                         case 1:
@@ -213,14 +213,6 @@ exports.Products = {
                 return ({ label: label, value: value });
             }),
             required: true,
-        },
-        {
-            name: 'product_files',
-            label: 'Product file(s)',
-            type: 'relationship',
-            required: true,
-            relationTo: 'product_files',
-            hasMany: false,
         },
         {
             name: 'approvedForSale',
@@ -298,6 +290,46 @@ exports.Products = {
                     relationTo: 'media',
                     required: true,
                 },
+            ],
+        },
+        {
+            name: 'liga_system',
+            label: 'Liga System',
+            type: 'text',
+        },
+        {
+            name: 'tilstand',
+            label: 'Tilstand',
+            type: 'select',
+            options: [
+                { label: "10 - Utmerket", value: "10" },
+                { label: "9 - Bra", value: "9" },
+                { label: "8 - Små feil", value: "8" },
+                { label: "7 - Synlige feil/skader", value: "7" },
+                { label: "6 - Bør repareres", value: "6" },
+                { label: "5 - Reparasjon kreves", value: "5" },
+                // Legg til flere tilstandsnivåer etter behov
+            ],
+        },
+        {
+            name: 'trykk',
+            label: 'Trykk',
+            type: 'select', // Du manglet også 'type'-feltet her
+            options: [
+                { label: 'Ja', value: 'Ja' },
+                { label: 'Nei', value: 'Nei' },
+            ],
+        },
+        {
+            name: 'size',
+            label: 'Størrelse',
+            type: 'select',
+            options: [
+                { label: "S", value: "S" },
+                { label: "M", value: "M" },
+                { label: "L", value: "L" },
+                { label: "XL", value: "XL" },
+                // Legg til flere størrelser etter behov
             ],
         },
     ],
