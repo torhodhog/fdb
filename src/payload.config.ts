@@ -1,14 +1,17 @@
-import { buildConfig } from "payload/config";
 import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
+import { cloudStorage } from "@payloadcms/plugin-cloud-storage";
+import { s3Adapter } from "@payloadcms/plugin-cloud-storage/s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
-import path from "path";
-import { Users } from "./collections/Users";
 import dotenv from "dotenv";
-import { Products } from "./collections/Products/Products";
+import path from "path";
+import { buildConfig } from "payload/config";
+
 import { Media } from "./collections/Media";
-import { ProductFiles } from "./collections/ProductFile";
 import { Orders } from "./collections/Orders";
+import { ProductFiles } from "./collections/ProductFile";
+import { Products } from "./collections/Products/Products";
+import { Users } from "./collections/Users";
 
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
@@ -36,7 +39,26 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.MONGODB_URL!,
   }),
+  plugins: [
+    cloudStorage({
+      collections: {
+        media: {
+          adapter: s3Adapter({
+            config: {
+              endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
+              credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',
+              },
+            },
+            bucket: process.env.S3_BUCKET || 'standardBucketName',
+          }),
+        },
+      },
+    }),
+  ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },
 });
+
