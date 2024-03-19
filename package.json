@@ -18,6 +18,7 @@
     "cliui": "7.0.2"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.537.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
