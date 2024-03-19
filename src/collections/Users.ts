@@ -53,7 +53,7 @@ export const Users: CollectionConfig = {
       ],
     },
     {
-      name: 'størrelse',
+      name: 'size',
       label: 'Størrelse',
       type: 'select',
       options: [
