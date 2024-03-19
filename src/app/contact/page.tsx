@@ -2,31 +2,7 @@
 import React from "react";
 
 export default function Contact() {
-  // // Denne funksjonen vil håndtere innsending av skjemaet
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
 
-  //   // Pakk ut data fra skjemaet
-  //   const formData = new FormData(event.target);
-  //   const data = Object.fromEntries(formData.entries());
-
-  //   // Send data til serveren
-  //   const response = await fetch("/api/sendEmail", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-
-  //   if (response.ok) {
-  //     console.log("Email sent successfully");
-  //     // Eventuell kode for å vise suksessmelding
-  //   } else {
-  //     console.log("Failed to send email");
-  //     // Eventuell kode for å vise feilmelding
-  //   }
-  // };
 
   return (
     <form

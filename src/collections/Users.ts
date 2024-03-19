@@ -2,15 +2,8 @@ import { Access, CollectionConfig } from "payload/types";
 
 import { PrimaryActionEmailHtml } from "../components/emails/PrimaryActionEmail";
 
-const adminsAndUser: Access = ({req : {user}}) => {
-  if (user.role === 'admin') return true
+const adminsOnly: Access = ({ req: { user } }) => user.role === 'admin';
 
-  return {
-    id: {
-      equals: user.id,
-    }
-  }
-} 
 export const Users: CollectionConfig = {
   slug: "users",
   auth: {
@@ -25,38 +18,55 @@ export const Users: CollectionConfig = {
     },
   },
   access: {
-    read:  adminsAndUser,
-    create: () => true,
-    update: ({req}) => req.user.role === 'admin',
-    delete: ({req}) => req.user.role === 'admin',
+    read: adminsOnly,
+    create: adminsOnly,
+    update: adminsOnly,
+    delete: adminsOnly,
   },
   admin: {
-    hidden: ({user}) => user.role !== 'admin',
+    hidden: ({ user }) => user.role !== 'admin',
     defaultColumns: ['id'],
   },
   fields: [
     {
       name: 'products',
       label: 'Products',
-      admin: {
-        condition: () => false,
-      },
       type: 'relationship',
       relationTo: 'products',
       hasMany: true,
     },
     {
-      name: 'product_files',
-      label: 'Product Files',
-      admin: {
-        condition: () => false,
-      },
-      type: 'relationship',
-      relationTo: 'product_files',
-      hasMany: true,
+      name: 'liga_system',
+      label: 'Liga System',
+      type: 'text',
+    },
+    {
+      name: 'tilstand',
+      label: 'Tilstand',
+      type: 'select',
+      options: [
+        { label: "10 - Utmerket", value: "10" },
+        { label: "9 - Bra", value: "9" },
+        { label: "8 - Små feil", value: "8" },
+        { label: "7 - Synlige feil/skader", value: "7" },
+        // Legg til flere tilstandsnivåer etter behov
+      ],
+    },
+    {
+      name: 'størrelse',
+      label: 'Størrelse',
+      type: 'select',
+      options: [
+        { label: "S", value: "S" },
+        { label: "M", value: "M" },
+        { label: "L", value: "L" },
+        { label: "XL", value: "XL"},
+        // Legg til flere størrelser etter behov
+      ],
     },
     {
       name: "role",
+      label: "Role",
       defaultValue: "user",
       required: true,
       type: "select",
@@ -65,5 +75,6 @@ export const Users: CollectionConfig = {
         { label: "User", value: "user" },
       ],
     },
+    // Eventuelle andre felt du trenger
   ],
 };
