@@ -90,15 +90,17 @@ const Page = () => {
                   return (
                     <li key={product.id} className="flex py-6 sm:py-10">
   <div className="flex-shrink-0">
-    <div className="relative h-24 w-24">
-      {typeof image !== "string" && image.url ? (
-        <img
-          className="-z-10 h-full w-full object-center"
-          src={image.url} // Use image.url instead of url
-          alt="Produkt-kjøpt"
-        />
-      ) : null}
-    </div>
+  <div className="relative h-24 w-24">
+  {typeof image !== "string" && image.url ? (
+    <Image
+      className="-z-10"
+      src={image.url} // Use image.url instead of url
+      alt="Produkt-kjøpt"
+      layout="fill"
+      objectFit="cover"
+    />
+  ) : null}
+</div>
   </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
