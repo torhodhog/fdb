@@ -48,6 +48,7 @@ exports.default = (0, config_1.buildConfig)({
                     adapter: (0, s3_1.s3Adapter)({
                         config: {
                             endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
+                            region: process.env.AWS_REGION, // Legg til regionen her
                             credentials: {
                                 accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
                                 secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',

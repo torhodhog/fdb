@@ -9,19 +9,19 @@ var adminsAndUser = function (_a) {
     return {
         id: {
             equals: user.id,
-        }
+        },
     };
 };
 exports.Users = {
-    slug: "users",
+    slug: 'users',
     auth: {
         verify: {
             generateEmailHTML: function (_a) {
                 var token = _a.token;
                 return (0, PrimaryActionEmail_1.PrimaryActionEmailHtml)({
-                    actionLabel: "verify your email",
-                    buttonText: "Verify Email",
-                    href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/verify-email?token=").concat(token),
+                    actionLabel: "verify your account",
+                    buttonText: "Verify Account",
+                    href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/verify-email?token=").concat(token)
                 });
             },
         },
@@ -58,7 +58,7 @@ exports.Users = {
         },
         {
             name: 'product_files',
-            label: 'Product Files',
+            label: 'Product files',
             admin: {
                 condition: function () { return false; },
             },
@@ -67,13 +67,13 @@ exports.Users = {
             hasMany: true,
         },
         {
-            name: "role",
-            defaultValue: "user",
+            name: 'role',
+            defaultValue: 'user',
             required: true,
-            type: "select",
+            type: 'select',
             options: [
-                { label: "Admin", value: "admin" },
-                { label: "User", value: "user" },
+                { label: 'Admin', value: 'admin' },
+                { label: 'User', value: 'user' },
             ],
         },
     ],

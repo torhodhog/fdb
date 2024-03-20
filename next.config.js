@@ -1,8 +1,15 @@
 const nextConfig = {
    images: {
-     domains: ['fotball-d-b-production.up.railway.app'],
+      domains: ['fdb-production-6f13.up.railway.app'],
    },
- };
- 
- module.exports = nextConfig;
- 
+   webpack: (config, { isServer }) => {
+      if (!isServer) {
+         config.resolve.fallback.fs = false;
+         config.resolve.fallback.readline = false;
+      }
+
+      return config;
+   },
+};
+
+module.exports = nextConfig;
