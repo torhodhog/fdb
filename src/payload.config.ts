@@ -41,23 +41,23 @@ export default buildConfig({
     url: process.env.MONGODB_URL!,
   }),
   plugins: [
-    // cloudStorage({
-    //   collections: {
-    //     media: {
-    //       adapter: s3Adapter({
-    //         config: {
-    //           endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
-    //           region: process.env.AWS_REGION,  // Legg til regionen her
-    //           credentials: {
-    //             accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
-    //             secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',
-    //           },
-    //         },
-    //         bucket: process.env.S3_BUCKET || 'standardBucketName',
-    //       }),
-    //     },
-    //   },
-    // }),
+    cloudStorage({
+      collections: {
+        media: {
+          adapter: s3Adapter({
+            config: {
+              endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
+              region: process.env.AWS_REGION,  // Legg til regionen her
+              credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',
+              },
+            },
+            bucket: process.env.S3_BUCKET || 'standardBucketName',
+          }),
+        },
+      },
+    }),
   ],
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
