@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bundler_webpack_1 = require("@payloadcms/bundler-webpack");
 var db_mongodb_1 = require("@payloadcms/db-mongodb");
-var plugin_cloud_storage_1 = require("@payloadcms/plugin-cloud-storage");
-var s3_1 = require("@payloadcms/plugin-cloud-storage/s3");
 var richtext_slate_1 = require("@payloadcms/richtext-slate");
 var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
@@ -42,23 +40,23 @@ exports.default = (0, config_1.buildConfig)({
         url: process.env.MONGODB_URL,
     }),
     plugins: [
-        (0, plugin_cloud_storage_1.cloudStorage)({
-            collections: {
-                media: {
-                    adapter: (0, s3_1.s3Adapter)({
-                        config: {
-                            endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
-                            region: process.env.AWS_REGION, // Legg til regionen her
-                            credentials: {
-                                accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
-                                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',
-                            },
-                        },
-                        bucket: process.env.S3_BUCKET || 'standardBucketName',
-                    }),
-                },
-            },
-        }),
+    // cloudStorage({
+    //   collections: {
+    //     media: {
+    //       adapter: s3Adapter({
+    //         config: {
+    //           endpoint: process.env.S3_ENDPOINT || 'https://s3.standard-endpoint.com',
+    //           region: process.env.AWS_REGION,  // Legg til regionen her
+    //           credentials: {
+    //             accessKeyId: process.env.S3_ACCESS_KEY_ID || 'standardAccessKeyId',
+    //             secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'standardSecretAccessKey',
+    //           },
+    //         },
+    //         bucket: process.env.S3_BUCKET || 'standardBucketName',
+    //       }),
+    //     },
+    //   },
+    // }),
     ],
     typescript: {
         outputFile: path_1.default.resolve(__dirname, "payload-types.ts"),
