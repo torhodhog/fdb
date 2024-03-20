@@ -36,6 +36,7 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-email/components": "^0.0.11",
+    "@swc/core": "^1.3.107",
     "@tanstack/react-query": "4.36.1",
     "@trpc/client": "^10.43.1",
     "@trpc/next": "^10.43.1",
