@@ -16,7 +16,7 @@ const perks = [
     name: "Ærlig kvalitet",
     Icon: CheckCircleIcon,
     description:
-      "Vi har fokus på kvalitet og originalitet og ønsker at alle produkter vi selger skal være av ypperste kvalitet. Ikke fornøyd? Vi har 30 dagers åpent kjøp.",
+      "Vi har fokus på kvalitet og originalitet på alle våre drakter og ønsker at alle produkter vi selger skal være av ypperste kvalitet. Ikke fornøyd? Vi har 30 dagers åpent kjøp.",
   },
   {
     name: "Bærekraft",
