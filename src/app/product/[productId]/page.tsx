@@ -134,8 +134,8 @@ const Page = async ({ params }: PageProps) => {
 
               <div className="mt-4">
                 <h2>Tilstand</h2>
-                <StarRating rating={parseInt(product.tilstand)} />
-              </div>
+                <StarRating rating={parseInt(product.tilstand || "0")} />             
+                 </div>
             </section>
           </div>
 
