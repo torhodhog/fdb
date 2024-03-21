@@ -53,7 +53,7 @@ const Page = async ({ params }: PageProps) => {
     .map(({ image }) => (typeof image === "string" ? image : image?.url))
     .filter(Boolean) as string[];
 
-  const StarRating = ({ rating }) => {
+  const StarRating = ({ rating }: { rating: number }) => {
     const stars = [];
     for (let i = 0; i < 10; i++) {
       stars.push(i < rating ? "⭐" : "☆");
