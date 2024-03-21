@@ -111,19 +111,13 @@ const ThankYouPage = async ({
                         value === product.category
                     )?.label
 
-                    const downloadUrl = (
-                      product.product_files as ProductFile
-                    ).url as string
-
+                    
                     const { image } = product.images[0]
 
                     return (
-                      <li
-                        key={product.id}
-                        className='flex space-x-6 py-6'>
+                      <li key={product.id} className='flex space-x-6 py-6'>
                         <div className='relative h-24 w-24'>
-                          {typeof image !== 'string' &&
-                          image.url ? (
+                          {typeof image !== 'string' && image.url ? (
                             <Image
                               fill
                               src={image.url}
@@ -143,15 +137,6 @@ const ThankYouPage = async ({
                               Category: {label}
                             </p>
                           </div>
-
-                          {order._isPaid ? (
-                            <a
-                              href={downloadUrl}
-                              download={product.name}
-                              className='text-blue-600 hover:underline underline-offset-2'>
-                              Download asset
-                            </a>
-                          ) : null}
                         </div>
 
                         <p className='flex-none font-medium text-gray-900'>
