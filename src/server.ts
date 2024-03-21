@@ -92,25 +92,25 @@ const start = async () => {
 
   // ...andre ruter...
 
-  app.get('/api/products', async (req, res) => {
-    const searchTerm = (req.query as any).searchTerm;
-    const ligaSystem = (req.query as any).liga_system;
+  // app.get('/api/products', async (req, res) => {
+  //   const searchTerm = (req.query as any).searchTerm;
+  //   const ligaSystem = (req.query as any).liga_system;
 
-    let query: Record<string, any> = {};
-    if (searchTerm) {
-      query.name = { $regex: new RegExp(searchTerm, 'i') };
-    }
-    if (ligaSystem) {
-      query.liga_system = ligaSystem;
-    }
+  //   let query: Record<string, any> = {};
+  //   if (searchTerm) {
+  //     query.name = { $regex: new RegExp(searchTerm, 'i') };
+  //   }
+  //   if (ligaSystem) {
+  //     query.liga_system = ligaSystem;
+  //   }
 
-    const { docs: products } = await req.payload.find({
-      collection: 'products',
-      where: query,
-    });
+  //   const { docs: products } = await req.payload.find({
+  //     collection: 'products',
+  //     where: query,
+  //   });
 
-    res.json(products);
-  });
+  //   res.json(products);
+  // });
 
   app.use((req, res) => nextHandler(req, res));
 
