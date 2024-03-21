@@ -7,7 +7,7 @@ import { paymentRouter } from './payment-router'
 
 export const appRouter = router({
   auth: authRouter,
-    payment: paymentRouter,
+  payment: paymentRouter,
 
   getInfiniteProducts: publicProcedure
     .input(
@@ -18,18 +18,27 @@ export const appRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const { query, cursor } = input;
-      const { sort, limit, ...queryOpts } = query;
+      console.log(input); // log the input
+
+      const { cursor } = input;
+      const { sort, limit, searchTerm, liga_system, ...queryOpts } = input.query;
 
       const payload = await getPayloadClient();
 
-      const parsedQueryOpts: Record<string, { equals: string }> = {};
+      const parsedQueryOpts: Record<string, any> = {};
 
       Object.entries(queryOpts).forEach(([key, value]) => {
         parsedQueryOpts[key] = {
           equals: value,
         };
       });
+
+      if (searchTerm) {
+        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };
+      }
+      if (liga_system) {
+        parsedQueryOpts.liga_system = { equals: liga_system };
+      }
 
       const page = cursor || 1;
 

@@ -54,7 +54,7 @@ const ProductReel = (props: ProductReelProps) => {
 
         {href ? (
           <Link
-            href={href}
+            href="/products"
             className="hidden text-sm font-medium text-blue-600 hover:text-blue-500 md:block"
           >
             Se hele kolleksjonen <span aria-hidden="true">&rarr;</span>

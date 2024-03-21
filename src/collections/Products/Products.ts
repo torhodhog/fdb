@@ -161,6 +161,17 @@ export const Products: CollectionConfig = {
          required: true,
       },
       {
+         name: 'product_files',
+         type: 'array',
+         fields: [
+           {
+             name: 'file',
+             type: 'upload',
+             relationTo: 'media',
+           },
+         ],
+       },
+      {
          name: 'category',
          label: 'Category',
          type: 'select',

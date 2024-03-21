@@ -26,6 +26,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   )?.label;
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [ligaSystem, setLigaSystem] = useState("");
 
   return (
     <>
@@ -40,6 +41,13 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           <Button type="submit" onClick={() => console.log(searchTerm)}>
             Søk
           </Button>
+          {/* <Button type="button" onClick={() => setLigaSystem("liga1")}>
+            Liga 1
+          </Button>
+          <Button type="button" onClick={() => setLigaSystem("liga2")}>
+            Liga 2
+          </Button> */}
+          {/* Add more buttons for other liga systems */}
         </div>
         <ProductReel
           title={label ?? "Finn din favoritt"}
@@ -47,7 +55,8 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             category,
             limit: 40,
             sort: sort === "desc" || sort === "asc" ? sort : undefined,
-            // searchTerm: searchTerm,
+            searchTerm: searchTerm,
+            liga_system: ligaSystem,
           }}
         />
       </MaxWidthWrapper>
