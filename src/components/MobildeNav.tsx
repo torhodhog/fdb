@@ -60,6 +60,12 @@ const MobileNav = () => {
               </button>
             </div>
 
+            <div className='space-y-10 px-4 pb-8 pt-10'>
+              <Link href='/' className="border-transparent text-gray-900 flex-1 whitespace-nowrap border-b-2 py-4 text-base font-medium hover:underline">
+                Hjem
+              </Link>
+            </div>
+
             <div className='mt-2'>
               <ul>
                 {PRODUCT_CATEGORIES.map((category) => (

@@ -122,22 +122,29 @@ const Page = async ({ params }: PageProps) => {
                 </p>
               </div>
               
-
+                <div className="p-4 border border-gray-200  mt-4 rounded-md bg-gray-100">
               <div className="mt-4">
-                <h2>Trykk:</h2>
+                <h2 className="text-lg font-bold">Trykk:</h2>
                 {product.trykk === "Ja" ? (
-                  <span style={{ color: "green" }}>✔️</span>
+                  <span className="text-green-500">
+                    {/* Replace with your check icon */}
+                    ✔
+                  </span>
                 ) : (
-                  <span style={{ color: "red" }}>❌</span>
+                  <span className="text-red-500" style={{ fontSize: '0.75rem' }}>
+                    {/* Replace with your cross icon */}
+                    ❌
+                  </span>
                 )}
               </div>
+              
 
               <div className="mt-4">
-                <h2>Tilstand</h2>
+                <h2 className="text-lg font-bold">Tilstand</h2>
                 <StarRating rating={parseInt(product.tilstand || "0")} />             
-                 </div>
-            </section>
-          </div>
+              </div></div>
+              </section>
+              </div>
 
           <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
             <div className="aspect-square rounded-lg">

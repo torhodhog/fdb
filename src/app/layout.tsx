@@ -29,7 +29,7 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system">
-          <main className="relative flex flex-col min-h-screen">
+          <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
               <div className="flex-grow flex-1">{children}</div>

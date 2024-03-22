@@ -16,22 +16,22 @@ const Navbar = async () => {
   const { user } = await getServerSideUser(nextCookies);
 
   return (
-    <div className=" sticky z-50 top-0  pb-8 inset-x-0 h-20">
-      <header className="relative bg-background">
-        <MaxWidthWrapper>
-          <div className="border-b border-gray-200">
-            <div className="flex h-28 items-center">
-             <MobileNav /> 
+    <div className="absolute top-0 inset-x-0 z-50">
+    <header className="relative bg-transparent lg:bg-background">
+      <MaxWidthWrapper>
+        <div className="border-b border-gray-200">
+          <div className="flex h-28 items-center">
+           <MobileNav /> 
 
-              <div className="ml-4 hidden lg:flex lg:ml-0">
-                <Link href="/">
-                  <Icons.logo className=" h-8 w-10" />
-                </Link>
-              </div>
+            <div className="ml-4 hidden lg:flex lg:ml-0">
+              <Link href="/">
+                <Icons.logo className=" h-8 w-10" />
+              </Link>
+            </div>
 
-              <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
-                <NavItems />
-              </div>
+            <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
+              <NavItems />
+            </div>
 
               <div className="ml-auto flex items-center">
                 <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
