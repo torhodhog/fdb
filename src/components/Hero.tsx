@@ -9,7 +9,7 @@ const Hero: FC = () => {
             <Image src="/HERO.png" alt="Hero Logo" layout="fill" objectFit="cover" />
          </div>
          <div className="relative w-full pl-0 pr-0 block lg:hidden" style={{ height: '100vh' }}>
-            <Image src="/mobhero.png" alt="Hero Logo Mobile" layout="fill" objectFit="cover" objectPosition="top" />
+            <Image src="/mobilhero.png" alt="Hero Logo Mobile" layout="fill" objectFit="cover" objectPosition="top" />
             <Link href="/products">
                <div className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1" style={{ top: '90%' }}>
                   <span className="text-sm font-extrabold text-pink-700 hover:text-blue-500">Se hele kolleksjonen</span> <span aria-hidden="true">&rarr;</span>
