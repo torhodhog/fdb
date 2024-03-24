@@ -1,12 +1,60 @@
+'use client'
 
-import React from "react";
+import React, { useState } from "react";
 
 export default function Contact() {
+  const [formState, setFormState] = useState({
+    email: '',
+    phone: '',
+    first: '',
+    last: '',
+    message: '',
+  });
 
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log('Form submitted', formState);
+
+    const message = {
+      to: 'fdb@fotballdraktbutikken.com',
+      from: formState.email,
+      subject: 'New Message from Contact Form',
+      text: `
+        Name: ${formState.first} ${formState.last}
+        Email: ${formState.email}
+        Phone: ${formState.phone}
+        Message: ${formState.message}
+      `,
+    };
+
+    try {
+      await fetch('https://api.resend.io/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+        },
+        body: JSON.stringify(message)
+      });
+      console.log('Email sent');
+    } catch (error) {
+      console.error('Failed to send email', error);
+    }
+  };
+
+  
 
   return (
     <form
-      // onSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       className="flex flex-col
       mb-28
       mt-28 items-center justify-center w-full max-w-lg mx-auto p-12 bg-gray-800 shadow-xl rounded-lg space-y-4"
@@ -23,6 +71,7 @@ export default function Contact() {
           name="email"
           className="p-2 rounded bg-gray-700 text-white border border-gray-600"
           required
+          onChange={handleChange}
         />
       </div>
 
@@ -36,6 +85,7 @@ export default function Contact() {
           name="phone"
           className="p-2 rounded bg-gray-700 text-white border border-gray-600"
           required
+          onChange={handleChange}
         />
       </div>
 
@@ -50,6 +100,7 @@ export default function Contact() {
             name="first"
             className="p-2 rounded bg-gray-700 text-white border border-gray-600"
             required
+            onChange={handleChange}
           />
         </div>
 
@@ -63,6 +114,7 @@ export default function Contact() {
             name="last"
             className="p-2 rounded bg-gray-700 text-white border border-gray-600"
             required
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -73,9 +125,9 @@ export default function Contact() {
         </label>
         <textarea
           id="frm-message"
-          
           name="message"
           className="p-2 rounded bg-gray-700 text-white border border-gray-600"
+          onChange={handleChange}
         ></textarea>
       </div>
 

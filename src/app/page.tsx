@@ -13,7 +13,7 @@ const perks = [
     description: "På alle bestillinger over 1000 kr",
   },
   {
-    name: "God kvalitet",
+    name: "Kvalitet",
     Icon: CheckCircleIcon,
     description:
       "Vi har fokus på kvalitet og originalitet og ønsker at alle produkter vi selger skal være av ypperste kvalitet. Ikke fornøyd? Vi har 30 dagers åpent kjøp.",
