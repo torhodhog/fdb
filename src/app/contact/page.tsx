@@ -12,19 +12,19 @@ export default function Contact() {
     message: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
     });
-  }
+  };
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const resend = new Resend(process.env.RESEND_API_KEY) as any;
     const message = {
       to: 'fdb@fotballdraktbutikken.com',
-      from: formState.email,
       subject: 'New Message from Contact Form',
       text: `
         Name: ${formState.first} ${formState.last}
