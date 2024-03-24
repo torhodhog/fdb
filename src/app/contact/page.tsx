@@ -1,6 +1,7 @@
-'use client'
 
+'use client'
 import React, { useState } from "react";
+import { Resend } from 'resend';
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -11,18 +12,16 @@ export default function Contact() {
     message: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
     });
-  };
-
-  const handleSubmit = async (e) => {
+  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('Form submitted', formState);
-
+    const resend = new Resend(process.env.RESEND_API_KEY) as any;
     const message = {
       to: 'fdb@fotballdraktbutikken.com',
       from: formState.email,
@@ -36,21 +35,12 @@ export default function Contact() {
     };
 
     try {
-      await fetch('https://api.resend.io/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
-        },
-        body: JSON.stringify(message)
-      });
+      await resend.messages.send(message);
       console.log('Email sent');
     } catch (error) {
       console.error('Failed to send email', error);
     }
   };
-
-  
 
   return (
     <form
@@ -69,20 +59,6 @@ export default function Contact() {
           id="frm-email"
           type="email"
           name="email"
-          className="p-2 rounded bg-gray-700 text-white border border-gray-600"
-          required
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="flex flex-col w-full">
-        <label htmlFor="frm-phone" className="text-gray-300">
-          Telefon
-        </label>
-        <input
-          id="frm-phone"
-          type="text"
-          name="phone"
           className="p-2 rounded bg-gray-700 text-white border border-gray-600"
           required
           onChange={handleChange}
