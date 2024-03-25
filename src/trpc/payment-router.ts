@@ -29,8 +29,6 @@ export const paymentRouter = router({
         },
       })
 
-      console.log('Found products:', products) // Log the found products
-
       const filteredProducts = products.filter((prod) =>
         Boolean(prod.priceId)
       )
@@ -44,50 +42,57 @@ export const paymentRouter = router({
         },
       })
 
-      console.log('Created order:', order) // Log the created order
-
       const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
         []
 
       filteredProducts.forEach((product) => {
-         line_items.push({
-            price_data: {
-               currency: 'nok',
-               product_data: {
-                  name: product.name,
-               },
-               unit_amount: product.price * 100, // Convert price to øre
-            },
-            quantity: 1,
-         })
+        line_items.push({
+          price: product.priceId!,
+          quantity: 1,
+        })
       })
-
-      console.log('Created line items:', line_items) // Log the created line items
 
       try {
         const stripeSession =
           await stripe.checkout.sessions.create({
             success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
             cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-            payment_method_types: ['card'],
+            payment_method_types: ['card', 'paypal'],
             mode: 'payment',
             metadata: {
               userId: user.id,
               orderId: order.id,
             },
             line_items,
-            shipping_address_collection: {
-              allowed_countries: ['NO'], // Only allow shipping to Norway
-            },
           })
-
-        console.log('Created Stripe session:', stripeSession) // Log the created Stripe session
 
         return { url: stripeSession.url }
       } catch (err) {
-        console.error('Error creating Stripe session:', err) // Log any errors
         return { url: null }
       }
     }),
-  // ...
+  pollOrderStatus: privateProcedure
+    .input(z.object({ orderId: z.string() }))
+    .query(async ({ input }) => {
+      const { orderId } = input
+
+      const payload = await getPayloadClient()
+
+      const { docs: orders } = await payload.find({
+        collection: 'orders',
+        where: {
+          id: {
+            equals: orderId,
+          },
+        },
+      })
+
+      if (!orders.length) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const [order] = orders
+
+      return { isPaid: order._isPaid }
+    }),
 })
