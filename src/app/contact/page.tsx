@@ -22,26 +22,31 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const resend = new Resend(process.env.RESEND_API_KEY) as any;
     const message = {
-      to: 'fdb@fotballdraktbutikken.com',
-      subject: 'New Message from Contact Form',
-      text: `
-        Name: ${formState.first} ${formState.last}
-        Email: ${formState.email}
-        Phone: ${formState.phone}
-        Message: ${formState.message}
-      `,
+      name: `${formState.first} ${formState.last}`,
+      email: formState.email,
+      phone: formState.phone,
+      message: formState.message,
     };
 
     try {
-      await resend.messages.send(message);
+      const response = await fetch('/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       console.log('Email sent');
     } catch (error) {
       console.error('Failed to send email', error);
     }
   };
-
   return (
     <form
       onSubmit={handleSubmit}
