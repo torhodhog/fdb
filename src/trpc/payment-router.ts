@@ -53,7 +53,7 @@ export const paymentRouter = router({
                product_data: {
                   name: product.name,
                },
-               unit_amount: product.price * 100, // Convert price to øre
+               unit_amount: product.price * 1000, // Convert price to øre
             },
             quantity: 1,
          })
