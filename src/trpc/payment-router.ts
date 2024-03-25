@@ -42,18 +42,26 @@ export const paymentRouter = router({
         },
       })
 
-      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-        []
+      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
 
       filteredProducts.forEach((product) => {
         line_items.push({
           price: product.priceId!,
           quantity: 1,
-        })
+        })        
+      })
+
+      // Add a fixed item to the line_items array
+      line_items.push({
+        price: 'price_1OCeBwA19umTXGu8s4p2G3aX',
+        quantity: 1,
+        adjustable_quantity: {
+          enabled: false,
+        },
       })
 
       try {
-        console.log(line_items); // Legg til denne linjen for å logge line_items
+        console.log(line_items); // Log the line_items
 
         const stripeSession =
           await stripe.checkout.sessions.create({
@@ -70,32 +78,8 @@ export const paymentRouter = router({
 
         return { url: stripeSession.url }
       } catch (err) {
-        console.error(err); // Endre denne linjen for å logge feilen
+        console.error(err); // Log the error
         return { url: null }
       }
-    }),
-  pollOrderStatus: privateProcedure
-    .input(z.object({ orderId: z.string() }))
-    .query(async ({ input }) => {
-      const { orderId } = input
-
-      const payload = await getPayloadClient()
-
-      const { docs: orders } = await payload.find({
-        collection: 'orders',
-        where: {
-          id: {
-            equals: orderId,
-          },
-        },
-      })
-
-      if (!orders.length) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
-      const [order] = orders
-
-      return { isPaid: order._isPaid }
     }),
 })
