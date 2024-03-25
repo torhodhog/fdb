@@ -77,6 +77,7 @@ export const paymentRouter = router({
 
         return { url: stripeSession.url }
       } catch (err) {
+        console.error(err);
         return { url: null }
       }
     }),
