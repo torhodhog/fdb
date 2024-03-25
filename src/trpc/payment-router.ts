@@ -53,7 +53,7 @@ export const paymentRouter = router({
 
       // Add a fixed item to the line_items array
       line_items.push({
-        price: 'price_1OCeBwA19umTXGu8s4p2G3aX',
+        price: 'price_1OyM5dFj2nzD3wjPTvx6r76d',
         quantity: 1,
         adjustable_quantity: {
           enabled: false,
@@ -81,5 +81,29 @@ export const paymentRouter = router({
         console.error(err); // Log the error
         return { url: null }
       }
+    }),
+  pollOrderStatus: privateProcedure
+    .input(z.object({ orderId: z.string() }))
+    .query(async ({ input }) => {
+      const { orderId } = input
+
+      const payload = await getPayloadClient()
+
+      const { docs: orders } = await payload.find({
+        collection: 'orders',
+        where: {
+          id: {
+            equals: orderId,
+          },
+        },
+      })
+
+      if (!orders.length) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const [order] = orders
+
+      return { isPaid: order._isPaid }
     }),
 })
