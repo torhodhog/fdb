@@ -89,19 +89,19 @@ export const Products: CollectionConfig = {
    hooks: {
       afterChange: [syncUser],
       beforeChange: [
-         addUser,
-         async (args) => {
-            if (args.operation === 'create') {
-               const data = args.data as Product
-
-               const createdProduct =
-               await stripe.products.create({
-                  name: data.name,
-                  default_price_data: {
-                     currency: 'NOK',
-                     unit_amount: Math.round(data.price),
-                  },
-               })
+        addUser,
+        async (args) => {
+          if (args.operation === 'create') {
+            const data = args.data as Product
+    
+            const createdProduct =
+            await stripe.products.create({
+              name: data.name,
+              default_price_data: {
+                currency: 'NOK',
+                unit_amount: Math.round(data.price * 100), // Convert price to øre
+              },
+            })
 
             const updated: Product = {
                ...data,
