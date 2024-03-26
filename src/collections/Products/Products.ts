@@ -94,14 +94,15 @@ export const Products: CollectionConfig = {
           if (args.operation === 'create') {
             const data = args.data as Product
     
-            const createdProduct =
-            await stripe.products.create({
-              name: data.name,
-              default_price_data: {
-                currency: 'NOK',
-                unit_amount: Math.round(data.price * 100), // Convert price to øre
-              },
-            })
+            const createdProduct = await stripe.products.create({
+               name: data.name,
+            });
+
+            const price = await stripe.prices.create({
+               currency: 'nok',
+               unit_amount: Math.round(data.price * 100), // Convert price to øre
+               product: createdProduct.id,
+            });
 
             const updated: Product = {
                ...data,
