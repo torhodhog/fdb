@@ -22,7 +22,7 @@ const perks = [
     name: "Bærekraft",
     Icon: Leaf,
     description:
-      "Med brukte drakter tar vi vare på planeten, samtidig som vi tar vare på historien til fotballen.",
+      "Vi bryr oss om miljøet og sender våre varer på den mest miljøbesparende måten",
   },
 ];
 
