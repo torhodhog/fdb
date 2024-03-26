@@ -53,21 +53,31 @@ export const paymentRouter = router({
         })
       })
 
-    
+      const deliveryFee = 50; // Set the delivery fee
+
+      line_items.push({
+        price_data: {
+          currency: "nok",
+          product_data: {
+            name: "Delivery Fee",
+          },
+          unit_amount: deliveryFee * 100, // Stripe uses the smallest currency unit, so we need to convert kr to øre
+        },
+        quantity: 1,
+      });
 
       try {
-        const stripeSession =
-          await stripe.checkout.sessions.create({
-            success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-            payment_method_types: ['card', 'paypal'],
-            mode: 'payment',
-            metadata: {
-              userId: user.id,
-              orderId: order.id,
-            },
-            line_items,
-          })
+        const stripeSession = await stripe.checkout.sessions.create({
+          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+          payment_method_types: ['card', 'klarna'],
+          mode: 'payment',
+          metadata: {
+            userId: user.id,
+            orderId: order.id,
+          },
+          line_items,
+        })
 
         return { url: stripeSession.url }
       } catch (err) {

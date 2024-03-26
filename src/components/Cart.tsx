@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCartIcon } from "lucide-react";
+import { Loader2, ShoppingCartIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -34,6 +34,8 @@ const Cart = () => {
     0
   )
 
+  const deliveryFee = cartTotal > 1000 ? 0 : 50;
+
   const fee = 1
   return (
     <Sheet>
@@ -63,21 +65,25 @@ const Cart = () => {
               </ScrollArea>
             </div>
             <div className="space-y-4 pr-6">
-              <Separator />
-              <div className="space-y-1.5 text-sm">
-                <div className="flex">
-                  <span className="flex-1">Shipping</span>
-                  <span>Free</span>
-                </div>
-                <div className="flex">
-                  <span className="flex-1">Tranaction Free</span>
-                  <span>{formatPrice(fee)}</span>
-                </div>
-                <div className="flex">
-                  <span className="flex-1">Total</span>
-                  <span>{formatPrice(cartTotal + fee)}</span>
-                </div>
-              </div>
+        <Separator />
+        <div className="space-y-1.5 text-sm">
+          <div className="flex">
+            <span className="flex-1">Shipping</span>
+            <span>{isMounted ? (
+              formatPrice(deliveryFee)
+            ) : (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}</span>
+          </div>
+          <div className="flex">
+            <span className="flex-1">Total</span>
+            <span>{isMounted ? (
+              formatPrice(cartTotal + deliveryFee)
+            ) : (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}</span>
+          </div>
+        </div>
               <SheetFooter>
                 <SheetTrigger asChild>
                   <Link
