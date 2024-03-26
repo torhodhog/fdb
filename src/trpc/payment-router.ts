@@ -53,13 +53,7 @@ export const paymentRouter = router({
         })
       })
 
-      line_items.push({
-        price: 'price_1OyM5dFj2nzD3wjPTvx6r76d',
-        quantity: 1,
-        adjustable_quantity: {
-          enabled: false,
-        },
-      })
+    
 
       try {
         const stripeSession =

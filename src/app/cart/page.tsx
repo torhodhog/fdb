@@ -35,7 +35,7 @@ const Page = () => {
     0
   );
 
-  const fee = 1;
+  const deliveryFee = cartTotal > 1000 ? 0 : 50;
 
   return (
     <div className="bg-white">
@@ -66,9 +66,9 @@ const Page = () => {
                     alt="empty shopping cart hippo"
                   />
                 </div>
-                <h3 className="font-semibold text-2xl">Your cart is empty</h3>
+                <h3 className="font-semibold text-2xl">Din handlevogn er tom</h3>
                 <p className="text-muted-foreground text-center">
-                  Whoops! Nothing to show here yet.
+                  Whoops! Ingen produkter å vise.
                 </p>
               </div>
             ) : null}
@@ -154,46 +154,46 @@ const Page = () => {
           </div>
 
           <section className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-            <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+            <h2 className="text-lg font-medium text-gray-900">Sammendrag</h2>
 
             <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-600">Subtotal</p>
-                <p className="text-sm font-medium text-gray-900">
-                  {isMounted ? (
-                    formatPrice(cartTotal)
-                  ) : (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  )}
-                </p>
-              </div>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">Kjøpstotal</p>
+        <p className="text-sm font-medium text-gray-900">
+          {isMounted ? (
+            formatPrice(cartTotal)
+          ) : (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+        </p>
+      </div>
 
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <span>Flat Transaction Fee</span>
-                </div>
-                <div className="text-sm font-medium text-gray-900">
-                  {isMounted ? (
-                    formatPrice(fee)
-                  ) : (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  )}
-                </div>
-              </div>
+      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+        <div className="flex items-center text-sm text-muted-foreground">
+          <span>Leveringskostnader</span>
+        </div>
+        <div className="text-sm font-medium text-gray-900">
+          {isMounted ? (
+            formatPrice(deliveryFee)
+          ) : (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+        </div>
+      </div>
 
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <div className="text-base font-medium text-gray-900">
-                  Order Total
-                </div>
-                <div className="text-base font-medium text-gray-900">
-                  {isMounted ? (
-                    formatPrice(cartTotal + fee)
-                  ) : (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  )}
-                </div>
-              </div>
-            </div>
+      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+        <div className="text-base font-medium text-gray-900">
+          Totalpris
+        </div>
+        <div className="text-base font-medium text-gray-900">
+          {isMounted ? (
+            formatPrice(cartTotal + deliveryFee)
+          ) : (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+        </div>
+      </div>
+    </div>
 
             <div className="mt-6">
               <Button
