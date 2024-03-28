@@ -26,9 +26,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
 
   if (!product || !isVisible) return <ProductPlaceholder />;
 
-  const label = PRODUCT_CATEGORIES.find(
-    ({ value }) => value === product.category
-  )?.label;
+ 
 
   const validUrls = product.images
   .map(({ image }) => {
@@ -56,7 +54,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
           <h3 className="mt-4 font-medium text-sm">
             {product.name}
           </h3>
-          <p className="mt-1 text-sm text-gray-500">{label}</p>
+          <p className="mt-1 text-sm text-gray-500">{product.size}</p>
           <p className="mt-1 font-medium text-sm">
             {formatPrice(product.price)}
           </p>

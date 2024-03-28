@@ -173,12 +173,18 @@ export const Products: CollectionConfig = {
          ],
        },
       {
-         name: 'category',
-         label: 'Category',
+         name: 'size',
+         label: 'Størrelse',
          type: 'select',
-         options: PRODUCT_CATEGORIES.map(
-            ({ label, value }) => ({ label, value })
-         ),
+         options: [
+            { label: "XS", value: "XS"},
+            { label: "S", value: "S" },
+            { label: "M", value: "M" },
+            { label: "L", value: "L" },
+            { label: "XL", value: "XL"},
+            { label: "XXL", value: "XXL"},
+            // Add more sizes as needed
+         ],
          required: true,
       },
       {
@@ -278,18 +284,6 @@ export const Products: CollectionConfig = {
           { label: 'Nei', value: 'Nei' },
         ],
       },
-      {
-         name: 'size',
-         label: 'Størrelse',
-         type: 'select',
-         options: [
-            { label: "S", value: "S" },
-            { label: "M", value: "M" },
-            { label: "L", value: "L" },
-            { label: "XL", value: "XL"},
-
-            // Legg til flere størrelser etter behov
-         ],
-      },
+     
    ],
 }
