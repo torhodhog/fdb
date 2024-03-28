@@ -48,6 +48,7 @@ export interface Product {
   id: string;
   user?: (string | null) | User;
   name: string;
+  isSold?: boolean | null;
   description?: string | null;
   price: number;
   product_files?:
@@ -56,7 +57,7 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
-  category: 'ui_kits' | 'icons';
+  size: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;
   priceId?: string | null;
   stripeId?: string | null;
@@ -67,7 +68,6 @@ export interface Product {
   liga_system?: string | null;
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
-  size?: ('S' | 'M' | 'L' | 'XL') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -123,6 +123,7 @@ export interface ProductFile {
   liga_system?: string | null;
   tilstand?: ('10' | '9' | '8' | '7') | null;
   size?: ('S' | 'M' | 'L' | 'XL') | null;
+  isSold?: boolean | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;

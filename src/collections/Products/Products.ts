@@ -76,61 +76,61 @@ const isAdminOrHasAccess =
       }
    }
 
-export const Products: CollectionConfig = {
-   slug: 'products',
-   admin: {
-      useAsTitle: 'name',
-   },
-   access: {
-      read: isAdminOrHasAccess(),
-      update: isAdminOrHasAccess(),
-      delete: isAdminOrHasAccess(),
-   },
-   hooks: {
-      afterChange: [syncUser],
-      beforeChange: [
-        addUser,
-        async (args) => {
-          if (args.operation === 'create') {
-            const data = args.data as Product
+   export const Products: CollectionConfig = {
+      slug: 'products',
+      admin: {
+        useAsTitle: 'name',
+      },
+      access: {
+        read: isAdminOrHasAccess(),
+        update: isAdminOrHasAccess(),
+        delete: isAdminOrHasAccess(),
+      },
+      hooks: {
+        afterChange: [syncUser],
+        beforeChange: [
+          addUser,
+          async (args) => {
+            if (args.operation === 'create') {
+              const data = args.data as Product
     
-            const createdProduct = await stripe.products.create({
-               name: data.name,
-            });
-
-            const price = await stripe.prices.create({
-               currency: 'nok',
-               unit_amount: Math.round(data.price * 100), // Convert price to øre
-               product: createdProduct.id,
-            });
-
-            const updated: Product = {
-               ...data,
-               stripeId: createdProduct.id,
-               priceId: createdProduct.default_price as string,
-            }
-
-               return updated
+              const createdProduct = await stripe.products.create({
+                name: data.name,
+              });
+    
+              const price = await stripe.prices.create({
+                currency: 'nok',
+                unit_amount: Math.round(data.price * 100), // Convert price to øre
+                product: createdProduct.id,
+              });
+    
+              const updated: Product = {
+                ...data,
+                stripeId: createdProduct.id,
+                priceId: createdProduct.default_price as string,
+              }
+    
+              return updated
             } else if (args.operation === 'update') {
-               const data = args.data as Product
-
-               const updatedProduct =
-                  await stripe.products.update(data.stripeId!, {
-                     name: data.name,
-                     default_price: data.priceId!,
-                  })
-
-               const updated: Product = {
-                  ...data,
-                  stripeId: updatedProduct.id,
-                  priceId: updatedProduct.default_price as string,
-               }
-
-               return updated
+              const data = args.data as Product
+    
+              const updatedProduct =
+                await stripe.products.update(data.stripeId!, {
+                  name: data.name,
+                  default_price: data.priceId!,
+                })
+    
+              const updated: Product = {
+                ...data,
+                stripeId: updatedProduct.id,
+                priceId: updatedProduct.default_price as string,
+              }
+    
+              return updated
             }
-         },
-      ],
-   },
+          },
+        ],
+      },
    fields: [
       {
          name: 'user',
@@ -148,6 +148,15 @@ export const Products: CollectionConfig = {
          type: 'text',
          required: true,
       },
+      {
+         name: 'isSold',
+         label: 'Sold',
+         type: 'checkbox',
+         defaultValue: false,
+         admin: {
+           condition: ({ req }) => req.user.role === 'admin',
+         },
+       },
       {
          name: 'description',
          type: 'textarea',

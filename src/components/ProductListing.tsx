@@ -58,6 +58,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
           <p className="mt-1 font-medium text-sm">
             {formatPrice(product.price)}
           </p>
+          {product.isSold && <p>This product is sold out</p>}
         </div>
       </Link>
     );

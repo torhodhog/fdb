@@ -121,5 +121,14 @@ export const ProductFiles: CollectionConfig = {
         // Legg til flere størrelser etter behov
       ],
     },
+    {
+      name: 'isSold',
+      label: 'Sold',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        condition: ({ req }) => req.user.role === 'admin',
+      },
+    },
   ],
 };
