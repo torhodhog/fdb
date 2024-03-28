@@ -12,6 +12,7 @@ export const paymentRouter = router({
   createSession: privateProcedure
     .input(z.object({ productIds: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
+      console.log('Create Session called with input :', input)
       const { user } = ctx
       let { productIds } = input
 
