@@ -1,14 +1,12 @@
 export const PRODUCT_CATEGORIES = [
   {
     label: "Produkter",
-    value: "ui_kits" as const,
+    value: "Produkter",
     featured: [
       {
         name: "Alle produkter",
         href: "/products",
         imageSrc: "/ui-kits/products.png",
-        
-
       },
       {
         name: "Salg",
@@ -19,14 +17,13 @@ export const PRODUCT_CATEGORIES = [
   },
   {
     label: "Kontakt",
-    value: "icons" as const,
+    value: "Kontakt",
     featured: [
       {
         name: "Kontakt Oss",
         href: "/contact",
         imageSrc: "/icons/bestsellers.jpg",
       },
-      
     ],
   },
 ];
