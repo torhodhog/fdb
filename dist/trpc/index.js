@@ -75,16 +75,17 @@ exports.appRouter = (0, trpc_1.router)({
         query: query_validator_1.QueryValidator,
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var query, cursor, sort, limit, queryOpts, payload, parsedQueryOpts, page, _c, items, hasNextPage, nextPage;
+        var cursor, _c, sort, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, _d, items, hasNextPage, nextPage;
         var input = _b.input;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        return __generator(this, function (_e) {
+            switch (_e.label) {
                 case 0:
-                    query = input.query, cursor = input.cursor;
-                    sort = query.sort, limit = query.limit, queryOpts = __rest(query, ["sort", "limit"]);
+                    console.log(input); // log the input
+                    cursor = input.cursor;
+                    _c = input.query, sort = _c.sort, limit = _c.limit, searchTerm = _c.searchTerm, liga_system = _c.liga_system, queryOpts = __rest(_c, ["sort", "limit", "searchTerm", "liga_system"]);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
-                    payload = _d.sent();
+                    payload = _e.sent();
                     parsedQueryOpts = {};
                     Object.entries(queryOpts).forEach(function (_a) {
                         var key = _a[0], value = _a[1];
@@ -92,6 +93,12 @@ exports.appRouter = (0, trpc_1.router)({
                             equals: value,
                         };
                     });
+                    if (searchTerm) {
+                        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };
+                    }
+                    if (liga_system) {
+                        parsedQueryOpts.liga_system = { equals: liga_system };
+                    }
                     page = cursor || 1;
                     return [4 /*yield*/, payload.find({
                             collection: "products",
@@ -104,7 +111,7 @@ exports.appRouter = (0, trpc_1.router)({
                             page: page,
                         })];
                 case 2:
-                    _c = _d.sent(), items = _c.docs, hasNextPage = _c.hasNextPage, nextPage = _c.nextPage;
+                    _d = _e.sent(), items = _d.docs, hasNextPage = _d.hasNextPage, nextPage = _d.nextPage;
                     return [2 /*return*/, {
                             items: items,
                             nextPage: hasNextPage ? nextPage : null,

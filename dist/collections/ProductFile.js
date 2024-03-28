@@ -101,9 +101,13 @@ var yourOwnAndPurchased = function (_a) { return __awaiter(void 0, [_a], void 0,
                     return order.products.map(function (product) {
                         if (typeof product === "string")
                             return req.payload.logger.error("Search depth not sufficient to find purchased file IDs");
-                        return typeof product.product_files === "string"
-                            ? product.product_files
-                            : product.product_files.id;
+                        if (product.product_files) {
+                            return product.product_files.map(function (product_file) {
+                                if (product_file.file && typeof product_file.file !== 'string') {
+                                    return product_file.file.id;
+                                }
+                            });
+                        }
                     });
                 })
                     .filter(Boolean)

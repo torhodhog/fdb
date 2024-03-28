@@ -53,6 +53,7 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 signature = req.headers['stripe-signature'] || '';
                 try {
                     event = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || '');
+                    console.log('Received Stripe event:', event); // Log the event
                 }
                 catch (err) {
                     return [2 /*return*/, res

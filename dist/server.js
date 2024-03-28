@@ -138,7 +138,25 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                     router: trpc_1.appRouter,
                     createContext: createContext,
                 }));
+                // ...andre ruter...
+                // app.get('/api/products', async (req, res) => {
+                //   const searchTerm = (req.query as any).searchTerm;
+                //   const ligaSystem = (req.query as any).liga_system;
+                //   let query: Record<string, any> = {};
+                //   if (searchTerm) {
+                //     query.name = { $regex: new RegExp(searchTerm, 'i') };
+                //   }
+                //   if (ligaSystem) {
+                //     query.liga_system = ligaSystem;
+                //   }
+                //   const { docs: products } = await req.payload.find({
+                //     collection: 'products',
+                //     where: query,
+                //   });
+                //   res.json(products);
+                // });
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
+                // ...resten av koden...
                 next_utils_1.nextApp.prepare().then(function () {
                     payload.logger.info("Next.js started");
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {

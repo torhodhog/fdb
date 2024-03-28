@@ -37,20 +37,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentRouter = void 0;
-var server_1 = require("@trpc/server");
 var zod_1 = require("zod");
+var trpc_1 = require("./trpc");
+var server_1 = require("@trpc/server");
 var get_payload_1 = require("../get-payload");
 var stripe_1 = require("../lib/stripe");
-var trpc_1 = require("./trpc");
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
         .input(zod_1.z.object({ productIds: zod_1.z.array(zod_1.z.string()) }))
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var user, productIds, payload, products, filteredProducts, order, line_items, stripeSession, err_1;
+        var user, productIds, payload, products, filteredProducts, order, line_items, deliveryFee, stripeSession, err_1;
         var ctx = _b.ctx, input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
+                    console.log('Create Session called with input :', input);
                     user = ctx.user;
                     productIds = input.productIds;
                     if (productIds.length === 0) {
@@ -85,22 +86,20 @@ exports.paymentRouter = (0, trpc_1.router)({
                     line_items = [];
                     filteredProducts.forEach(function (product) {
                         line_items.push({
-                            price_data: {
-                                currency: 'nok',
-                                product_data: {
-                                    name: product.name,
-                                },
-                                unit_amount: product.price * 100, // Convert price to øre
-                            },
+                            price: product.priceId,
                             quantity: 1,
                         });
                     });
+                    deliveryFee = 50;
                     line_items.push({
-                        price: 'price_1OqaFxFj2nzD3wjPAHUtyH5C',
-                        quantity: 1,
-                        adjustable_quantity: {
-                            enabled: false,
+                        price_data: {
+                            currency: "nok",
+                            product_data: {
+                                name: "Delivery Fee",
+                            },
+                            unit_amount: deliveryFee * 100,
                         },
+                        quantity: 1,
                     });
                     _c.label = 4;
                 case 4:
@@ -108,22 +107,21 @@ exports.paymentRouter = (0, trpc_1.router)({
                     return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
                             success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
-                            payment_method_types: ['card', 'paypal'],
+                            payment_method_types: ['card', 'klarna'],
                             mode: 'payment',
                             metadata: {
                                 userId: user.id,
                                 orderId: order.id,
                             },
                             line_items: line_items,
-                            shipping_address_collection: {
-                                allowed_countries: ['NO'], // Only allow shipping to Norway
-                            },
                         })];
                 case 5:
                     stripeSession = _c.sent();
+                    console.log('Stripe Session:', stripeSession);
                     return [2 /*return*/, { url: stripeSession.url }];
                 case 6:
                     err_1 = _c.sent();
+                    console.error(err_1);
                     return [2 /*return*/, { url: null }];
                 case 7: return [2 /*return*/];
             }

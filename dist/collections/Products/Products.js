@@ -140,35 +140,38 @@ exports.Products = {
         beforeChange: [
             addUser,
             function (args) { return __awaiter(void 0, void 0, void 0, function () {
-                var data, createdProduct, updated, data, updatedProduct, updated;
+                var data, createdProduct, price, updated, data, updatedProduct, updated;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!(args.operation === 'create')) return [3 /*break*/, 2];
+                            if (!(args.operation === 'create')) return [3 /*break*/, 3];
                             data = args.data;
                             return [4 /*yield*/, stripe_1.stripe.products.create({
                                     name: data.name,
-                                    default_price_data: {
-                                        currency: 'NOK',
-                                        unit_amount: Math.round(data.price),
-                                    },
                                 })];
                         case 1:
                             createdProduct = _a.sent();
+                            return [4 /*yield*/, stripe_1.stripe.prices.create({
+                                    currency: 'nok',
+                                    unit_amount: Math.round(data.price * 100), // Convert price to øre
+                                    product: createdProduct.id,
+                                })];
+                        case 2:
+                            price = _a.sent();
                             updated = __assign(__assign({}, data), { stripeId: createdProduct.id, priceId: createdProduct.default_price });
                             return [2 /*return*/, updated];
-                        case 2:
-                            if (!(args.operation === 'update')) return [3 /*break*/, 4];
+                        case 3:
+                            if (!(args.operation === 'update')) return [3 /*break*/, 5];
                             data = args.data;
                             return [4 /*yield*/, stripe_1.stripe.products.update(data.stripeId, {
                                     name: data.name,
                                     default_price: data.priceId,
                                 })];
-                        case 3:
+                        case 4:
                             updatedProduct = _a.sent();
                             updated = __assign(__assign({}, data), { stripeId: updatedProduct.id, priceId: updatedProduct.default_price });
                             return [2 /*return*/, updated];
-                        case 4: return [2 /*return*/];
+                        case 5: return [2 /*return*/];
                     }
                 });
             }); },
@@ -203,6 +206,17 @@ exports.Products = {
             max: 10000,
             type: 'number',
             required: true,
+        },
+        {
+            name: 'product_files',
+            type: 'array',
+            fields: [
+                {
+                    name: 'file',
+                    type: 'upload',
+                    relationTo: 'media',
+                },
+            ],
         },
         {
             name: 'category',
