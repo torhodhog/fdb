@@ -24,6 +24,9 @@ export const stripeWebhookHandler = async (
       signature,
       process.env.STRIPE_WEBHOOK_SECRET || ''
     )
+
+    console.log('Received Stripe event:', event); // Log the event
+
   } catch (err) {
     return res
       .status(400)

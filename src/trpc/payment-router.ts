@@ -53,7 +53,7 @@ export const paymentRouter = router({
         })
       })
 
-      const deliveryFee = 50; // Set the delivery fee
+      const deliveryFee = 50; 
 
       line_items.push({
         price_data: {
@@ -61,7 +61,7 @@ export const paymentRouter = router({
           product_data: {
             name: "Delivery Fee",
           },
-          unit_amount: deliveryFee * 100, // Stripe uses the smallest currency unit, so we need to convert kr to øre
+          unit_amount: deliveryFee * 100, 
         },
         quantity: 1,
       });
@@ -78,6 +78,8 @@ export const paymentRouter = router({
           },
           line_items,
         })
+
+        console.log('Stripe Session:', stripeSession)
 
         return { url: stripeSession.url }
       } catch (err) {
