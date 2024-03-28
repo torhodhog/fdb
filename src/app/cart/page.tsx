@@ -198,7 +198,17 @@ const Page = () => {
             <div className="mt-6">
               <Button
                 disabled={items.length === 0 || isLoading}
-                onClick={() => createCheckoutSession({ productIds })}
+                onClick={() => createCheckoutSession({ 
+                  productIds, 
+                  leveringsinfo: {
+                    navn: 'Brukerens navn',
+                    adresse: 'Brukerens adresse',
+                    postnummer: 'Brukerens postnummer',
+                    by: 'Brukerens by',
+                    telefonnummer: 'Brukerens telefonnummer',
+                    land: 'Brukerens land',
+                  } 
+                })}
                 className="w-full"
                 size="lg"
               >
