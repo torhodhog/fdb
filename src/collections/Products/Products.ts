@@ -82,6 +82,7 @@ const isAdminOrHasAccess =
         useAsTitle: 'name',
       },
       access: {
+        create: ({ req }) => req.user.role === 'admin', // Only allow admin users to create products
         read: isAdminOrHasAccess(),
         update: isAdminOrHasAccess(),
         delete: isAdminOrHasAccess(),
