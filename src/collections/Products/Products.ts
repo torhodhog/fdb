@@ -295,7 +295,7 @@ export const Products: CollectionConfig = {
         label: category.label,
         value: category.label,
       })),
-      required: false,
+      required: true,
     },
   ],
 };

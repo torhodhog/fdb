@@ -1,7 +1,7 @@
 export const PRODUCT_CATEGORIES = [
   {
     label: "Produkter",
-    value: "Produkter",
+    value: "ui_kits",
     featured: [
       {
         name: "Alle produkter",
@@ -17,7 +17,7 @@ export const PRODUCT_CATEGORIES = [
   },
   {
     label: "Kontakt",
-    value: "Kontakt",
+    value: "icons",
     featured: [
       {
         name: "Kontakt Oss",
