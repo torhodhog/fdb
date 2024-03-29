@@ -68,7 +68,6 @@ export interface Product {
   liga_system?: string | null;
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
-  category: 'Produkter' | 'Kontakt';
   updatedAt: string;
   createdAt: string;
 }
