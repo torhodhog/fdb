@@ -287,15 +287,15 @@ export const Products: CollectionConfig = {
         { label: "Nei", value: "Nei" },
       ],
     },
-    {
+   {
       name: "category",
       label: "Category",
       type: "select",
       options: PRODUCT_CATEGORIES.map((category) => ({
-        label: category.label,
-        value: category.label,
+         label: category.label,
+         value: category.value,
       })),
       required: true,
-    },
+   }
   ],
 };
