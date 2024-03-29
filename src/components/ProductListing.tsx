@@ -26,10 +26,8 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
 
   if (!product || !isVisible) return <ProductPlaceholder />;
 
-const label = PRODUCT_CATEGORIES.find(
-  ({ value }) => value === product.category
-)?.label;
-
+ 
+  
 
   const validUrls = product.images
   .map(({ image }) => {

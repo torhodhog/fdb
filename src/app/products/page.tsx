@@ -53,7 +53,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           title={label ?? "Finn din favoritt"}
           query={{
             category,
-            limit: 40,
+            limit: 80,
             sort: sort === "desc" || sort === "asc" ? sort : undefined,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
