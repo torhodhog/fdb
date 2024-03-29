@@ -94,18 +94,16 @@ export const Products: CollectionConfig = {
 
             const createdProduct = await stripe.products.create({
                name: data.name,
-            });
-
-            const price = await stripe.prices.create({
-               currency: "nok",
-               unit_amount: Math.round(data.price * 100), // Convert price to øre
-               product: createdProduct.id,
+               default_price_data: {
+                  currency: "nok",
+                  unit_amount: Math.round(data.price * 100), // Convert price to øre
+               },
             });
 
             const updated: Product = {
                ...data,
                stripeId: createdProduct.id,
-               priceId: price.id, // Use the ID from the created price
+               priceId: createdProduct.default_price as string, // Use the ID from the created price
             };
 
             return updated;
@@ -114,28 +112,13 @@ export const Products: CollectionConfig = {
 
             const updatedProduct = await stripe.products.update(data.stripeId!, {
                name: data.name,
+               default_price: data.priceId!,
             });
-
-            // If the price has changed, create a new price in Stripe
-            if (data.priceId) {
-               const newPrice = await stripe.prices.create({
-                  currency: "nok",
-                  unit_amount: Math.round(data.price * 100), // Convert price to øre
-                  product: updatedProduct.id,
-               });
-
-               const updated: Product = {
-                  ...data,
-                  stripeId: updatedProduct.id,
-                  priceId: newPrice.id, // Use the ID from the new price
-               };
-
-               return updated;
-            }
 
             const updated: Product = {
                ...data,
                stripeId: updatedProduct.id,
+               priceId: updatedProduct.default_price as string, // Use the ID from the new price
             };
 
             return updated;
