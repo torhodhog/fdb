@@ -81,9 +81,9 @@ const Page = () => {
             >
               {isMounted &&
                 items.map(({ product }) => {
-                  // const label = PRODUCT_CATEGORIES.find(
-                  //   (c) => c.value === product.category
-                  // )?.label;
+                  const label = PRODUCT_CATEGORIES.find(
+                    (c) => c.value === product.category
+                  )?.label;
 
                   const { image } = product.images[0];
 
@@ -119,7 +119,7 @@ const Page = () => {
 
                             <div className="mt-1 flex text-sm">
                               <p className="text-muted-foreground">
-                                {/* Category: {label} */}
+                                Category: {label}
                               </p>
                             </div>
 
