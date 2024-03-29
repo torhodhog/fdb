@@ -287,11 +287,6 @@ export const Products: CollectionConfig = {
         { label: "Nei", value: "Nei" },
       ],
     },
-   {
-      name: "category",
-      label: "Category",
-      type: "text",
-      required: true,
-   }
+  
   ],
 };
