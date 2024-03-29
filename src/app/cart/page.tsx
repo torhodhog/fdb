@@ -119,7 +119,7 @@ const Page = () => {
 
                             <div className="mt-1 flex text-sm">
                               <p className="text-muted-foreground">
-                                Category: {label}
+                                {/* Category: {label} */}
                               </p>
                             </div>
 
@@ -144,7 +144,7 @@ const Page = () => {
                         <p className="mt-4 flex space-x-2 text-sm text-gray-700">
                           <Check className="h-5 w-5 flex-shrink-0 text-green-500" />
 
-                          <span>Eligible for instant delivery</span>
+                          <span>Kvalifisert for øyeblikkelig levering</span>
                         </p>
                       </div>
                     </li>
