@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server'
 import { getPayloadClient } from '../get-payload'
 import { stripe } from '../lib/stripe'
 import type Stripe from 'stripe'
+import { Product } from '../payload-types'
 
 export const paymentRouter = router({
    createSession: privateProcedure
@@ -126,6 +127,38 @@ export const paymentRouter = router({
 
          const [order] = orders
 
+         // If the order is paid, mark all products in the order as sold
+         if (order._isPaid) {
+            for (const productId of order.products) {
+               // Fetch the existing product
+               const { docs: products } = await payload.find({
+                  collection: 'products',
+                  where: {
+                     id: {
+                        equals: productId,
+                     },
+                  },
+               })
+
+               // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
+               const productToUpdate = products[0] as Product & { isSold: boolean }
+
+               // Update the isSold field
+               productToUpdate.isSold = true
+
+               // Update the product
+               await payload.update({
+                  collection: 'products',
+                  data: productToUpdate,
+                  where: {
+                     id: {
+                        equals: productId,
+                     },
+                  },
+               })
+            } // Closing brace for the for loop
+         } // Closing brace for the if statement
+
          return { isPaid: order._isPaid }
-      }),
-})
+         })
+         })
