@@ -20,7 +20,7 @@ exports.PRODUCT_CATEGORIES = [
     },
     {
         label: "Kontakt",
-        value: "icons",
+        value: "Kontakt",
         featured: [
             {
                 name: "Kontakt Oss",

@@ -43,10 +43,10 @@ var resend_1 = require("resend");
 var ReceiptEmail_1 = require("./components/emails/ReceiptEmail");
 var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event, session, payload, users, user, orders, order, data, error_1;
-    var _a, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var webhookRequest, body, signature, event, session, payload, users, user, orders, order, _i, _a, product, productId, products, productToUpdate, data, error_1;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 webhookRequest = req;
                 body = webhookRequest.rawBody;
@@ -64,16 +64,16 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 }
                 session = event.data
                     .object;
-                if (!((_a = session === null || session === void 0 ? void 0 : session.metadata) === null || _a === void 0 ? void 0 : _a.userId) ||
-                    !((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.orderId)) {
+                if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) ||
+                    !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
                     return [2 /*return*/, res
                             .status(400)
                             .send("Webhook Error: No user present in metadata")];
                 }
-                if (!(event.type === 'checkout.session.completed')) return [3 /*break*/, 8];
+                if (!(event.type === 'checkout.session.completed')) return [3 /*break*/, 11];
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 1:
-                payload = _c.sent();
+                payload = _d.sent();
                 return [4 /*yield*/, payload.find({
                         collection: 'users',
                         where: {
@@ -83,7 +83,7 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                         },
                     })];
             case 2:
-                users = (_c.sent()).docs;
+                users = (_d.sent()).docs;
                 user = users[0];
                 if (!user)
                     return [2 /*return*/, res
@@ -99,30 +99,53 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                         },
                     })];
             case 3:
-                orders = (_c.sent()).docs;
+                orders = (_d.sent()).docs;
                 order = orders[0];
                 if (!order)
                     return [2 /*return*/, res
                             .status(404)
-                            .json({ error: 'No such order exists.' })];
-                return [4 /*yield*/, payload.update({
-                        collection: 'orders',
-                        data: {
-                            _isPaid: true,
-                        },
+                            .json({ error: 'No such order exists.' })
+                        // Mark all products in the order as sold
+                    ];
+                _i = 0, _a = order.products;
+                _d.label = 4;
+            case 4:
+                if (!(_i < _a.length)) return [3 /*break*/, 11];
+                product = _a[_i];
+                productId = typeof product === 'object' ? product.id : product;
+                return [4 /*yield*/, payload.find({
+                        collection: 'products',
                         where: {
                             id: {
-                                equals: session.metadata.orderId,
+                                equals: productId,
+                            },
+                        },
+                    })
+                    // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
+                ];
+            case 5:
+                products = (_d.sent()).docs;
+                productToUpdate = products[0];
+                // Update the isSold field
+                productToUpdate.isSold = true;
+                // Update the product
+                return [4 /*yield*/, payload.update({
+                        collection: 'products',
+                        data: productToUpdate,
+                        where: {
+                            id: {
+                                equals: productId,
                             },
                         },
                     })
                     // send receipt
                 ];
-            case 4:
-                _c.sent();
-                _c.label = 5;
-            case 5:
-                _c.trys.push([5, 7, , 8]);
+            case 6:
+                // Update the product
+                _d.sent();
+                _d.label = 7;
+            case 7:
+                _d.trys.push([7, 9, , 10]);
                 return [4 /*yield*/, resend.emails.send({
                         from: 'Fotballdraktbutikken <fdb@fotballdraktbutikken.com>',
                         to: [user.email],
@@ -134,15 +157,18 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                             products: order.products,
                         }),
                     })];
-            case 6:
-                data = _c.sent();
+            case 8:
+                data = _d.sent();
                 res.status(200).json({ data: data });
-                return [3 /*break*/, 8];
-            case 7:
-                error_1 = _c.sent();
+                return [3 /*break*/, 10];
+            case 9:
+                error_1 = _d.sent();
                 res.status(500).json({ error: error_1 });
-                return [3 /*break*/, 8];
-            case 8: return [2 /*return*/, res.status(200).send()];
+                return [3 /*break*/, 10];
+            case 10:
+                _i++;
+                return [3 /*break*/, 4];
+            case 11: return [2 /*return*/, res.status(200).send()];
         }
     });
 }); };

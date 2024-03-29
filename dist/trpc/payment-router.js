@@ -44,16 +44,26 @@ var get_payload_1 = require("../get-payload");
 var stripe_1 = require("../lib/stripe");
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
-        .input(zod_1.z.object({ productIds: zod_1.z.array(zod_1.z.string()) }))
+        .input(zod_1.z.object({
+        productIds: zod_1.z.array(zod_1.z.string()),
+        leveringsinfo: zod_1.z.object({
+            navn: zod_1.z.string(),
+            adresse: zod_1.z.string(),
+            postnummer: zod_1.z.string(),
+            by: zod_1.z.string(),
+            telefonnummer: zod_1.z.string(),
+            land: zod_1.z.string(),
+        }),
+    }))
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var user, productIds, payload, products, filteredProducts, order, line_items, deliveryFee, stripeSession, err_1;
+        var user, productIds, leveringsinfo, payload, products, filteredProducts, order, line_items, deliveryFee, stripeSession, err_1;
         var ctx = _b.ctx, input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
                     console.log('Create Session called with input :', input);
                     user = ctx.user;
-                    productIds = input.productIds;
+                    productIds = input.productIds, leveringsinfo = input.leveringsinfo;
                     if (productIds.length === 0) {
                         throw new server_1.TRPCError({ code: 'BAD_REQUEST' });
                     }
@@ -112,6 +122,12 @@ exports.paymentRouter = (0, trpc_1.router)({
                             metadata: {
                                 userId: user.id,
                                 orderId: order.id,
+                                leveringsNavn: leveringsinfo.navn,
+                                leveringsAdresse: leveringsinfo.adresse,
+                                leveringsPostnummer: leveringsinfo.postnummer,
+                                leveringsBy: leveringsinfo.by,
+                                leveringsTelefonnummer: leveringsinfo.telefonnummer,
+                                leveringsLand: leveringsinfo.land,
                             },
                             line_items: line_items,
                         })];
@@ -130,15 +146,15 @@ exports.paymentRouter = (0, trpc_1.router)({
     pollOrderStatus: trpc_1.privateProcedure
         .input(zod_1.z.object({ orderId: zod_1.z.string() }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var orderId, payload, orders, order;
+        var orderId, payload, orders, order, _i, _c, productId, products, productToUpdate;
         var input = _b.input;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
                     orderId = input.orderId;
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
-                    payload = _c.sent();
+                    payload = _d.sent();
                     return [4 /*yield*/, payload.find({
                             collection: 'orders',
                             where: {
@@ -148,13 +164,52 @@ exports.paymentRouter = (0, trpc_1.router)({
                             },
                         })];
                 case 2:
-                    orders = (_c.sent()).docs;
+                    orders = (_d.sent()).docs;
                     if (!orders.length) {
                         throw new server_1.TRPCError({ code: 'NOT_FOUND' });
                     }
                     order = orders[0];
-                    return [2 /*return*/, { isPaid: order._isPaid }];
+                    if (!order._isPaid) return [3 /*break*/, 7];
+                    _i = 0, _c = order.products;
+                    _d.label = 3;
+                case 3:
+                    if (!(_i < _c.length)) return [3 /*break*/, 7];
+                    productId = _c[_i];
+                    return [4 /*yield*/, payload.find({
+                            collection: 'products',
+                            where: {
+                                id: {
+                                    equals: productId,
+                                },
+                            },
+                        })
+                        // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
+                    ];
+                case 4:
+                    products = (_d.sent()).docs;
+                    productToUpdate = products[0];
+                    // Update the isSold field
+                    productToUpdate.isSold = true;
+                    // Update the product
+                    return [4 /*yield*/, payload.update({
+                            collection: 'products',
+                            data: productToUpdate,
+                            where: {
+                                id: {
+                                    equals: productId,
+                                },
+                            },
+                        })];
+                case 5:
+                    // Update the product
+                    _d.sent();
+                    _d.label = 6;
+                case 6:
+                    _i++;
+                    return [3 /*break*/, 3];
+                case 7: // Closing brace for the if statement
+                return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
-    }); }),
+    }); })
 });

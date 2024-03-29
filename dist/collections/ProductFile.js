@@ -187,5 +187,17 @@ exports.ProductFiles = {
                 // Legg til flere størrelser etter behov
             ],
         },
+        {
+            name: 'isSold',
+            label: 'Sold',
+            type: 'checkbox',
+            defaultValue: false,
+            admin: {
+                condition: function (_a) {
+                    var req = _a.req;
+                    return req.user.role === 'admin';
+                },
+            },
+        },
     ],
 };
