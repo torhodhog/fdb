@@ -124,7 +124,13 @@ export const Products: CollectionConfig = {
                   product: updatedProduct.id,
                });
 
-               data.priceId = newPrice.id;
+               const updated: Product = {
+                  ...data,
+                  stripeId: updatedProduct.id,
+                  priceId: newPrice.id, // Use the ID from the new price
+               };
+
+               return updated;
             }
 
             const updated: Product = {
@@ -136,6 +142,7 @@ export const Products: CollectionConfig = {
          }
       },
    ],
+   // ...
   },
   fields: [
     {
