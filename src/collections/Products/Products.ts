@@ -86,46 +86,55 @@ export const Products: CollectionConfig = {
   },
   hooks: {
     afterChange: [syncUser],
-   beforeChange: [
+    beforeChange: [
       addUser,
       async (args) => {
-         if (args.operation === "create") {
-            const data = args.data as Product;
+        if (args.operation === "create") {
+          const data = args.data as Product;
 
-            const createdProduct = await stripe.products.create({
-               name: data.name,
-               default_price_data: {
-                  currency: "nok",
-                  unit_amount: Math.round(data.price * 100), // Convert price to øre
-               },
-            });
+          const createdProduct = await stripe.products.create({
+            name: data.name,
+            default_price_data: {
+              currency: "nok",
+              unit_amount: Math.round(data.price * 100), // Convert price to øre
+            },
+          });
 
-            const updated: Product = {
-               ...data,
-               stripeId: createdProduct.id,
-               priceId: createdProduct.default_price as string, // Use the ID from the created price
-            };
+          // Fetch the product again to get the default_price
+          const fetchedProduct = await stripe.products.retrieve(
+            createdProduct.id
+          );
 
-            return updated;
-         } else if (args.operation === "update") {
-            const data = args.data as Product;
+          const updated: Product = {
+            ...data,
+            stripeId: fetchedProduct.id,
+            priceId: fetchedProduct.default_price as string, // Use the ID from the created price
+          };
 
-            const updatedProduct = await stripe.products.update(data.stripeId!, {
-               name: data.name,
-               default_price: data.priceId!,
-            });
+          return updated;
+        } else if (args.operation === "update") {
+          const data = args.data as Product;
 
-            const updated: Product = {
-               ...data,
-               stripeId: updatedProduct.id,
-               priceId: updatedProduct.default_price as string, // Use the ID from the new price
-            };
+          const updatedProduct = await stripe.products.update(data.stripeId!, {
+            name: data.name,
+            default_price: data.priceId!,
+          });
 
-            return updated;
-         }
+          // Fetch the product again to get the default_price
+          const fetchedProduct = await stripe.products.retrieve(
+            updatedProduct.id
+          );
+
+          const updated: Product = {
+            ...data,
+            stripeId: fetchedProduct.id,
+            priceId: fetchedProduct.default_price as string, // Use the ID from the new price
+          };
+
+          return updated;
+        }
       },
-   ],
-   // ...
+    ],
   },
   fields: [
     {
@@ -286,15 +295,15 @@ export const Products: CollectionConfig = {
         { label: "Nei", value: "Nei" },
       ],
     },
-   {
+    {
       name: "category",
       label: "Category",
       type: "select",
       options: PRODUCT_CATEGORIES.map((category) => ({
-         label: category.label,
-         value: category.value,
+        label: category.label,
+        value: category.value,
       })),
       required: true,
-   }
+    },
   ],
 };
