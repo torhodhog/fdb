@@ -44,23 +44,28 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
   if (isVisible && product) {
     return (
       <Link
-        className={cn("invisible h-full w-full cursor-pointer group/main", {
-          "visible animate-in fade-in-5": isVisible,
-        })}
-        href={`/product/${product.id}`}
+         className={cn("invisible h-full w-full cursor-pointer group/main", {
+            "visible animate-in fade-in-5": isVisible,
+         })}
+         href={`/product/${product.id}`}
       >
-        <div className="flex flex-col w-full">
-          <ImageSlider urls={validUrls} />
+         <div className="flex flex-col w-full">
+            <ImageSlider urls={validUrls} />
 
-          <h3 className="mt-4 font-medium text-sm">
-            {product.name}
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">Størrelse: {product.size}</p>
-          <p className="mt-1 font-medium text-sm">
-            {formatPrice(product.price)}
-          </p>
-          {product.isSold && <p>Dette produktet er dessverre solgt</p>}
-        </div>
+            {product.isSold ? (
+               <p className="font-bold">Dette produktet er dessverre solgt</p>
+            ) : (
+               <>
+                  <h3 className="mt-4 font-medium text-sm">
+                     {product.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">Størrelse: {product.size}</p>
+                  <p className="mt-1 font-medium text-sm font-bla">
+                     {formatPrice(product.price)}
+                  </p>
+               </>
+            )}
+         </div>
       </Link>
     );
   }

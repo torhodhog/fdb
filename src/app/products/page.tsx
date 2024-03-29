@@ -50,7 +50,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           {/* Add more buttons for other liga systems */}
         </div>
         <ProductReel
-          title={label ?? "Finn din favoritt"}
+          title={label ?? "Alle produkter"}
           query={{
             category,
             limit: 80,
