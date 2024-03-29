@@ -131,7 +131,7 @@ export const ReceiptEmail = ({
             );
           })}
 
-          <Section>
+          {/* <Section>
             <Column style={{ width: "64px" }}></Column>
             <Column
               style={{
@@ -139,13 +139,13 @@ export const ReceiptEmail = ({
                 paddingTop: 20,
               }}
             >
-              <Text style={productTitle}>Transaction Fee</Text>
+              <Text style={productTitle}>Leveringskostnader</Text>
             </Column>
 
             <Column style={productPriceWrapper} align="right">
-              <Text style={productPrice}>{formatPrice(1)}</Text>
+              <Text style={productPrice}>{formatPrice(deliveryFee)}</Text>
             </Column>
-          </Section>
+          </Section> */}
 
           <Hr style={productPriceLine} />
           <Section align="right">

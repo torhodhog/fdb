@@ -119,15 +119,8 @@ exports.paymentRouter = (0, trpc_1.router)({
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
                             payment_method_types: ['card', 'klarna'],
                             mode: 'payment',
-                            metadata: {
-                                userId: user.id,
-                                orderId: order.id,
-                                leveringsNavn: leveringsinfo.navn,
-                                leveringsAdresse: leveringsinfo.adresse,
-                                leveringsPostnummer: leveringsinfo.postnummer,
-                                leveringsBy: leveringsinfo.by,
-                                leveringsTelefonnummer: leveringsinfo.telefonnummer,
-                                leveringsLand: leveringsinfo.land,
+                            shipping_address_collection: {
+                                allowed_countries: ['NO'], // replace with your allowed countries
                             },
                             line_items: line_items,
                         })];
