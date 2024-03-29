@@ -89,50 +89,47 @@ export const Products: CollectionConfig = {
     beforeChange: [
       addUser,
       async (args) => {
-        if (args.operation === "create") {
-          const data = args.data as Product;
+         if (args.operation === "create") {
+            const data = args.data as Product;
 
-          const createdProduct = await stripe.products.create({
-            name: data.name,
-            default_price_data: {
-              currency: "nok",
-              unit_amount: Math.round(data.price * 100), // Convert price to øre
-            },
-          });
+            const createdProduct = await stripe.products.create({
+               name: data.name,
+            });
 
-          // Fetch the product again to get the default_price
-          const fetchedProduct = await stripe.products.retrieve(
-            createdProduct.id
-          );
+            const price = await stripe.prices.create({
+               currency: "nok",
+               unit_amount: Math.round(data.price * 100), // Convert price to øre
+               product: createdProduct.id,
+            });
 
-          const updated: Product = {
-            ...data,
-            stripeId: fetchedProduct.id,
-            priceId: fetchedProduct.default_price as string, // Use the ID from the created price
-          };
+            const updated: Product = {
+               ...data,
+               stripeId: createdProduct.id,
+               priceId: price.id, // Use the ID from the created price
+            };
 
-          return updated;
-        } else if (args.operation === "update") {
-          const data = args.data as Product;
+            return updated;
+         } else if (args.operation === "update") {
+            const data = args.data as Product;
 
-          const updatedProduct = await stripe.products.update(data.stripeId!, {
-            name: data.name,
-            default_price: data.priceId!,
-          });
+            const updatedProduct = await stripe.products.update(data.stripeId!, {
+               name: data.name,
+            });
 
-          // Fetch the product again to get the default_price
-          const fetchedProduct = await stripe.products.retrieve(
-            updatedProduct.id
-          );
+            const newPrice = await stripe.prices.create({
+               currency: "nok",
+               unit_amount: Math.round(data.price * 100), // Convert price to øre
+               product: updatedProduct.id,
+            });
 
-          const updated: Product = {
-            ...data,
-            stripeId: fetchedProduct.id,
-            priceId: fetchedProduct.default_price as string, // Use the ID from the new price
-          };
+            const updated: Product = {
+               ...data,
+               stripeId: updatedProduct.id,
+               priceId: newPrice.id, // Use the ID from the new price
+            };
 
-          return updated;
-        }
+            return updated;
+         }
       },
     ],
   },
