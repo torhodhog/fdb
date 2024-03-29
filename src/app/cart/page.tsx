@@ -35,7 +35,8 @@ const Page = () => {
     0
   );
 
-  const deliveryFee = cartTotal > 1000 ? 0 : 50;
+  // const deliveryFee = cartTotal > 1000 ? 0 : 50;
+  const deliveryFee = 0;
 
   return (
     <div className="bg-white">
