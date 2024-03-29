@@ -150,9 +150,6 @@ export const Products: CollectionConfig = {
       label: "Sold",
       type: "checkbox",
       defaultValue: false,
-      admin: {
-        condition: ({ req }) => req.user.role === "admin",
-      },
     },
     {
       name: "description",
