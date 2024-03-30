@@ -20,19 +20,19 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import CartItem from "./CartItem";
 
 const Cart = () => {
-  const { items } = useCart()
-  const itemCount = items.length
+  const { items } = useCart();
+  const itemCount = items.length;
 
-  const [isMounted, setIsMounted] = useState<boolean>(false)
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   const cartTotal = items.reduce(
     (total, { product }) => total + product.price,
     0
-  )
+  );
 
   const deliveryFee = 0;
 
@@ -55,35 +55,36 @@ const Cart = () => {
         {itemCount > 0 ? (
           <>
             <div className="flex w-full flex-col pr-6">
-            <ScrollArea>
+              <ScrollArea>
                 {items.map(({ product }) => (
-                  <CartItem
-                    product={product}
-                    key={product.id}
-                  />
+                  <CartItem product={product} key={product.id} />
                 ))}
               </ScrollArea>
             </div>
             <div className="space-y-4 pr-6">
-        <Separator />
-        <div className="space-y-1.5 text-sm">
-          <div className="flex">
-            <span className="flex-1">Shipping</span>
-            <span>{isMounted ? (
-              formatPrice(deliveryFee)
-            ) : (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            )}</span>
-          </div>
-          <div className="flex">
-            <span className="flex-1">Total</span>
-            <span>{isMounted ? (
-              formatPrice(cartTotal + deliveryFee)
-            ) : (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            )}</span>
-          </div>
-        </div>
+              <Separator />
+              <div className="space-y-1.5 text-sm">
+                <div className="flex">
+                  <span className="flex-1">Shipping</span>
+                  <span>
+                    {isMounted ? (
+                      formatPrice(deliveryFee)
+                    ) : (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    )}
+                  </span>
+                </div>
+                <div className="flex">
+                  <span className="flex-1">Total</span>
+                  <span>
+                    {isMounted ? (
+                      formatPrice(cartTotal + deliveryFee)
+                    ) : (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    )}
+                  </span>
+                </div>
+              </div>
               <SheetFooter>
                 <SheetTrigger asChild>
                   <Link
@@ -104,7 +105,12 @@ const Cart = () => {
               aria-hidden="true"
               className="relative mb-40 h-60 w-60  text-muted-foreground"
             >
-              <Image src="/empty-cart.png" className="rounded-md" fill alt="empty shopping cart" />
+              <Image
+                src="/empty-cart.png"
+                className="rounded-md"
+                fill
+                alt="empty shopping cart"
+              />
             </div>
             <div className="text-xl font-semibold">Handlekurven er tom</div>
             <SheetTrigger asChild>

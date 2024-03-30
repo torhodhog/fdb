@@ -67,7 +67,9 @@ const Page = () => {
                     alt="empty shopping cart hippo"
                   />
                 </div>
-                <h3 className="font-semibold text-2xl">Din handlevogn er tom</h3>
+                <h3 className="font-semibold text-2xl">
+                  Din handlevogn er tom
+                </h3>
                 <p className="text-muted-foreground text-center">
                   Whoops! Ingen produkter å vise.
                 </p>
@@ -90,19 +92,19 @@ const Page = () => {
 
                   return (
                     <li key={product.id} className="flex py-6 sm:py-10">
-  <div className="flex-shrink-0">
-  <div className="relative h-24 w-24">
-  {typeof image !== "string" && image.url ? (
-    <Image
-      className="-z-10"
-      src={image.url} // Use image.url instead of url
-      alt="Produkt-kjøpt"
-      layout="fill"
-      objectFit="cover"
-    />
-  ) : null}
-</div>
-  </div>
+                      <div className="flex-shrink-0">
+                        <div className="relative h-24 w-24">
+                          {typeof image !== "string" && image.url ? (
+                            <Image
+                              className="-z-10"
+                              src={image.url} // Use image.url instead of url
+                              alt="Produkt-kjøpt"
+                              layout="fill"
+                              objectFit="cover"
+                            />
+                          ) : null}
+                        </div>
+                      </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
                         <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
@@ -158,58 +160,60 @@ const Page = () => {
             <h2 className="text-lg font-medium text-gray-900">Sammendrag</h2>
 
             <div className="mt-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">Kjøpstotal</p>
-        <p className="text-sm font-medium text-gray-900">
-          {isMounted ? (
-            formatPrice(cartTotal)
-          ) : (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          )}
-        </p>
-      </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">Kjøpstotal</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {isMounted ? (
+                    formatPrice(cartTotal)
+                  ) : (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  )}
+                </p>
+              </div>
 
-      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-        <div className="flex items-center text-sm text-muted-foreground">
-          <span>Leveringskostnader</span>
-        </div>
-        <div className="text-sm font-medium text-gray-900">
-          {isMounted ? (
-            formatPrice(deliveryFee)
-          ) : (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          )}
-        </div>
-      </div>
+              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <span>Leveringskostnader</span>
+                </div>
+                <div className="text-sm font-medium text-gray-900">
+                  {isMounted ? (
+                    formatPrice(deliveryFee)
+                  ) : (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  )}
+                </div>
+              </div>
 
-      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-        <div className="text-base font-medium text-gray-900">
-          Totalpris
-        </div>
-        <div className="text-base font-medium text-gray-900">
-          {isMounted ? (
-            formatPrice(cartTotal + deliveryFee)
-          ) : (
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          )}
-        </div>
-      </div>
-    </div>
+              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="text-base font-medium text-gray-900">
+                  Totalpris
+                </div>
+                <div className="text-base font-medium text-gray-900">
+                  {isMounted ? (
+                    formatPrice(cartTotal + deliveryFee)
+                  ) : (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  )}
+                </div>
+              </div>
+            </div>
 
             <div className="mt-6">
               <Button
                 disabled={items.length === 0 || isLoading}
-                onClick={() => createCheckoutSession({ 
-                  productIds, 
-                  leveringsinfo: {
-                    navn: 'Brukerens navn',
-                    adresse: 'Brukerens adresse',
-                    postnummer: 'Brukerens postnummer',
-                    by: 'Brukerens by',
-                    telefonnummer: 'Brukerens telefonnummer',
-                    land: 'Brukerens land',
-                  } 
-                })}
+                onClick={() =>
+                  createCheckoutSession({
+                    productIds,
+                    leveringsinfo: {
+                      navn: "Brukerens navn",
+                      adresse: "Brukerens adresse",
+                      postnummer: "Brukerens postnummer",
+                      by: "Brukerens by",
+                      telefonnummer: "Brukerens telefonnummer",
+                      land: "Brukerens land",
+                    },
+                  })
+                }
                 className="w-full"
                 size="lg"
               >
