@@ -20,13 +20,16 @@ const AddToCartButton = ({product}: {product: Product}) => {
   return (
     <Button
       onClick={() => {
-         addItem(product)
-        setIsSuccess(true);
+        if (!product.isSold) {
+          addItem(product);
+          setIsSuccess(true);
+        }
       }}
       size="lg"
-      className="w-full"
+      className={`w-full ${product.isSold ? 'bg-gray-500' : 'bg-blue-500'}`}
+      disabled={product.isSold!}
     >
-      {isSuccess ? "Puttet i handlekurven" : "Legg til i handlekurven"}
+      {product.isSold ? "Solgt" : isSuccess ? "Puttet i handlekurven" : "Legg til i handlekurven"}
     </Button>
   );
 };

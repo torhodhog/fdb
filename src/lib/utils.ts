@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from "clsx";
+import { ClassValue, clsx } from "clsx";
 import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 
@@ -29,7 +29,7 @@ export function constructMetadata({
   title = 'Fotballdraktbutikken - markedet for brukte, unike fotballdrakter',
   description = 'Fotballdraktbutikken is an open-source marketplace for high-quality digital goods.',
   image = '/herologo.png',
-  icons = '/favicon.ico',
+  icons = '/herologo.png',
   noIndex = false,
 }: {
   title?: string

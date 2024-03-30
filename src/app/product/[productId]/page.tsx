@@ -133,7 +133,7 @@ const Page = async ({ params }: PageProps) => {
                 ) : (
                   <span className="text-red-500" style={{ fontSize: '0.75rem' }}>
                     {/* Replace with your cross icon */}
-                    ❌
+                    Nei
                   </span>
                 )}
               </div>
