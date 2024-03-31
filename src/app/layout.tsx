@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <Head>
-        <link rel="icon" href="/herologo.png" />
+        <link rel="icon" href="/fdblogo.png" />
       </Head>
       <body
         className={cn(

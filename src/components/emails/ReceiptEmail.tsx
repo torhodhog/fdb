@@ -45,10 +45,10 @@ export const ReceiptEmail = ({
           <Section>
             <Column>
               <Image
-                src={`${process.env.NEXT_PUBLIC_SERVER_URL}/hippo-email-sent.png`}
+                src="https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png"
                 width={100}
                 height={100}
-                alt="DigitalHippo"
+                alt="Fdblogo"
               />
             </Column>
 
@@ -70,14 +70,14 @@ export const ReceiptEmail = ({
               </Column>
 
               <Column style={informationTableColumn}>
-                <Text style={informationTableLabel}>INVOICE DATE</Text>
+                <Text style={informationTableLabel}>Fakturadato</Text>
                 <Text style={informationTableValue}>
                   {format(date, "dd MMM yyyy")}
                 </Text>
               </Column>
 
               <Column style={informationTableColumn}>
-                <Text style={informationTableLabel}>ORDER ID</Text>
+                <Text style={informationTableLabel}>BestillingsId</Text>
                 <Link
                   style={{
                     ...informationTableValue,
@@ -89,7 +89,7 @@ export const ReceiptEmail = ({
             </Row>
           </Section>
           <Section style={productTitleTable}>
-            <Text style={productsTitle}>Order Summary</Text>
+            <Text style={productsTitle}>Bestillingssammendrag</Text>
           </Section>
           {products.map((product) => {
             const { image } = product.images[0];
@@ -120,7 +120,7 @@ export const ReceiptEmail = ({
                     href={`${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${orderId}`}
                     style={productLink}
                   >
-                    Download Asset
+                    
                   </Link>
                 </Column>
 
