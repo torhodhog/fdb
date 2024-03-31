@@ -10,7 +10,7 @@ const Hero: FC = () => {
         style={{ height: "600px" }}
       >
         <Image
-          src="/hero.png"
+          src="https://forsoker-ny-botte.s3.amazonaws.com/hero.png"
           alt="Hero Logo"
           layout="fill"
           objectFit="cover"
