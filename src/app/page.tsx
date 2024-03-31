@@ -10,7 +10,7 @@ const perks = [
   {
     name: "Gratis frakt",
     Icon: ArrowDownToLine,
-    description: "På alle bestillinger over 1000 kr",
+    description: "På alle bestillinger over 1500 kr",
   },
   {
     name: "Kvalitet",

@@ -65,7 +65,7 @@ export const paymentRouter = router({
             })
          })
 
-         const deliveryFee = 50; 
+         const deliveryFee = 87; 
 
          line_items.push({
             price_data: {

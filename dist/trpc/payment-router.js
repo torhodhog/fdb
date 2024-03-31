@@ -100,7 +100,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                             quantity: 1,
                         });
                     });
-                    deliveryFee = 50;
+                    deliveryFee = 87;
                     line_items.push({
                         price_data: {
                             currency: "nok",

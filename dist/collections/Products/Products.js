@@ -99,31 +99,12 @@ var syncUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (
         }
     });
 }); };
-var isAdminOrHasAccess = function () {
-    return function (_a) {
-        var _user = _a.req.user;
-        var user = _user;
-        if (!user)
-            return false;
-        if (user.role === "admin")
-            return true;
-        var userProductIDs = (user.products || []).reduce(function (acc, product) {
-            if (!product)
-                return acc;
-            if (typeof product === "string") {
-                acc.push(product);
-            }
-            else {
-                acc.push(product.id);
-            }
-            return acc;
-        }, []);
-        return {
-            id: {
-                in: userProductIDs,
-            },
-        };
-    };
+var isAdmin = function (_a) {
+    var _user = _a.req.user;
+    var user = _user;
+    if (!user)
+        return false;
+    return user.role === "admin";
 };
 exports.Products = {
     slug: "products",
@@ -131,9 +112,9 @@ exports.Products = {
         useAsTitle: "name",
     },
     access: {
-        read: isAdminOrHasAccess(),
-        update: isAdminOrHasAccess(),
-        delete: isAdminOrHasAccess(),
+        read: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
     },
     hooks: {
         afterChange: [syncUser],

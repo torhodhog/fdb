@@ -1,7 +1,4 @@
-import {
-  AfterChangeHook,
-  BeforeChangeHook,
-} from "payload/dist/collections/config/types";
+import { AfterChangeHook, BeforeChangeHook } from "payload/dist/collections/config/types";
 import { Access, CollectionConfig } from "payload/types";
 
 import { PRODUCT_CATEGORIES } from "../../config";
@@ -45,34 +42,12 @@ const syncUser: AfterChangeHook<Product> = async ({ req, doc }) => {
   }
 };
 
-const isAdminOrHasAccess =
-  (): Access =>
-  ({ req: { user: _user } }) => {
-    const user = _user as User | undefined;
+const isAdmin: Access = ({ req: { user: _user } }) => {
+  const user = _user as User | undefined;
 
-    if (!user) return false;
-    if (user.role === "admin") return true;
-
-    const userProductIDs = (user.products || []).reduce<Array<string>>(
-      (acc, product) => {
-        if (!product) return acc;
-        if (typeof product === "string") {
-          acc.push(product);
-        } else {
-          acc.push(product.id);
-        }
-
-        return acc;
-      },
-      []
-    );
-
-    return {
-      id: {
-        in: userProductIDs,
-      },
-    };
-  };
+  if (!user) return false;
+  return user.role === "admin";
+};
 
 export const Products: CollectionConfig = {
   slug: "products",
@@ -80,10 +55,11 @@ export const Products: CollectionConfig = {
     useAsTitle: "name",
   },
   access: {
-    read: isAdminOrHasAccess(),
-    update: isAdminOrHasAccess(),
-    delete: isAdminOrHasAccess(),
+    read: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
   },
+ 
   hooks: {
     afterChange: [syncUser],
     beforeChange: [

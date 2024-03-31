@@ -34,7 +34,7 @@ const Cart = () => {
     0
   );
 
-  const deliveryFee = 0;
+  const deliveryFee = cartTotal > 1500 ? 0 : 87;
 
   // const fee = 1
   return (
@@ -65,7 +65,7 @@ const Cart = () => {
               <Separator />
               <div className="space-y-1.5 text-sm">
                 <div className="flex">
-                  <span className="flex-1">Shipping</span>
+                  <span className="flex-1">Levering</span>
                   <span>
                     {isMounted ? (
                       formatPrice(deliveryFee)

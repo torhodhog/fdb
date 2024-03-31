@@ -65,7 +65,7 @@ const Page = () => {
           <div className="flex flex-col items-center space-y-2 text-center">
             <Icons.logo className="h-20 w-20" />
             <h1 className="text-2xl font-semibold tracking-tight">
-              Create an account
+              Lag en konto
             </h1>
 
             <Link
@@ -75,7 +75,7 @@ const Page = () => {
               })}
               href="/sign-in"
             >
-              Already have an account? Sign-in
+              Har du allerede en konto? Logg inn
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

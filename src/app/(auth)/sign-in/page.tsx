@@ -102,7 +102,7 @@ const Page = () => {
                     className={cn({
                       "focus-visible:ring-red-500": errors.email,
                     })}
-                    placeholder="you@example.com"
+                    placeholder="din@epost.com"
                   />
                   {errors?.email && (
                     <p className="text-sm text-red-500">
@@ -112,7 +112,7 @@ const Page = () => {
                 </div>
 
                 <div className="grid gap-1 py-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Passord</Label>
                   <Input
                     {...register("password")}
                     type="password"
@@ -132,7 +132,7 @@ const Page = () => {
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Sign in
+                  Logg inn
                 </Button>
               </div>
             </form>

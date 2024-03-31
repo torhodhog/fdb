@@ -82,7 +82,7 @@ const NavItem = ({
                         {item.name}
                       </Link>
                       <p className="mt-1" aria-hidden="true">
-                        Shop now
+                        
                       </p>
                     </div>
                   ))}

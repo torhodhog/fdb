@@ -1,5 +1,7 @@
 "use client";
 
+// Antatte nødvendige import-setninger basert på din bruk av komponenter og kroker.
+import React from 'react';
 import { User } from "@/payload-types";
 import { Button } from "./ui/button";
 import {
@@ -12,7 +14,11 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 
-const UserAccountNav = ({ user }: { user: User }) => {
+interface UserAccountNavProps {
+  user: User;
+}
+
+const UserAccountNav: React.FC<UserAccountNavProps> = ({ user }) => {
   const { signOut } = useAuth();
 
   return (
@@ -32,12 +38,18 @@ const UserAccountNav = ({ user }: { user: User }) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link href="/sell">Seller Dashboard</Link>
-        </DropdownMenuItem>
+        {user.role === 'admin' ? (
+          <DropdownMenuItem asChild>
+            <Link href="/sell">Rediger produkter</Link>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem asChild>
+            <Link href="/sell">Mine ordre</Link>
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem onClick={signOut} className="cursor-pointer">
-          Log out
+          Logg ut
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
