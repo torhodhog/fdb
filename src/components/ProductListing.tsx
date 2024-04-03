@@ -26,46 +26,42 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
 
   if (!product || !isVisible) return <ProductPlaceholder />;
 
- 
-  
-
   const validUrls = product.images
-  .map(({ image }) => {
-    if (typeof image === 'string') {
-      return image;
-    } else if (image && 'url' in image) {
-      return image.url;
-    }
-    return null;
-  })
-  .filter(Boolean) as string[];
-
+    .map(({ image }) => {
+      if (typeof image === "string") {
+        return image;
+      } else if (image && "url" in image) {
+        return image.url;
+      }
+      return null;
+    })
+    .filter(Boolean) as string[];
 
   if (isVisible && product) {
     return (
       <Link
-         className={cn("invisible h-full w-full cursor-pointer group/main", {
-            "visible animate-in fade-in-5": isVisible,
-         })}
-         href={`/product/${product.id}`}
+        className={cn("invisible h-full w-full cursor-pointer group/main", {
+          "visible animate-in fade-in-5": isVisible,
+        })}
+        href={`/product/${product.id}`}
       >
-         <div className="flex flex-col w-full">
-            <ImageSlider urls={validUrls} />
+        <div className="flex flex-col w-full">
+          <ImageSlider urls={validUrls} />
 
-            {product.isSold ? (
-               <p className="font-bold">Dette produktet er dessverre solgt</p>
-            ) : (
-               <>
-                  <h3 className="mt-4 font-medium text-sm">
-                     {product.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">Størrelse: {product.size}</p>
-                  <p className="mt-1 font-medium text-sm font-bla">
-                     {formatPrice(product.price)}
-                  </p>
-               </>
-            )}
-         </div>
+          {product.isSold ? (
+            <p className="font-bold">Dette produktet er dessverre solgt</p>
+          ) : (
+            <>
+              <h3 className="mt-4 font-medium text-sm">{product.name}</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Størrelse: {product.size}
+              </p>
+              <p className="mt-1 font-medium text-sm font-bla">
+                {formatPrice(product.price)}
+              </p>
+            </>
+          )}
+        </div>
       </Link>
     );
   }
