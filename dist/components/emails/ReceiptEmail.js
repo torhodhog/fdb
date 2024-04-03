@@ -53,7 +53,7 @@ var ReceiptEmail = function (_a) {
             React.createElement(components_1.Container, { style: container },
                 React.createElement(components_1.Section, null,
                     React.createElement(components_1.Column, null,
-                        React.createElement(image_1.default, { src: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/hippo-email-sent.png"), width: 100, height: 100, alt: "DigitalHippo" })),
+                        React.createElement(image_1.default, { src: "https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
                     React.createElement(components_1.Column, { align: "right", style: tableCell },
                         React.createElement(components_1.Text, { style: heading }, "Kvittering"))),
                 React.createElement(components_1.Section, { style: informationTable },
@@ -62,13 +62,13 @@ var ReceiptEmail = function (_a) {
                             React.createElement(components_1.Text, { style: informationTableLabel }, "EMAIL"),
                             React.createElement(components_1.Link, { style: __assign({}, informationTableValue) }, email)),
                         React.createElement(components_1.Column, { style: informationTableColumn },
-                            React.createElement(components_1.Text, { style: informationTableLabel }, "INVOICE DATE"),
+                            React.createElement(components_1.Text, { style: informationTableLabel }, "Fakturadato"),
                             React.createElement(components_1.Text, { style: informationTableValue }, (0, date_fns_1.format)(date, "dd MMM yyyy"))),
                         React.createElement(components_1.Column, { style: informationTableColumn },
-                            React.createElement(components_1.Text, { style: informationTableLabel }, "ORDER ID"),
+                            React.createElement(components_1.Text, { style: informationTableLabel }, "BestillingsId"),
                             React.createElement(components_1.Link, { style: __assign({}, informationTableValue) }, orderId)))),
                 React.createElement(components_1.Section, { style: productTitleTable },
-                    React.createElement(components_1.Text, { style: productsTitle }, "Order Summary")),
+                    React.createElement(components_1.Text, { style: productsTitle }, "Bestillingssammendrag")),
                 products.map(function (product) {
                     var _a;
                     var image = product.images[0].image;
@@ -79,7 +79,7 @@ var ReceiptEmail = function (_a) {
                             product.description ? (React.createElement(components_1.Text, { style: productDescription }, product.description.length > 50
                                 ? ((_a = product.description) === null || _a === void 0 ? void 0 : _a.slice(0, 50)) + "..."
                                 : product.description)) : null,
-                            React.createElement(components_1.Link, { href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(orderId), style: productLink }, "Download Asset")),
+                            React.createElement(components_1.Link, { href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(orderId), style: productLink })),
                         React.createElement(components_1.Column, { style: productPriceWrapper, align: "right" },
                             React.createElement(components_1.Text, { style: productPrice }, (0, utils_1.formatPrice)(product.price)))));
                 }),
