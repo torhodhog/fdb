@@ -12,7 +12,7 @@ interface ProductReelProps {
   subtitle?: string;
   href?: string;
   query: TQueryValidator;
-  size: string;
+  size?: string;
 }
 
 const FALLBACK_LIMIT = 4;
