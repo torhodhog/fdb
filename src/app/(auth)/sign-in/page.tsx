@@ -152,7 +152,7 @@ const Page = () => {
                 variant="secondary"
                 disabled={isLoading}
               >
-                Continue as customer
+                Fortsett som kjøper
               </Button>
             ): null}
           </div>
