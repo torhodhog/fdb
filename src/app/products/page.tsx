@@ -6,6 +6,8 @@ import { PRODUCT_CATEGORIES } from "@/config";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Select from "@/components/ui/select";
+import { Product } from "@/payload-types";
 
 type Param = string | string[] | undefined;
 
@@ -27,30 +29,44 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
+  const [size, setSize] = useState("");
 
   return (
     <>
-      <MaxWidthWrapper>
-        <div className="flex w-full max-w-sm items-center mt-14 space-x-2">
-          <Input
-            type="search"
-            placeholder="Søk etter drakter"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button type="submit" onClick={() => console.log(searchTerm)}>
-            Søk
-          </Button>
-          {/* <Button type="button" onClick={() => setLigaSystem("liga1")}>
-            Liga 1
-          </Button>
-          <Button type="button" onClick={() => setLigaSystem("liga2")}>
-            Liga 2
-          </Button> */}
-          {/* Add more buttons for other liga systems */}
+      <MaxWidthWrapper className="relative">
+        <div className="flex justify-between w-full max-w-sm items-center mt-14">
+          {/* Gruppering for søkefelt og knapp */}
+          <div className="flex space-x-2 flex-grow">
+            <Input
+              className="flex-grow"
+              type="search"
+              placeholder="Søk etter drakter"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button type="submit">Søk</Button>
+          </div>
+          <div>
+            <Select
+              className="absolute right-0"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+            >
+              <option value="">Alle størrelser</option>
+              <option value="S">Small</option>
+              <option value="M">Medium</option>
+              <option value="L">Large</option>
+              <option value="XL">Extra Large</option>
+              <option value="XXL">XXL</option>
+            </Select>
+          </div>
         </div>
+      </MaxWidthWrapper>
+
+      <MaxWidthWrapper>
         <ProductReel
           title={label ?? "Alle produkter"}
+          size={size}
           query={{
             category,
             limit: 80,
