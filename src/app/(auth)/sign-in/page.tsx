@@ -25,9 +25,7 @@ const Page = () => {
   const isSeller = searchParams.get("as") === "seller";
   const origin = searchParams.get("origin");
 
-  const continueAsSeller = () => {
-    router.push("?as=seller");
-  };
+ 
 
   const continueAsBuyer = () => {
     router.replace("/sign-in", undefined);
@@ -52,10 +50,7 @@ const Page = () => {
         return;
       }
 
-      if (isSeller) {
-        router.push("/sell");
-        return;
-      }
+  
 
       router.push("/");
     },
@@ -146,7 +141,7 @@ const Page = () => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  or
+                  fdb
                 </span>
               </div>
             </div>
@@ -159,15 +154,7 @@ const Page = () => {
               >
                 Continue as customer
               </Button>
-            ) : (
-              <Button
-                onClick={continueAsSeller}
-                variant="secondary"
-                disabled={isLoading}
-              >
-                Continue as seller
-              </Button>
-            )}
+            ): null}
           </div>
         </div>
       </div>
