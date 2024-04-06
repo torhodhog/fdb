@@ -33,35 +33,35 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
 
   return (
     <>
-      <MaxWidthWrapper className="relative">
-        <div className="flex justify-between w-full max-w-sm items-center mt-14">
-          {/* Gruppering for søkefelt og knapp */}
-          <div className="flex space-x-2 flex-grow">
-            <Input
-              className="flex-grow"
-              type="search"
-              placeholder="Søk etter drakter"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Button type="submit">Søk</Button>
-          </div>
-          <div>
-            <Select
-              className="absolute right-0"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-            >
-              <option value="">Alle størrelser</option>
-              <option value="S">Small</option>
-              <option value="M">Medium</option>
-              <option value="L">Large</option>
-              <option value="XL">Extra Large</option>
-              <option value="XXL">XXL</option>
-            </Select>
-          </div>
-        </div>
-      </MaxWidthWrapper>
+       <MaxWidthWrapper className="relative">
+    <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
+      {/* Gruppering for søkefelt og knapp */}
+      <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
+        <Input
+          className="flex-grow"
+          type="search"
+          placeholder="Søk etter drakter"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button type="submit">Søk</Button>
+      </div>
+      <div>
+        <Select
+          className="sm:absolute sm:right-0"
+          value={size}
+          onChange={(e) => setSize(e.target.value)}
+        >
+          <option value="">Alle størrelser</option>
+          <option value="S">Small</option>
+          <option value="M">Medium</option>
+          <option value="L">Large</option>
+          <option value="XL">Extra Large</option>
+          <option value="XXL">XXL</option>
+        </Select>
+      </div>
+    </div>
+  </MaxWidthWrapper>
 
       <MaxWidthWrapper>
         <ProductReel

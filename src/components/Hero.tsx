@@ -18,7 +18,7 @@ const Hero: FC = () => {
       </div>
       <div
         className="relative w-full pl-0 pr-0 block lg:hidden"
-        style={{ height: "100vh" }}
+        style={{ height: "80vh" }}
       >
         <Image
           src="/cellhero.png"
