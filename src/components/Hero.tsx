@@ -21,7 +21,7 @@ const Hero: FC = () => {
         style={{ height: "80vh" }}
       >
         <Image
-          src="/cellhero.png"
+          src="/vhshero.png"
           alt="Hero Logo Mobile"
           layout="fill"
           objectFit="cover"
