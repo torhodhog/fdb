@@ -50,7 +50,7 @@ const Cart = () => {
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
         <SheetHeader className="space-y-2.5 pr-6">
-          <SheetTitle>Cart({itemCount})</SheetTitle>
+          <SheetTitle>Handlevogn({itemCount})</SheetTitle>
         </SheetHeader>
         {itemCount > 0 ? (
           <>

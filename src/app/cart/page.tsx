@@ -31,7 +31,7 @@ const Page = () => {
   }, []);
 
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product }) => total + (product.salePrice || product.price),
     0
   );
 
@@ -96,11 +96,10 @@ const Page = () => {
                         <div className="relative h-24 w-24">
                           {typeof image !== "string" && image.url ? (
                             <Image
-                              className="-z-10"
-                              src={image.url} // Use image.url instead of url
-                              alt="Produkt-kjøpt"
-                              layout="fill"
-                              objectFit="cover"
+                              fill
+                              src={image.url}
+                              alt="product image"
+                              className="h-full w-full rounded-md object-cover object-center sm:h-48 sm:w-48"
                             />
                           ) : null}
                         </div>
@@ -127,7 +126,7 @@ const Page = () => {
                             </div>
 
                             <p className="mt-1 text-sm font-medium text-gray-900">
-                              {formatPrice(product.price)}
+                              {formatPrice(product.salePrice || product.price)}
                             </p>
                           </div>
 
