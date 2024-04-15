@@ -17,21 +17,21 @@ const Navbar = async () => {
 
   return (
     <div className=" top-0 inset-x-0 z-50">
-    <header className="relative bg-transparent lg:bg-background">
-      <MaxWidthWrapper>
-        <div className="border-b border-gray-200">
-          <div className="flex h-28 items-center">
-           <MobileNav /> 
+      <header className="relative bg-transparent lg:bg-background">
+        <MaxWidthWrapper>
+          <div className="border-b border-gray-200">
+            <div className="flex h-28 items-center">
+              <MobileNav />
 
-            <div className="ml-4 hidden lg:flex lg:ml-0">
-              <Link href="/">
-                <Icons.logo className=" h-8 w-10" />
-              </Link>
-            </div>
+              <div className="ml-4 hidden lg:flex lg:ml-0">
+                <Link href="/">
+                  <Icons.logo className=" h-8 w-10" />
+                </Link>
+              </div>
 
-            <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
-              <NavItems />
-            </div>
+              <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
+                <NavItems />
+              </div>
 
               <div className="ml-auto flex items-center">
                 <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
@@ -80,11 +80,10 @@ const Navbar = async () => {
                     </div>
                   )}
 
-                  <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6">
+                  <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex">
                     <Cart />
                     <ModeToggle />
                   </div>
-                  
                 </div>
               </div>
             </div>

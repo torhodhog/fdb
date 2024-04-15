@@ -21,12 +21,14 @@ const Hero: FC = () => {
         style={{ height: "80vh" }}
       >
         <Image
-          src="/vhshero.png"
-          alt="Hero Logo Mobile"
-          layout="fill"
-          objectFit="cover"
-          objectPosition="top"
-        />
+  src="/logo.png"
+  alt="Hero Logo Mobile"
+  width={500}
+  height={300}
+  objectFit="cover"
+  objectPosition="top"
+  style={{ marginTop: '20px' }}
+/>
         <Link href="/products">
           <div
             className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1"

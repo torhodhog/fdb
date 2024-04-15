@@ -10,7 +10,7 @@ export const PRODUCT_CATEGORIES = [
       },
       {
         name: "Salg",
-        href: "#",
+        href: "/Sale",
         imageSrc: "/salg.jpeg",
       },
     ],
