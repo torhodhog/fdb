@@ -138,23 +138,40 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                     router: trpc_1.appRouter,
                     createContext: createContext,
                 }));
-                // ...andre ruter...
-                // app.get('/api/products', async (req, res) => {
-                //   const searchTerm = (req.query as any).searchTerm;
-                //   const ligaSystem = (req.query as any).liga_system;
-                //   let query: Record<string, any> = {};
-                //   if (searchTerm) {
-                //     query.name = { $regex: new RegExp(searchTerm, 'i') };
-                //   }
-                //   if (ligaSystem) {
-                //     query.liga_system = ligaSystem;
-                //   }
-                //   const { docs: products } = await req.payload.find({
-                //     collection: 'products',
-                //     where: query,
-                //   });
-                //   res.json(products);
-                // });
+                app.get('/api/products', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+                    var myReq, searchTerm, ligaSystem, onSale, query, products;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                myReq = req;
+                                searchTerm = myReq.query.searchTerm;
+                                ligaSystem = myReq.query.liga_system;
+                                onSale = myReq.query.onSale;
+                                console.log('searchTerm:', searchTerm);
+                                console.log('ligaSystem:', ligaSystem);
+                                console.log('onSale:', onSale);
+                                query = {};
+                                if (searchTerm) {
+                                    query.name = { $regex: new RegExp(searchTerm, 'i') };
+                                }
+                                if (ligaSystem) {
+                                    query.liga_system = ligaSystem;
+                                }
+                                if (onSale) {
+                                    query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
+                                }
+                                console.log('query:', query);
+                                return [4 /*yield*/, myReq.payload.find({
+                                        collection: 'products',
+                                        where: query,
+                                    })];
+                            case 1:
+                                products = (_a.sent()).docs;
+                                res.json(products);
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
                 // ...resten av koden...
                 next_utils_1.nextApp.prepare().then(function () {

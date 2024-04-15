@@ -89,9 +89,12 @@ exports.appRouter = (0, trpc_1.router)({
                     parsedQueryOpts = {};
                     Object.entries(queryOpts).forEach(function (_a) {
                         var key = _a[0], value = _a[1];
-                        parsedQueryOpts[key] = {
-                            equals: value,
-                        };
+                        if (key === 'onSale') {
+                            parsedQueryOpts[key] = { equals: value === 'true' || value === true };
+                        }
+                        else {
+                            parsedQueryOpts[key] = { equals: value };
+                        }
                     });
                     if (searchTerm) {
                         parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };

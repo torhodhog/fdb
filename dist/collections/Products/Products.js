@@ -201,6 +201,22 @@ exports.Products = {
             required: true,
         },
         {
+            name: "onSale",
+            label: "On Sale",
+            type: "checkbox",
+            defaultValue: false,
+        },
+        {
+            name: "salePrice",
+            label: "Sale Price in NOK",
+            min: 0,
+            max: 10000,
+            type: "number",
+            admin: {
+                condition: function (data) { return data.onSale; },
+            },
+        },
+        {
             name: "product_files",
             type: "array",
             fields: [

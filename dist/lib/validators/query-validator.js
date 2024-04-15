@@ -6,6 +6,7 @@ exports.QueryValidator = zod_1.z.object({
     category: zod_1.z.string().optional(),
     sort: zod_1.z.enum(["asc", "desc"]).optional(),
     limit: zod_1.z.number().optional(),
-    searchTerm: zod_1.z.string().optional(), // Add this line
-    liga_system: zod_1.z.string().optional(), // Add this line
+    searchTerm: zod_1.z.string().optional(),
+    liga_system: zod_1.z.string().optional(),
+    onSale: zod_1.z.boolean().optional(), // Legg til denne linjen
 });
