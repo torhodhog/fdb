@@ -16,8 +16,6 @@ interface PageProps {
   };
 }
 
-
-
 const BREADCRUMBS = [
   { id: 1, name: "Home", href: "/" },
   { id: 2, name: "Products", href: "/products" },
@@ -61,6 +59,10 @@ const Page = async ({ params }: PageProps) => {
     return <p>{stars}</p>;
   };
 
+  const price = product.salePrice || product.price;
+  
+  const isOnSale = Boolean(product.salePrice);
+
   return (
     <MaxWidthWrapper className="bg-white ">
       <div className="bg-white">
@@ -98,8 +100,8 @@ const Page = async ({ params }: PageProps) => {
             </div>
             <section className="mt-4">
               <div className="flex items-center">
-                <p className="font-medium text-gray-900">
-                  {formatPrice(product.price)}
+                <p className={`font-medium ${isOnSale ? 'text-red-500' : 'text-gray-900'}`}>
+                  {formatPrice(price)}
                 </p>
                 <div className="ml-4 border-1 text-muted-foreground border-gray-300 pl-4">
                   {label}

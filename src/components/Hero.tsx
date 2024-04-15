@@ -32,7 +32,7 @@ const Hero: FC = () => {
         <Link href="/products">
           <div
             className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1"
-            style={{ top: "90%" }}
+            style={{ top: "80%" }}
           >
             <span className="text-sm font-extrabold text-pink-700 hover:text-blue-500">
               Se hele kolleksjonen
