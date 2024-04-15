@@ -50,32 +50,26 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
             case 0:
                 webhookRequest = req;
                 body = webhookRequest.rawBody;
-                signature = req.headers['stripe-signature'] || '';
+                signature = req.headers["stripe-signature"] || "";
                 try {
-                    event = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || '');
-                    console.log('Received Stripe event:', event); // Log the event
+                    event = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
+                    console.log("Received Stripe event:", event); // Log the event
                 }
                 catch (err) {
                     return [2 /*return*/, res
                             .status(400)
-                            .send("Webhook Error: ".concat(err instanceof Error
-                            ? err.message
-                            : 'Unknown Error'))];
+                            .send("Webhook Error: ".concat(err instanceof Error ? err.message : "Unknown Error"))];
                 }
-                session = event.data
-                    .object;
-                if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) ||
-                    !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
-                    return [2 /*return*/, res
-                            .status(400)
-                            .send("Webhook Error: No user present in metadata")];
+                session = event.data.object;
+                if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) || !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
+                    return [2 /*return*/, res.status(400).send("Webhook Error: No user present in metadata")];
                 }
-                if (!(event.type === 'checkout.session.completed')) return [3 /*break*/, 11];
+                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 11];
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 1:
                 payload = _d.sent();
                 return [4 /*yield*/, payload.find({
-                        collection: 'users',
+                        collection: "users",
                         where: {
                             id: {
                                 equals: session.metadata.userId,
@@ -86,11 +80,9 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 users = (_d.sent()).docs;
                 user = users[0];
                 if (!user)
-                    return [2 /*return*/, res
-                            .status(404)
-                            .json({ error: 'No such user exists.' })];
+                    return [2 /*return*/, res.status(404).json({ error: "No such user exists." })];
                 return [4 /*yield*/, payload.find({
-                        collection: 'orders',
+                        collection: "orders",
                         depth: 2,
                         where: {
                             id: {
@@ -102,27 +94,21 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 orders = (_d.sent()).docs;
                 order = orders[0];
                 if (!order)
-                    return [2 /*return*/, res
-                            .status(404)
-                            .json({ error: 'No such order exists.' })
-                        // Mark all products in the order as sold
-                    ];
+                    return [2 /*return*/, res.status(404).json({ error: "No such order exists." })];
                 _i = 0, _a = order.products;
                 _d.label = 4;
             case 4:
                 if (!(_i < _a.length)) return [3 /*break*/, 11];
                 product = _a[_i];
-                productId = typeof product === 'object' ? product.id : product;
+                productId = typeof product === "object" ? product.id : product;
                 return [4 /*yield*/, payload.find({
-                        collection: 'products',
+                        collection: "products",
                         where: {
                             id: {
                                 equals: productId,
                             },
                         },
-                    })
-                    // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
-                ];
+                    })];
             case 5:
                 products = (_d.sent()).docs;
                 productToUpdate = products[0];
@@ -130,16 +116,14 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 productToUpdate.isSold = true;
                 // Update the product
                 return [4 /*yield*/, payload.update({
-                        collection: 'products',
+                        collection: "products",
                         data: productToUpdate,
                         where: {
                             id: {
                                 equals: productId,
                             },
                         },
-                    })
-                    // send receipt
-                ];
+                    })];
             case 6:
                 // Update the product
                 _d.sent();
@@ -147,14 +131,19 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
             case 7:
                 _d.trys.push([7, 9, , 10]);
                 return [4 /*yield*/, resend.emails.send({
-                        from: 'Fotballdraktbutikken <fdb@fotballdraktbutikken.com>',
+                        from: "Fotballdraktbutikken <fdb@fotballdraktbutikken.com>",
                         to: [user.email],
-                        subject: 'Takk for din bestilling! Dette er din kvittering.',
+                        subject: "Takk for din bestilling! Dette er din kvittering.",
                         html: (0, ReceiptEmail_1.ReceiptEmailHtml)({
                             date: new Date(),
                             email: user.email,
                             orderId: session.metadata.orderId,
-                            products: order.products,
+                            products: order.products
+                                .filter(function (product) { return typeof product !== "string"; })
+                                .map(function (product) {
+                                product.price = product.salePrice || product.price;
+                                return product;
+                            }),
                         }),
                     })];
             case 8:

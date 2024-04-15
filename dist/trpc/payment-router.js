@@ -61,17 +61,17 @@ exports.paymentRouter = (0, trpc_1.router)({
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    console.log('Create Session called with input :', input);
+                    console.log("Create Session called with input :", input);
                     user = ctx.user;
                     productIds = input.productIds, leveringsinfo = input.leveringsinfo;
                     if (productIds.length === 0) {
-                        throw new server_1.TRPCError({ code: 'BAD_REQUEST' });
+                        throw new server_1.TRPCError({ code: "BAD_REQUEST" });
                     }
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _c.sent();
                     return [4 /*yield*/, payload.find({
-                            collection: 'products',
+                            collection: "products",
                             where: {
                                 id: {
                                     in: productIds,
@@ -80,11 +80,9 @@ exports.paymentRouter = (0, trpc_1.router)({
                         })];
                 case 2:
                     products = (_c.sent()).docs;
-                    filteredProducts = products.filter(function (prod) {
-                        return Boolean(prod.priceId);
-                    });
+                    filteredProducts = products.filter(function (prod) { return Boolean(prod.priceId); });
                     return [4 /*yield*/, payload.create({
-                            collection: 'orders',
+                            collection: "orders",
                             data: {
                                 _isPaid: false,
                                 products: filteredProducts.map(function (prod) { return prod.id; }),
@@ -95,8 +93,15 @@ exports.paymentRouter = (0, trpc_1.router)({
                     order = _c.sent();
                     line_items = [];
                     filteredProducts.forEach(function (product) {
+                        var price = product.salePrice || product.price;
                         line_items.push({
-                            price: product.priceId,
+                            price_data: {
+                                currency: "nok",
+                                product_data: {
+                                    name: product.name,
+                                },
+                                unit_amount: price * 100, // Stripe expects the price in cents
+                            },
                             quantity: 1,
                         });
                     });
@@ -117,16 +122,16 @@ exports.paymentRouter = (0, trpc_1.router)({
                     return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
                             success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
-                            payment_method_types: ['card', 'klarna'],
-                            mode: 'payment',
+                            payment_method_types: ["card", "klarna"],
+                            mode: "payment",
                             shipping_address_collection: {
-                                allowed_countries: ['NO'], // replace with your allowed countries
+                                allowed_countries: ["NO"], // replace with your allowed countries
                             },
                             line_items: line_items,
                         })];
                 case 5:
                     stripeSession = _c.sent();
-                    console.log('Stripe Session:', stripeSession);
+                    console.log("Stripe Session:", stripeSession);
                     return [2 /*return*/, { url: stripeSession.url }];
                 case 6:
                     err_1 = _c.sent();
@@ -149,7 +154,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                 case 1:
                     payload = _d.sent();
                     return [4 /*yield*/, payload.find({
-                            collection: 'orders',
+                            collection: "orders",
                             where: {
                                 id: {
                                     equals: orderId,
@@ -159,7 +164,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                 case 2:
                     orders = (_d.sent()).docs;
                     if (!orders.length) {
-                        throw new server_1.TRPCError({ code: 'NOT_FOUND' });
+                        throw new server_1.TRPCError({ code: "NOT_FOUND" });
                     }
                     order = orders[0];
                     if (!order._isPaid) return [3 /*break*/, 7];
@@ -169,15 +174,13 @@ exports.paymentRouter = (0, trpc_1.router)({
                     if (!(_i < _c.length)) return [3 /*break*/, 7];
                     productId = _c[_i];
                     return [4 /*yield*/, payload.find({
-                            collection: 'products',
+                            collection: "products",
                             where: {
                                 id: {
                                     equals: productId,
                                 },
                             },
-                        })
-                        // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
-                    ];
+                        })];
                 case 4:
                     products = (_d.sent()).docs;
                     productToUpdate = products[0];
@@ -185,7 +188,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                     productToUpdate.isSold = true;
                     // Update the product
                     return [4 /*yield*/, payload.update({
-                            collection: 'products',
+                            collection: "products",
                             data: productToUpdate,
                             where: {
                                 id: {
@@ -204,5 +207,5 @@ exports.paymentRouter = (0, trpc_1.router)({
                 return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
-    }); })
+    }); }),
 });
