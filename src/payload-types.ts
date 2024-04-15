@@ -51,6 +51,8 @@ export interface Product {
   isSold?: boolean | null;
   description?: string | null;
   price: number;
+  onSale?: boolean | null;
+  salePrice?: number | null;
   product_files?:
     | {
         file?: string | Media | null;
@@ -68,7 +70,7 @@ export interface Product {
   liga_system?: string | null;
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
-  category: 'Produkter' | 'Kontakt';
+  category: 'ui_kits' | 'Kontakt';
   updatedAt: string;
   createdAt: string;
 }

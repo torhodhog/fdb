@@ -5,7 +5,7 @@ import express from "express";
 import { IncomingMessage } from "http";
 import nextBuild from "next/dist/build";
 import path from "path";
-import { PayloadRequest } from "payload/types";
+
 import { parse } from "url";
 
 import { getPayloadClient } from "./get-payload";
@@ -13,6 +13,13 @@ import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
 import { stripeWebhookHandler } from './webhooks'
 import  {Products} from './collections/Products/Products'
+import { Request } from 'express';
+import { PayloadRequest } from 'payload/types';
+
+interface MyRequest extends Request {
+  payload: PayloadRequest['payload'];
+}
+
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -89,29 +96,37 @@ const start = async () => {
       createContext,
     })
   );
+app.get('/api/products', async (req: Request, res) => {
+  const myReq = req as MyRequest;
 
-  // ...andre ruter...
+  const searchTerm = (myReq.query as any).searchTerm;
+  const ligaSystem = (myReq.query as any).liga_system;
+  const onSale = (myReq.query as any).onSale;
 
-  // app.get('/api/products', async (req, res) => {
-  //   const searchTerm = (req.query as any).searchTerm;
-  //   const ligaSystem = (req.query as any).liga_system;
+  console.log('searchTerm:', searchTerm);
+  console.log('ligaSystem:', ligaSystem);
+  console.log('onSale:', onSale);
 
-  //   let query: Record<string, any> = {};
-  //   if (searchTerm) {
-  //     query.name = { $regex: new RegExp(searchTerm, 'i') };
-  //   }
-  //   if (ligaSystem) {
-  //     query.liga_system = ligaSystem;
-  //   }
+  let query: Record<string, any> = {};
+  if (searchTerm) {
+    query.name = { $regex: new RegExp(searchTerm, 'i') };
+  }
+  if (ligaSystem) {
+    query.liga_system = ligaSystem;
+  }
+  if (onSale) {
+    query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
+  }
 
-  //   const { docs: products } = await req.payload.find({
-  //     collection: 'products',
-  //     where: query,
-  //   });
+  console.log('query:', query);
 
-  //   res.json(products);
-  // });
+  const { docs: products } = await myReq.payload.find({
+    collection: 'products',
+    where: query,
+  });
 
+  res.json(products);
+});
   app.use((req, res) => nextHandler(req, res));
 
   // ...resten av koden...

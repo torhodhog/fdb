@@ -59,53 +59,53 @@ export const Products: CollectionConfig = {
     update: isAdmin,
     delete: isAdmin,
   },
- 
+
   hooks: {
     afterChange: [syncUser],
     beforeChange: [
       addUser,
       async (args) => {
-         if (args.operation === "create") {
-            const data = args.data as Product;
+        if (args.operation === "create") {
+          const data = args.data as Product;
 
-            const createdProduct = await stripe.products.create({
-               name: data.name,
-            });
+          const createdProduct = await stripe.products.create({
+            name: data.name,
+          });
 
-            const price = await stripe.prices.create({
-               currency: "nok",
-               unit_amount: Math.round(data.price * 100), // Convert price to øre
-               product: createdProduct.id,
-            });
+          const price = await stripe.prices.create({
+            currency: "nok",
+            unit_amount: Math.round(data.price * 100), // Convert price to øre
+            product: createdProduct.id,
+          });
 
-            const updated: Product = {
-               ...data,
-               stripeId: createdProduct.id,
-               priceId: price.id, // Use the ID from the created price
-            };
+          const updated: Product = {
+            ...data,
+            stripeId: createdProduct.id,
+            priceId: price.id, // Use the ID from the created price
+          };
 
-            return updated;
-         } else if (args.operation === "update") {
-            const data = args.data as Product;
+          return updated;
+        } else if (args.operation === "update") {
+          const data = args.data as Product;
 
-            const updatedProduct = await stripe.products.update(data.stripeId!, {
-               name: data.name,
-            });
+          const updatedProduct = await stripe.products.update(data.stripeId!, {
+            name: data.name,
+          });
 
-            const newPrice = await stripe.prices.create({
-               currency: "nok",
-               unit_amount: Math.round(data.price * 100), // Convert price to øre
-               product: updatedProduct.id,
-            });
+          const newPrice = await stripe.prices.create({
+            currency: "nok",
+            unit_amount: Math.round(data.price * 100), // Convert price to øre
+            product: updatedProduct.id,
+          });
 
-            const updated: Product = {
-               ...data,
-               stripeId: updatedProduct.id,
-               priceId: newPrice.id, // Use the ID from the new price
-            };
+          const updated: Product = {
+            ...data,
+            stripeId: updatedProduct.id,
+            priceId: newPrice.id, // Use the ID from the new price
+          };
 
-            return updated;
-         }
+          return updated;
+        }
       },
     ],
   },
@@ -144,6 +144,22 @@ export const Products: CollectionConfig = {
       max: 10000,
       type: "number",
       required: true,
+    },
+    {
+      name: "onSale",
+      label: "On Sale",
+      type: "checkbox",
+      defaultValue: false,
+    },
+    {
+      name: "salePrice",
+      label: "Sale Price in NOK",
+      min: 0,
+      max: 10000,
+      type: "number",
+      admin: {
+        condition: (data) => data.onSale,
+      },
     },
     {
       name: "product_files",

@@ -24,7 +24,7 @@ const ProductReel = (props: ProductReelProps) => {
     trpc.getInfiniteProducts.useInfiniteQuery(
       {
         limit: query.limit ?? FALLBACK_LIMIT,
-        query,
+        query: query,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,

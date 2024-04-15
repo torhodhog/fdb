@@ -28,10 +28,12 @@ export const appRouter = router({
       const parsedQueryOpts: Record<string, any> = {};
 
       Object.entries(queryOpts).forEach(([key, value]) => {
-        parsedQueryOpts[key] = {
-          equals: value,
-        };
-      });
+  if (key === 'onSale') {
+    parsedQueryOpts[key] = { equals: value === 'true' || value === true };
+  } else {
+    parsedQueryOpts[key] = { equals: value };
+  }
+});
 
       if (searchTerm) {
         parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };

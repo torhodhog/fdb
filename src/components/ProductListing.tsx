@@ -56,9 +56,30 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
               <p className="mt-1 text-sm text-gray-500">
                 Størrelse: {product.size}
               </p>
-              <p className="mt-1 font-medium text-sm font-bla">
-                {formatPrice(product.price)}
-              </p>
+              {product.onSale &&
+              product.salePrice !== null &&
+              product.salePrice !== undefined ? (
+                <>
+                  <p
+                    className="mt-1 font-medium text-sm font-bla"
+                    style={{ textDecoration: "line-through" }}
+                  >
+                    {formatPrice(product.price)}
+                  </p>
+                  <p
+                    className="mt-1 font-medium text-sm font-bla"
+                    style={{ color: "red" }}
+                  >
+                    {formatPrice(product.salePrice)} (
+                    {Math.round((1 - product.salePrice / product.price) * 100)}%
+                    off)
+                  </p>
+                </>
+              ) : (
+                <p className="mt-1 font-medium text-sm font-bla">
+                  {formatPrice(product.price)}
+                </p>
+              )}
             </>
           )}
         </div>
