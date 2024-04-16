@@ -1,8 +1,10 @@
-import { z } from "zod";
-import { privateProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
 import { getPayloadClient } from "../get-payload";
 import { stripe } from "../lib/stripe";
+import { privateProcedure, router } from "./trpc";
+
 import type Stripe from "stripe";
 import { Product } from "../payload-types";
 
@@ -90,6 +92,10 @@ export const paymentRouter = router({
             allowed_countries: ["NO"], // replace with your allowed countries
           },
           line_items,
+          metadata: {
+            userId: user.id,
+            orderId: order.id,
+          },
         });
 
         console.log("Stripe Session:", stripeSession);

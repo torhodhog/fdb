@@ -37,11 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentRouter = void 0;
-var zod_1 = require("zod");
-var trpc_1 = require("./trpc");
 var server_1 = require("@trpc/server");
+var zod_1 = require("zod");
 var get_payload_1 = require("../get-payload");
 var stripe_1 = require("../lib/stripe");
+var trpc_1 = require("./trpc");
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
         .input(zod_1.z.object({
@@ -128,6 +128,10 @@ exports.paymentRouter = (0, trpc_1.router)({
                                 allowed_countries: ["NO"], // replace with your allowed countries
                             },
                             line_items: line_items,
+                            metadata: {
+                                userId: user.id,
+                                orderId: order.id,
+                            },
                         })];
                 case 5:
                     stripeSession = _c.sent();
