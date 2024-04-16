@@ -57,7 +57,7 @@ export const stripeWebhookHandler = async (
     const [order] = orders;
 
     if (!order) {
-      console.error('Order not found');
+      console.error("Order not found");
       return res.status(404).json({ error: "No such order exists." });
     }
 
@@ -66,16 +66,19 @@ export const stripeWebhookHandler = async (
       const productId = typeof product === "object" ? product.id : product;
 
       // Update 'isSold' to 'true'
-      const updatedProduct = await payload.update({
-        collection: "products",
-        id: productId,
-        data: { isSold: true },
-      });
-
-      console.log("Updated product as sold:", updatedProduct);
+      try {
+        const updatedProduct = await payload.update({
+          collection: "products",
+          id: productId,
+          data: { isSold: true },
+        });
+        console.log("Updated product as sold:", updatedProduct);
+      } catch (error) {
+        console.error("Error updating product as sold:", error);
+      }
     }
 
-    res.status(200).send('Order processed and products updated as sold.');
+    res.status(200).send("Order processed and products updated as sold.");
   }
 
   return res.status(200).send();

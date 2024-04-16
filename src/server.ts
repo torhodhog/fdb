@@ -2,19 +2,18 @@ import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import bodyParser from "body-parser";
 import express from "express";
+import { Request } from 'express';
 import { IncomingMessage } from "http";
 import nextBuild from "next/dist/build";
 import path from "path";
-
+import { PayloadRequest } from 'payload/types';
 import { parse } from "url";
 
+import  { Products } from './collections/Products/Products'
 import { getPayloadClient } from "./get-payload";
 import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
 import { stripeWebhookHandler } from './webhooks'
-import  {Products} from './collections/Products/Products'
-import { Request } from 'express';
-import { PayloadRequest } from 'payload/types';
 
 interface MyRequest extends Request {
   payload: PayloadRequest['payload'];
@@ -46,10 +45,13 @@ const start = async () => {
   });
 
   app.post(
-    "/api/webhooks/stripe",
-    webhookMiddleware,
-    stripeWebhookHandler
-  );
+  "/api/webhooks/stripe",
+  webhookMiddleware,
+  async (req: express.Request, res: express.Response) => {
+    console.log("Received Stripe webhook event"); // Log when a webhook event is received
+    await stripeWebhookHandler(req, res);
+  }
+);
 
   const payload = await getPayloadClient({
     initOptions: {

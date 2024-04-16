@@ -49,7 +49,7 @@ var ReceiptEmail = function (_a) {
             React.createElement(components_1.Container, { style: container },
                 React.createElement(components_1.Section, null,
                     React.createElement(components_1.Column, null,
-                        React.createElement(components_1.Img, { src: "https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
+                        React.createElement(components_1.Img, { src: "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
                     React.createElement(components_1.Column, { align: "right", style: tableCell },
                         React.createElement(components_1.Text, { style: heading }, "Kvittering"))),
                 React.createElement(components_1.Section, { style: informationTable },

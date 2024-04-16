@@ -1,18 +1,4 @@
-import {
-  Body,
-  Column,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Link,
-  Preview,
-  render,
-  Row,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Body, Column, Container, Head, Hr, Html, Img, Link, Preview, render, Row, Section, Text } from "@react-email/components";
 import { format } from "date-fns";
 import Image from "next/image";
 import * as React from "react";
@@ -48,7 +34,7 @@ export const ReceiptEmail = ({
           <Section>
             <Column>
               <Img
-                src="https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png"
+                src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fdblogo.png"
                 width={100}
                 height={100}
                 alt="Fdblogo"
