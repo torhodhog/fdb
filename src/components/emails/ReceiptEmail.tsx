@@ -14,17 +14,18 @@ import {
   Text,
 } from "@react-email/components";
 import { format } from "date-fns";
+import Image from "next/image";
 import * as React from "react";
 
 import { formatPrice } from "../../lib/utils";
 import { Product } from "../../payload-types";
-import Image from "next/image";
 
 interface ReceiptEmailProps {
   email: string;
   date: Date;
   orderId: string;
   products: Product[];
+  deliveryFee: number;
 }
 
 export const ReceiptEmail = ({
@@ -32,8 +33,10 @@ export const ReceiptEmail = ({
   date,
   orderId,
   products,
+  deliveryFee,
 }: ReceiptEmailProps) => {
-  const total = products.reduce((acc, curr) => acc + curr.price, 0) + 1;
+  const total =
+    products.reduce((acc, curr) => acc + curr.price, 0) + deliveryFee;
 
   return (
     <Html>
@@ -44,7 +47,7 @@ export const ReceiptEmail = ({
         <Container style={container}>
           <Section>
             <Column>
-              <Image
+              <Img
                 src="https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png"
                 width={100}
                 height={100}
@@ -119,9 +122,7 @@ export const ReceiptEmail = ({
                   <Link
                     href={`${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${orderId}`}
                     style={productLink}
-                  >
-                    
-                  </Link>
+                  ></Link>
                 </Column>
 
                 <Column style={productPriceWrapper} align="right">
@@ -131,7 +132,7 @@ export const ReceiptEmail = ({
             );
           })}
 
-          {/* <Section>
+          <Section>
             <Column style={{ width: "64px" }}></Column>
             <Column
               style={{
@@ -145,7 +146,7 @@ export const ReceiptEmail = ({
             <Column style={productPriceWrapper} align="right">
               <Text style={productPrice}>{formatPrice(deliveryFee)}</Text>
             </Column>
-          </Section> */}
+          </Section>
 
           <Hr style={productPriceLine} />
           <Section align="right">

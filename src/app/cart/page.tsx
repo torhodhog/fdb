@@ -35,7 +35,7 @@ const Page = () => {
     0
   );
 
-  const deliveryFee = cartTotal > 1500 ? 0 : 87;
+  const deliveryFee = cartTotal >= 1500 ? 0 : 87;
   // const deliveryFee = 87;
 
   return (
