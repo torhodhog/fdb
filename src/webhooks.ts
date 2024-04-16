@@ -85,6 +85,8 @@ export const stripeWebhookHandler = async (
         },
       });
 
+      console.log("Fetched product:", products[0]); // Log the fetched product
+
       // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
       const productToUpdate = products[0] as Product & { isSold: boolean };
 
@@ -92,7 +94,7 @@ export const stripeWebhookHandler = async (
       productToUpdate.isSold = true;
 
       // Update the product
-      await payload.update({
+      const updatedProduct = await payload.update({
         collection: "products",
         data: productToUpdate,
         where: {
@@ -101,6 +103,8 @@ export const stripeWebhookHandler = async (
           },
         },
       });
+
+      console.log("Updated product:", updatedProduct); // Log the updated product
 
       // send receipt
       try {
