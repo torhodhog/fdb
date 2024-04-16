@@ -6,7 +6,14 @@ import { stripe } from "../../lib/stripe";
 import { Product, User } from "../../payload-types";
 
 const addUser: BeforeChangeHook<Product> = async ({ req, data }) => {
+  console.log('addUser function called');
+
   const user = req.user;
+
+  if (!user) {
+    console.error('req.user is undefined');
+    return data;
+  }
 
   return { ...data, user: user.id };
 };
@@ -60,55 +67,57 @@ export const Products: CollectionConfig = {
     delete: isAdmin,
   },
 
-  hooks: {
-    afterChange: [syncUser],
-    beforeChange: [
-      addUser,
-      async (args) => {
-        if (args.operation === "create") {
-          const data = args.data as Product;
+ hooks: {
+  afterChange: [syncUser],
+  beforeChange: [
+    async (args) => {
+      console.log('Anonymous function in beforeChange hooks called');
 
-          const createdProduct = await stripe.products.create({
-            name: data.name,
-          });
+      if (args.operation === "create") {
+        const data = args.data as Product;
 
-          const price = await stripe.prices.create({
-            currency: "nok",
-            unit_amount: Math.round(data.price * 100), // Convert price to øre
-            product: createdProduct.id,
-          });
+        const createdProduct = await stripe.products.create({
+          name: data.name,
+        });
 
-          const updated: Product = {
-            ...data,
-            stripeId: createdProduct.id,
-            priceId: price.id, // Use the ID from the created price
-          };
+        const price = await stripe.prices.create({
+          currency: "nok",
+          unit_amount: Math.round(data.price * 100), // Convert price to øre
+          product: createdProduct.id,
+        });
 
-          return updated;
-        } else if (args.operation === "update") {
-          const data = args.data as Product;
+        const updated: Product = {
+          ...data,
+          stripeId: createdProduct.id,
+          priceId: price.id, // Use the ID from the created price
+        };
 
-          const updatedProduct = await stripe.products.update(data.stripeId!, {
-            name: data.name,
-          });
+        return updated;
+      } else if (args.operation === "update") {
+        const data = args.data as Product;
 
-          const newPrice = await stripe.prices.create({
-            currency: "nok",
-            unit_amount: Math.round(data.price * 100), // Convert price to øre
-            product: updatedProduct.id,
-          });
+        const updatedProduct = await stripe.products.update(data.stripeId!, {
+          name: data.name,
+        });
 
-          const updated: Product = {
-            ...data,
-            stripeId: updatedProduct.id,
-            priceId: newPrice.id, // Use the ID from the new price
-          };
+        const newPrice = await stripe.prices.create({
+          currency: "nok",
+          unit_amount: Math.round(data.price * 100), // Convert price to øre
+          product: updatedProduct.id,
+        });
 
-          return updated;
-        }
-      },
-    ],
-  },
+        const updated: Product = {
+          ...data,
+          stripeId: updatedProduct.id,
+          priceId: newPrice.id, // Use the ID from the new price
+        };
+
+        return updated;
+      }
+    },
+    addUser,
+  ],
+},
   fields: [
     {
       name: "user",

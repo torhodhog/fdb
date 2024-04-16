@@ -63,7 +63,12 @@ var addUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (_
     var user;
     var req = _b.req, data = _b.data;
     return __generator(this, function (_c) {
+        console.log('addUser function called');
         user = req.user;
+        if (!user) {
+            console.error('req.user is undefined');
+            return [2 /*return*/, data];
+        }
         return [2 /*return*/, __assign(__assign({}, data), { user: user.id })];
     });
 }); };
@@ -119,12 +124,12 @@ exports.Products = {
     hooks: {
         afterChange: [syncUser],
         beforeChange: [
-            addUser,
             function (args) { return __awaiter(void 0, void 0, void 0, function () {
                 var data, createdProduct, price, updated, data, updatedProduct, newPrice, updated;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
+                            console.log('Anonymous function in beforeChange hooks called');
                             if (!(args.operation === "create")) return [3 /*break*/, 3];
                             data = args.data;
                             return [4 /*yield*/, stripe_1.stripe.products.create({
@@ -162,6 +167,7 @@ exports.Products = {
                     }
                 });
             }); },
+            addUser,
         ],
     },
     fields: [
