@@ -1,13 +1,13 @@
-import { getServerSideUser } from '@/lib/payload-utils'
-import Image from 'next/image'
-import { cookies } from 'next/headers'
-import { getPayloadClient } from '@/get-payload'
-import { notFound, redirect } from 'next/navigation'
-import { Product, ProductFile, User } from '@/payload-types'
-import { PRODUCT_CATEGORIES } from '@/config'
-import { formatPrice } from '@/lib/utils'
-import Link from 'next/link'
 import PaymentStatus from '@/components/Paymentstatus'
+import { PRODUCT_CATEGORIES } from '@/config'
+import { getPayloadClient } from '@/get-payload'
+import { getServerSideUser } from '@/lib/payload-utils'
+import { formatPrice } from '@/lib/utils'
+import { Product, ProductFile, User } from '@/payload-types'
+import { cookies } from 'next/headers'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound, redirect } from 'next/navigation'
 
 interface PageProps {
   searchParams: {
@@ -52,7 +52,9 @@ const ThankYouPage = async ({
   const products = order.products as Product[]
 
   const orderTotal = products.reduce((total, product) => {
-    return total + product.price
+    // Use the sale price if it's available, otherwise use the regular price
+    const price = product.salePrice || product.price
+    return total + price
   }, 0)
 
   return (
@@ -70,10 +72,10 @@ const ThankYouPage = async ({
         <div className='mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8 lg:py-32 xl:gap-x-24'>
           <div className='lg:col-start-2'>
             <p className='text-sm font-medium text-blue-600'>
-              Order successful
+              Kjøp fullført
             </p>
             <h1 className='mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
-              Thanks for ordering
+              Takk for din bestilling
             </h1>
             {order._isPaid ? (
               <p className='mt-2 text-base text-muted-foreground'>
@@ -89,9 +91,7 @@ const ThankYouPage = async ({
               </p>
             ) : (
               <p className='mt-2 text-base text-muted-foreground'>
-                We appreciate your order, and we&apos;re
-                currently processing it. So hang tight and
-                we&apos;ll send you confirmation very soon!
+                Vi setter pris på bestillingen din og behandler den nå. Bare vent litt, så sender vi deg en bekreftelse veldig snart!
               </p>
             )}
 
@@ -134,13 +134,13 @@ const ThankYouPage = async ({
                             </h3>
 
                             <p className='my-1'>
-                              Category: {label}
+                              Kategori: {label}
                             </p>
                           </div>
                         </div>
 
                         <p className='flex-none font-medium text-gray-900'>
-                          {formatPrice(product.price)}
+                          {formatPrice(product.salePrice || product.price)}
                         </p>
                       </li>
                     )
@@ -150,21 +150,21 @@ const ThankYouPage = async ({
 
               <div className='space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-muted-foreground'>
                 <div className='flex justify-between'>
-                  <p>Subtotal</p>
+                  <p>Delsum: </p>
                   <p className='text-gray-900'>
                     {formatPrice(orderTotal)}
                   </p>
                 </div>
 
                 <div className='flex justify-between'>
-                  <p>Transaction Fee</p>
+                  <p>Levering</p>
                   <p className='text-gray-900'>
                     {formatPrice(1)}
                   </p>
                 </div>
 
                 <div className='flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900'>
-                  <p className='text-base'>Total</p>
+                  <p className='text-base'>Totalt</p>
                   <p className='text-base'>
                     {formatPrice(orderTotal + 1)}
                   </p>
@@ -181,7 +181,7 @@ const ThankYouPage = async ({
                 <Link
                   href='/products'
                   className='text-sm font-medium text-blue-600 hover:text-blue-500'>
-                  Continue shopping &rarr;
+                  Fortsett å handle &rarr;
                 </Link>
               </div>
             </div>
