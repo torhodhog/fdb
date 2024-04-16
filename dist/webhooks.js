@@ -40,10 +40,9 @@ exports.stripeWebhookHandler = void 0;
 var stripe_1 = require("./lib/stripe");
 var get_payload_1 = require("./get-payload");
 var resend_1 = require("resend");
-var ReceiptEmail_1 = require("./components/emails/ReceiptEmail");
 var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event, session, payload, users, user, orders, order, _i, _a, product, productId, products, productToUpdate, data, error_1;
+    var webhookRequest, body, signature, event, session, payload, orders, order, _i, _a, product, productId, updatedProduct;
     var _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
@@ -64,100 +63,48 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) || !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
                     return [2 /*return*/, res.status(400).send("Webhook Error: No user present in metadata")];
                 }
-                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 11];
+                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 7];
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 1:
                 payload = _d.sent();
                 return [4 /*yield*/, payload.find({
-                        collection: "users",
-                        where: {
-                            id: {
-                                equals: session.metadata.userId,
-                            },
-                        },
-                    })];
-            case 2:
-                users = (_d.sent()).docs;
-                user = users[0];
-                if (!user)
-                    return [2 /*return*/, res.status(404).json({ error: "No such user exists." })];
-                return [4 /*yield*/, payload.find({
                         collection: "orders",
-                        depth: 2,
                         where: {
                             id: {
                                 equals: session.metadata.orderId,
                             },
                         },
+                        depth: 2,
                     })];
-            case 3:
+            case 2:
                 orders = (_d.sent()).docs;
                 order = orders[0];
-                if (!order)
+                if (!order) {
+                    console.error('Order not found');
                     return [2 /*return*/, res.status(404).json({ error: "No such order exists." })];
+                }
                 _i = 0, _a = order.products;
-                _d.label = 4;
-            case 4:
-                if (!(_i < _a.length)) return [3 /*break*/, 11];
+                _d.label = 3;
+            case 3:
+                if (!(_i < _a.length)) return [3 /*break*/, 6];
                 product = _a[_i];
                 productId = typeof product === "object" ? product.id : product;
-                return [4 /*yield*/, payload.find({
-                        collection: "products",
-                        where: {
-                            id: {
-                                equals: productId,
-                            },
-                        },
-                    })];
-            case 5:
-                products = (_d.sent()).docs;
-                productToUpdate = products[0];
-                // Update the isSold field
-                productToUpdate.isSold = true;
-                // Update the product
                 return [4 /*yield*/, payload.update({
                         collection: "products",
-                        data: productToUpdate,
-                        where: {
-                            id: {
-                                equals: productId,
-                            },
-                        },
+                        id: productId,
+                        data: { isSold: true },
                     })];
-            case 6:
-                // Update the product
-                _d.sent();
-                _d.label = 7;
-            case 7:
-                _d.trys.push([7, 9, , 10]);
-                return [4 /*yield*/, resend.emails.send({
-                        from: "Fotballdraktbutikken <fdb@fotballdraktbutikken.com>",
-                        to: [user.email],
-                        subject: "Takk for din bestilling! Dette er din kvittering.",
-                        html: (0, ReceiptEmail_1.ReceiptEmailHtml)({
-                            date: new Date(),
-                            email: user.email,
-                            orderId: session.metadata.orderId,
-                            products: order.products
-                                .filter(function (product) { return typeof product !== "string"; })
-                                .map(function (product) {
-                                product.price = product.salePrice || product.price;
-                                return product;
-                            }),
-                        }),
-                    })];
-            case 8:
-                data = _d.sent();
-                res.status(200).json({ data: data });
-                return [3 /*break*/, 10];
-            case 9:
-                error_1 = _d.sent();
-                res.status(500).json({ error: error_1 });
-                return [3 /*break*/, 10];
-            case 10:
+            case 4:
+                updatedProduct = _d.sent();
+                console.log("Updated product as sold:", updatedProduct);
+                _d.label = 5;
+            case 5:
                 _i++;
-                return [3 /*break*/, 4];
-            case 11: return [2 /*return*/, res.status(200).send()];
+                return [3 /*break*/, 3];
+            case 6:
+                res.status(200).send('Order processed and products updated as sold.');
+                _d.label = 7;
+            case 7: return [2 /*return*/, res.status(200).send()];
         }
     });
 }); };

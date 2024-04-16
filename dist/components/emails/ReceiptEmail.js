@@ -33,19 +33,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReceiptEmailHtml = exports.ReceiptEmail = void 0;
 var components_1 = require("@react-email/components");
 var date_fns_1 = require("date-fns");
 var React = __importStar(require("react"));
 var utils_1 = require("../../lib/utils");
-var image_1 = __importDefault(require("next/image"));
 var ReceiptEmail = function (_a) {
-    var email = _a.email, date = _a.date, orderId = _a.orderId, products = _a.products;
-    var total = products.reduce(function (acc, curr) { return acc + curr.price; }, 0) + 1;
+    var email = _a.email, date = _a.date, orderId = _a.orderId, products = _a.products, deliveryFee = _a.deliveryFee;
+    var total = products.reduce(function (acc, curr) { return acc + curr.price; }, 0) + deliveryFee;
     return (React.createElement(components_1.Html, null,
         React.createElement(components_1.Head, null),
         React.createElement(components_1.Preview, null, "Din kvittering fra Fotballdraktbutikken"),
@@ -53,7 +49,7 @@ var ReceiptEmail = function (_a) {
             React.createElement(components_1.Container, { style: container },
                 React.createElement(components_1.Section, null,
                     React.createElement(components_1.Column, null,
-                        React.createElement(image_1.default, { src: "https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
+                        React.createElement(components_1.Img, { src: "https://forsoker-ny-botte.s3.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
                     React.createElement(components_1.Column, { align: "right", style: tableCell },
                         React.createElement(components_1.Text, { style: heading }, "Kvittering"))),
                 React.createElement(components_1.Section, { style: informationTable },
@@ -83,6 +79,15 @@ var ReceiptEmail = function (_a) {
                         React.createElement(components_1.Column, { style: productPriceWrapper, align: "right" },
                             React.createElement(components_1.Text, { style: productPrice }, (0, utils_1.formatPrice)(product.price)))));
                 }),
+                React.createElement(components_1.Section, null,
+                    React.createElement(components_1.Column, { style: { width: "64px" } }),
+                    React.createElement(components_1.Column, { style: {
+                            paddingLeft: "40px",
+                            paddingTop: 20,
+                        } },
+                        React.createElement(components_1.Text, { style: productTitle }, "Leveringskostnader")),
+                    React.createElement(components_1.Column, { style: productPriceWrapper, align: "right" },
+                        React.createElement(components_1.Text, { style: productPrice }, (0, utils_1.formatPrice)(deliveryFee)))),
                 React.createElement(components_1.Hr, { style: productPriceLine }),
                 React.createElement(components_1.Section, { align: "right" },
                     React.createElement(components_1.Column, { style: tableCell, align: "right" },
