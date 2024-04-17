@@ -42,7 +42,7 @@ var get_payload_1 = require("./get-payload");
 var resend_1 = require("resend");
 var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event, session, payload, orders, order, _i, _a, product, productId, updatedProduct, error_1;
+    var webhookRequest, body, signature, event, session, payload, orders, order, updateResult, _i, _a, product, productId, updatedProduct, error_1;
     var _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
@@ -52,7 +52,8 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 signature = req.headers["stripe-signature"] || "";
                 try {
                     event = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
-                    console.log("Received Stripe event:", event); // Log the event
+                    // Log the full details of the Stripe event right after verifying it
+                    console.log("Received Stripe event:", JSON.stringify(event, null, 2)); // Provides a detailed printout of the event data
                 }
                 catch (err) {
                     return [2 /*return*/, res
@@ -63,7 +64,8 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) || !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
                     return [2 /*return*/, res.status(400).send("Webhook Error: No user present in metadata")];
                 }
-                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 9];
+                console.log("Webhook event type:", event.type);
+                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 11];
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 1:
                 payload = _d.sent();
@@ -83,35 +85,47 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                     console.error("Order not found");
                     return [2 /*return*/, res.status(404).json({ error: "No such order exists." })];
                 }
-                _i = 0, _a = order.products;
-                _d.label = 3;
+                if (!!order._isPaid) return [3 /*break*/, 4];
+                console.log("Attempting to update order payment status for order ID:", order.id);
+                return [4 /*yield*/, payload.update({
+                        collection: "orders",
+                        id: order.id,
+                        data: { _isPaid: true },
+                    })];
             case 3:
-                if (!(_i < _a.length)) return [3 /*break*/, 8];
-                product = _a[_i];
-                productId = typeof product === "object" ? product.id : product;
+                updateResult = _d.sent();
+                console.log("Order payment status update result:", updateResult);
                 _d.label = 4;
             case 4:
-                _d.trys.push([4, 6, , 7]);
+                _i = 0, _a = order.products;
+                _d.label = 5;
+            case 5:
+                if (!(_i < _a.length)) return [3 /*break*/, 10];
+                product = _a[_i];
+                productId = typeof product === "object" ? product.id : product;
+                _d.label = 6;
+            case 6:
+                _d.trys.push([6, 8, , 9]);
                 return [4 /*yield*/, payload.update({
                         collection: "products",
                         id: productId,
                         data: { isSold: true },
                     })];
-            case 5:
+            case 7:
                 updatedProduct = _d.sent();
                 console.log("Updated product as sold:", updatedProduct);
-                return [3 /*break*/, 7];
-            case 6:
+                return [3 /*break*/, 9];
+            case 8:
                 error_1 = _d.sent();
                 console.error("Error updating product as sold:", error_1);
-                return [3 /*break*/, 7];
-            case 7:
+                return [3 /*break*/, 9];
+            case 9:
                 _i++;
-                return [3 /*break*/, 3];
-            case 8:
+                return [3 /*break*/, 5];
+            case 10:
                 res.status(200).send("Order processed and products updated as sold.");
-                _d.label = 9;
-            case 9: return [2 /*return*/, res.status(200).send()];
+                _d.label = 11;
+            case 11: return [2 /*return*/, res.status(200).send()];
         }
     });
 }); };

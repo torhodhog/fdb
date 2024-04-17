@@ -1,5 +1,4 @@
 import express from "express";
-
 import { stripe } from "./lib/stripe";
 import { WebhookRequest } from "./server";
 
@@ -27,7 +26,9 @@ export const stripeWebhookHandler = async (
       process.env.STRIPE_WEBHOOK_SECRET || ""
     );
 
-    console.log("Received Stripe event:", event); // Log the event
+    // Log the full details of the Stripe event right after verifying it
+    console.log("Received Stripe event:", JSON.stringify(event, null, 2)); // Provides a detailed printout of the event data
+
   } catch (err) {
     return res
       .status(400)
@@ -41,6 +42,8 @@ export const stripeWebhookHandler = async (
   if (!session?.metadata?.userId || !session?.metadata?.orderId) {
     return res.status(400).send(`Webhook Error: No user present in metadata`);
   }
+  console.log("Webhook event type:", event.type);
+
   if (event.type === "checkout.session.completed") {
     const payload = await getPayloadClient();
 
@@ -59,6 +62,17 @@ export const stripeWebhookHandler = async (
     if (!order) {
       console.error("Order not found");
       return res.status(404).json({ error: "No such order exists." });
+    }
+
+    // Update payment status if not already paid
+    if (!order._isPaid) {
+        console.log("Attempting to update order payment status for order ID:", order.id);
+        const updateResult = await payload.update({
+            collection: "orders",
+            id: order.id,
+            data: { _isPaid: true },
+        });
+        console.log("Order payment status update result:", updateResult);
     }
 
     // Mark all products in the order as sold

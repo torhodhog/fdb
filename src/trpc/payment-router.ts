@@ -24,26 +24,32 @@ export const paymentRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("Create Session called with input :", input);
+      console.log("Create Session called with input:", input);
       const { user } = ctx;
-      let { productIds, leveringsinfo } = input;
 
+      if (!user) {
+        console.error("User context is missing");
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      let { productIds, leveringsinfo } = input;
       if (productIds.length === 0) {
+        console.error("No products provided");
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
 
       const payload = await getPayloadClient();
+      console.log("Payload client instantiated");
 
       const { docs: products } = await payload.find({
         collection: "products",
-        where: {
-          id: {
-            in: productIds,
-          },
-        },
+        where: { id: { in: productIds } },
       });
 
+      console.log("Products fetched:", products.map(p => p.name));
+
       const filteredProducts = products.filter((prod) => Boolean(prod.priceId));
+      console.log("Filtered products (with priceId):", filteredProducts.map(p => p.name));
 
       const order = await payload.create({
         collection: "orders",
@@ -54,33 +60,28 @@ export const paymentRouter = router({
         },
       });
 
-      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-      filteredProducts.forEach((product) => {
-        const price = product.salePrice || product.price;
-        line_items.push({
-          price_data: {
-            currency: "nok",
-            product_data: {
-              name: product.name,
-            },
-            unit_amount: price * 100, // Stripe expects the price in cents
-          },
-          quantity: 1,
-        });
-      });
+      console.log("Order created with ID:", order.id);
+
+      const line_items = filteredProducts.map((product) => ({
+        price_data: {
+          currency: "nok",
+          product_data: { name: product.name },
+          unit_amount: (product.salePrice || product.price) * 100,
+        },
+        quantity: 1,
+      }));
 
       const deliveryFee = 87;
-
       line_items.push({
         price_data: {
           currency: "nok",
-          product_data: {
-            name: "Delivery Fee",
-          },
+          product_data: { name: "Delivery Fee" },
           unit_amount: deliveryFee * 100,
         },
         quantity: 1,
       });
+
+      console.log("Line items prepared for Stripe Checkout");
 
       try {
         const stripeSession = await stripe.checkout.sessions.create({
@@ -88,77 +89,65 @@ export const paymentRouter = router({
           cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
           payment_method_types: ["card", "klarna"],
           mode: "payment",
-          shipping_address_collection: {
-            allowed_countries: ["NO"], // replace with your allowed countries
-          },
+          shipping_address_collection: { allowed_countries: ["NO"] },
           line_items,
-          metadata: {
-            userId: user.id,
-            orderId: order.id,
-          },
+          metadata: { userId: user.id, orderId: order.id },
         });
 
-        console.log("Stripe Session:", stripeSession);
-
+        console.log("Stripe Session created:", stripeSession.id);
         return { url: stripeSession.url };
       } catch (err) {
-        console.error(err);
+        console.error("Failed to create Stripe session:", err);
         return { url: null };
       }
     }),
+
   pollOrderStatus: privateProcedure
     .input(z.object({ orderId: z.string() }))
     .query(async ({ input }) => {
       const { orderId } = input;
+      console.log("Polling status for order:", orderId);
 
       const payload = await getPayloadClient();
-
       const { docs: orders } = await payload.find({
         collection: "orders",
-        where: {
-          id: {
-            equals: orderId,
-          },
-        },
+        where: { id: { equals: orderId } },
       });
 
       if (!orders.length) {
+        console.error("Order not found:", orderId);
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
       const [order] = orders;
+      console.log("Order found:", order.id, "Paid status:", order._isPaid);
 
-      // If the order is paid, mark all products in the order as sold
       if (order._isPaid) {
+        console.log("Order is paid, marking products as sold...");
         for (const productId of order.products) {
-          // Fetch the existing product
           const { docs: products } = await payload.find({
             collection: "products",
-            where: {
-              id: {
-                equals: productId,
-              },
-            },
+            where: { id: { equals: productId } },
           });
 
-          // Use a type assertion to tell TypeScript that productToUpdate includes the isSold field
+          if (!products.length) {
+            console.error("Product not found during update:", productId);
+            continue;
+          }
+
           const productToUpdate = products[0] as Product & { isSold: boolean };
-
-          // Update the isSold field
-          productToUpdate.isSold = true;
-
-          // Update the product
+          productToUpdate.isSold = true
           await payload.update({
             collection: "products",
-            data: productToUpdate,
-            where: {
-              id: {
-                equals: productId,
-              },
-            },
+            data: { isSold: true },
+            where: { id: { equals: productId } },
           });
-        } // Closing brace for the for loop
-      } // Closing brace for the if statement
+
+          console.log(`Product ${productId} marked as sold.`);
+        }
+      } else {
+        console.log(`Order ${orderId} is not yet paid.`);
+      }
 
       return { isPaid: order._isPaid };
     }),

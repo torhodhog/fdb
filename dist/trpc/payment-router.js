@@ -61,26 +61,30 @@ exports.paymentRouter = (0, trpc_1.router)({
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    console.log("Create Session called with input :", input);
+                    console.log("Create Session called with input:", input);
                     user = ctx.user;
+                    if (!user) {
+                        console.error("User context is missing");
+                        throw new server_1.TRPCError({ code: "UNAUTHORIZED" });
+                    }
                     productIds = input.productIds, leveringsinfo = input.leveringsinfo;
                     if (productIds.length === 0) {
+                        console.error("No products provided");
                         throw new server_1.TRPCError({ code: "BAD_REQUEST" });
                     }
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _c.sent();
+                    console.log("Payload client instantiated");
                     return [4 /*yield*/, payload.find({
                             collection: "products",
-                            where: {
-                                id: {
-                                    in: productIds,
-                                },
-                            },
+                            where: { id: { in: productIds } },
                         })];
                 case 2:
                     products = (_c.sent()).docs;
+                    console.log("Products fetched:", products.map(function (p) { return p.name; }));
                     filteredProducts = products.filter(function (prod) { return Boolean(prod.priceId); });
+                    console.log("Filtered products (with priceId):", filteredProducts.map(function (p) { return p.name; }));
                     return [4 /*yield*/, payload.create({
                             collection: "orders",
                             data: {
@@ -91,31 +95,25 @@ exports.paymentRouter = (0, trpc_1.router)({
                         })];
                 case 3:
                     order = _c.sent();
-                    line_items = [];
-                    filteredProducts.forEach(function (product) {
-                        var price = product.salePrice || product.price;
-                        line_items.push({
-                            price_data: {
-                                currency: "nok",
-                                product_data: {
-                                    name: product.name,
-                                },
-                                unit_amount: price * 100, // Stripe expects the price in cents
-                            },
-                            quantity: 1,
-                        });
-                    });
+                    console.log("Order created with ID:", order.id);
+                    line_items = filteredProducts.map(function (product) { return ({
+                        price_data: {
+                            currency: "nok",
+                            product_data: { name: product.name },
+                            unit_amount: (product.salePrice || product.price) * 100,
+                        },
+                        quantity: 1,
+                    }); });
                     deliveryFee = 87;
                     line_items.push({
                         price_data: {
                             currency: "nok",
-                            product_data: {
-                                name: "Delivery Fee",
-                            },
+                            product_data: { name: "Delivery Fee" },
                             unit_amount: deliveryFee * 100,
                         },
                         quantity: 1,
                     });
+                    console.log("Line items prepared for Stripe Checkout");
                     _c.label = 4;
                 case 4:
                     _c.trys.push([4, 6, , 7]);
@@ -124,22 +122,17 @@ exports.paymentRouter = (0, trpc_1.router)({
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
                             payment_method_types: ["card", "klarna"],
                             mode: "payment",
-                            shipping_address_collection: {
-                                allowed_countries: ["NO"], // replace with your allowed countries
-                            },
+                            shipping_address_collection: { allowed_countries: ["NO"] },
                             line_items: line_items,
-                            metadata: {
-                                userId: user.id,
-                                orderId: order.id,
-                            },
+                            metadata: { userId: user.id, orderId: order.id },
                         })];
                 case 5:
                     stripeSession = _c.sent();
-                    console.log("Stripe Session:", stripeSession);
+                    console.log("Stripe Session created:", stripeSession.id);
                     return [2 /*return*/, { url: stripeSession.url }];
                 case 6:
                     err_1 = _c.sent();
-                    console.error(err_1);
+                    console.error("Failed to create Stripe session:", err_1);
                     return [2 /*return*/, { url: null }];
                 case 7: return [2 /*return*/];
             }
@@ -154,24 +147,24 @@ exports.paymentRouter = (0, trpc_1.router)({
             switch (_d.label) {
                 case 0:
                     orderId = input.orderId;
+                    console.log("Polling status for order:", orderId);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _d.sent();
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
-                            where: {
-                                id: {
-                                    equals: orderId,
-                                },
-                            },
+                            where: { id: { equals: orderId } },
                         })];
                 case 2:
                     orders = (_d.sent()).docs;
                     if (!orders.length) {
+                        console.error("Order not found:", orderId);
                         throw new server_1.TRPCError({ code: "NOT_FOUND" });
                     }
                     order = orders[0];
-                    if (!order._isPaid) return [3 /*break*/, 7];
+                    console.log("Order found:", order.id, "Paid status:", order._isPaid);
+                    if (!order._isPaid) return [3 /*break*/, 8];
+                    console.log("Order is paid, marking products as sold...");
                     _i = 0, _c = order.products;
                     _d.label = 3;
                 case 3:
@@ -179,36 +172,33 @@ exports.paymentRouter = (0, trpc_1.router)({
                     productId = _c[_i];
                     return [4 /*yield*/, payload.find({
                             collection: "products",
-                            where: {
-                                id: {
-                                    equals: productId,
-                                },
-                            },
+                            where: { id: { equals: productId } },
                         })];
                 case 4:
                     products = (_d.sent()).docs;
+                    if (!products.length) {
+                        console.error("Product not found during update:", productId);
+                        return [3 /*break*/, 6];
+                    }
                     productToUpdate = products[0];
-                    // Update the isSold field
                     productToUpdate.isSold = true;
-                    // Update the product
                     return [4 /*yield*/, payload.update({
                             collection: "products",
-                            data: productToUpdate,
-                            where: {
-                                id: {
-                                    equals: productId,
-                                },
-                            },
+                            data: { isSold: true },
+                            where: { id: { equals: productId } },
                         })];
                 case 5:
-                    // Update the product
                     _d.sent();
+                    console.log("Product ".concat(productId, " marked as sold."));
                     _d.label = 6;
                 case 6:
                     _i++;
                     return [3 /*break*/, 3];
-                case 7: // Closing brace for the if statement
-                return [2 /*return*/, { isPaid: order._isPaid }];
+                case 7: return [3 /*break*/, 9];
+                case 8:
+                    console.log("Order ".concat(orderId, " is not yet paid."));
+                    _d.label = 9;
+                case 9: return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
     }); }),
