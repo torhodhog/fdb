@@ -141,7 +141,7 @@ exports.paymentRouter = (0, trpc_1.router)({
     pollOrderStatus: trpc_1.privateProcedure
         .input(zod_1.z.object({ orderId: zod_1.z.string() }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var orderId, payload, orders, order, _i, _c, productId, products, productToUpdate;
+        var orderId, payload, orders, order, _i, _c, product, productId, error_1;
         var input = _b.input;
         return __generator(this, function (_d) {
             switch (_d.label) {
@@ -169,36 +169,33 @@ exports.paymentRouter = (0, trpc_1.router)({
                     _d.label = 3;
                 case 3:
                     if (!(_i < _c.length)) return [3 /*break*/, 8];
-                    productId = _c[_i];
-                    return [4 /*yield*/, payload.find({
-                            collection: "products",
-                            where: { id: { equals: productId } },
-                        })];
-                case 4:
-                    products = (_d.sent()).docs;
-                    if (!products.length) {
-                        console.error("Product not found during update:", productId);
+                    product = _c[_i];
+                    productId = typeof product === 'string' ? product : product.id;
+                    if (!productId) {
+                        console.error("Invalid product ID:", product);
                         return [3 /*break*/, 7];
                     }
-                    productToUpdate = products[0];
-                    if (!productToUpdate) return [3 /*break*/, 6];
+                    _d.label = 4;
+                case 4:
+                    _d.trys.push([4, 6, , 7]);
                     return [4 /*yield*/, payload.update({
                             collection: "products",
+                            id: productId,
                             data: { isSold: true },
-                            where: { id: { equals: productId } },
                         })];
                 case 5:
                     _d.sent();
                     console.log("Product ".concat(productId, " marked as sold."));
                     return [3 /*break*/, 7];
                 case 6:
-                    console.error("Product not found during update:", productId);
-                    _d.label = 7;
+                    error_1 = _d.sent();
+                    console.error("Failed to update product:", productId, error_1);
+                    return [3 /*break*/, 7];
                 case 7:
                     _i++;
                     return [3 /*break*/, 3];
                 case 8: return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
-    }); }),
+    }); })
 });
