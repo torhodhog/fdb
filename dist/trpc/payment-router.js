@@ -141,7 +141,7 @@ exports.paymentRouter = (0, trpc_1.router)({
     pollOrderStatus: trpc_1.privateProcedure
         .input(zod_1.z.object({ orderId: zod_1.z.string() }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var orderId, payload, orders, order, _i, _c, product, productId, error_1;
+        var orderId, payload, orders, order, _i, _c, productId, productDocs, product, error_1;
         var input = _b.input;
         return __generator(this, function (_d) {
             switch (_d.label) {
@@ -163,39 +163,50 @@ exports.paymentRouter = (0, trpc_1.router)({
                     }
                     order = orders[0];
                     console.log("Order found:", order.id, "Paid status:", order._isPaid);
-                    if (!order._isPaid) return [3 /*break*/, 8];
+                    if (!order._isPaid) return [3 /*break*/, 11];
                     console.log("Order is paid, marking products as sold...");
                     _i = 0, _c = order.products;
                     _d.label = 3;
                 case 3:
-                    if (!(_i < _c.length)) return [3 /*break*/, 8];
-                    product = _c[_i];
-                    productId = typeof product === 'string' ? product : product.id;
-                    if (!productId) {
-                        console.error("Invalid product ID:", product);
-                        return [3 /*break*/, 7];
-                    }
+                    if (!(_i < _c.length)) return [3 /*break*/, 11];
+                    productId = _c[_i];
                     _d.label = 4;
                 case 4:
-                    _d.trys.push([4, 6, , 7]);
+                    _d.trys.push([4, 9, , 10]);
+                    return [4 /*yield*/, payload.find({
+                            collection: "products",
+                            where: { id: { equals: productId } },
+                        })];
+                case 5:
+                    productDocs = (_d.sent()).docs;
+                    if (!productDocs.length) {
+                        console.error("Product not found:", productId);
+                        return [3 /*break*/, 10];
+                    }
+                    product = productDocs[0];
+                    if (!!product.isSold) return [3 /*break*/, 7];
                     return [4 /*yield*/, payload.update({
                             collection: "products",
                             id: productId,
                             data: { isSold: true },
                         })];
-                case 5:
+                case 6:
                     _d.sent();
                     console.log("Product ".concat(productId, " marked as sold."));
-                    return [3 /*break*/, 7];
-                case 6:
-                    error_1 = _d.sent();
-                    console.error("Failed to update product:", productId, error_1);
-                    return [3 /*break*/, 7];
+                    return [3 /*break*/, 8];
                 case 7:
+                    console.log("Product ".concat(productId, " already marked as sold."));
+                    _d.label = 8;
+                case 8: return [3 /*break*/, 10];
+                case 9:
+                    error_1 = _d.sent();
+                    console.error("Error updating product:", productId, error_1);
+                    return [3 /*break*/, 10];
+                case 10:
                     _i++;
                     return [3 /*break*/, 3];
-                case 8: return [2 /*return*/, { isPaid: order._isPaid }];
+                case 11: return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
-    }); })
+    }); }),
 });

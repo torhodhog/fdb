@@ -192,6 +192,26 @@ exports.Products = {
             label: "Sold",
             type: "checkbox",
             defaultValue: false,
+            access: {
+                create: function (_a) {
+                    var _b;
+                    var req = _a.req;
+                    return ((_b = req.user) === null || _b === void 0 ? void 0 : _b.role) === "admin";
+                },
+                read: function () { return true; },
+                update: function (_a) {
+                    var _b;
+                    var req = _a.req;
+                    return ((_b = req.user) === null || _b === void 0 ? void 0 : _b.role) === 'admin';
+                } // Tillater kun admin-brukere å oppdatere
+            },
+            admin: {
+                condition: function (_a) {
+                    var _b;
+                    var req = _a.req;
+                    return ((_b = req.user) === null || _b === void 0 ? void 0 : _b.role) === 'admin';
+                },
+            }
         },
         {
             name: "description",

@@ -140,7 +140,17 @@ export const Products: CollectionConfig = {
       label: "Sold",
       type: "checkbox",
       defaultValue: false,
-    },
+      access: {
+        create: ({ req }) => req.user?.role === "admin",
+        read: () => true,
+        update: ({ req }) => req.user?.role === 'admin'  // Tillater kun admin-brukere å oppdatere
+      },
+      admin: {
+        condition: ({ req }) => req.user?.role === 'admin',
+      }
+    }
+    
+    ,
     {
       name: "description",
       type: "textarea",
