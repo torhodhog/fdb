@@ -76,21 +76,22 @@ export const stripeWebhookHandler = async (
     }
 
     // Mark all products in the order as sold
-    for (const product of order.products) {
-      const productId = typeof product === "object" ? product.id : product;
+for (const product of order.products) {
+  const productId = typeof product === "object" ? product.id : product;
 
-      // Update 'isSold' to 'true'
-      try {
-        const updatedProduct = await payload.update({
-          collection: "products",
-          id: productId,
-          data: { isSold: true },
-        });
-        console.log("Updated product as sold:", updatedProduct);
-      } catch (error) {
-        console.error("Error updating product as sold:", error);
-      }
-    }
+  try {
+    console.log(`Attempting to mark product ${productId} as sold.`);
+    const updatedProduct = await payload.update({
+      collection: "products",
+      id: productId,
+      data: { isSold: true },
+    });
+    console.log(`Successfully updated product ${productId} as sold:`, updatedProduct);
+  } catch (error) {
+    console.error(`Error updating product ${productId} as sold:`, error);
+  }
+}
+
 
     res.status(200).send("Order processed and products updated as sold.");
   }
