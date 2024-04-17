@@ -168,7 +168,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                     _i = 0, _c = order.products;
                     _d.label = 3;
                 case 3:
-                    if (!(_i < _c.length)) return [3 /*break*/, 7];
+                    if (!(_i < _c.length)) return [3 /*break*/, 8];
                     productId = _c[_i];
                     return [4 /*yield*/, payload.find({
                             collection: "products",
@@ -178,10 +178,10 @@ exports.paymentRouter = (0, trpc_1.router)({
                     products = (_d.sent()).docs;
                     if (!products.length) {
                         console.error("Product not found during update:", productId);
-                        return [3 /*break*/, 6];
+                        return [3 /*break*/, 7];
                     }
                     productToUpdate = products[0];
-                    productToUpdate.isSold = true;
+                    if (!productToUpdate) return [3 /*break*/, 6];
                     return [4 /*yield*/, payload.update({
                             collection: "products",
                             data: { isSold: true },
@@ -190,15 +190,14 @@ exports.paymentRouter = (0, trpc_1.router)({
                 case 5:
                     _d.sent();
                     console.log("Product ".concat(productId, " marked as sold."));
-                    _d.label = 6;
+                    return [3 /*break*/, 7];
                 case 6:
+                    console.error("Product not found during update:", productId);
+                    _d.label = 7;
+                case 7:
                     _i++;
                     return [3 /*break*/, 3];
-                case 7: return [3 /*break*/, 9];
-                case 8:
-                    console.log("Order ".concat(orderId, " is not yet paid."));
-                    _d.label = 9;
-                case 9: return [2 /*return*/, { isPaid: order._isPaid }];
+                case 8: return [2 /*return*/, { isPaid: order._isPaid }];
             }
         });
     }); }),
