@@ -103,52 +103,52 @@ export const paymentRouter = router({
     }),
 
   pollOrderStatus: privateProcedure
-    .input(z.object({ orderId: z.string() }))
-    .query(async ({ input }) => {
-      const { orderId } = input;
-      console.log("Polling status for order:", orderId);
+  .input(z.object({ orderId: z.string() }))
+  .query(async ({ input }) => {
+    const { orderId } = input;
+    console.log("Polling status for order:", orderId);
 
-      const payload = await getPayloadClient();
-      const { docs: orders } = await payload.find({
-        collection: "orders",
-        where: { id: { equals: orderId } },
-      });
+    const payload = await getPayloadClient();
+    const { docs: orders } = await payload.find({
+      collection: "orders",
+      where: { id: { equals: orderId } },
+    });
 
-      if (!orders.length) {
-        console.error("Order not found:", orderId);
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
+    if (!orders.length) {
+      console.error("Order not found:", orderId);
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
 
-      const [order] = orders;
-      console.log("Order found:", order.id, "Paid status:", order._isPaid);
+    const [order] = orders;
+    console.log("Order found:", order.id, "Paid status:", order._isPaid);
 
-      if (order._isPaid) {
-        console.log("Order is paid, marking products as sold...");
-        for (const productId of order.products) {
-          const { docs: products } = await payload.find({
-            collection: "products",
-            where: { id: { equals: productId } },
-          });
+    if (order._isPaid) {
+      console.log("Order is paid, marking products as sold...");
+      for (const productId of order.products) {
+        const { docs: products } = await payload.find({
+          collection: "products",
+          where: { id: { equals: productId } },
+        });
 
-          if (!products.length) {
-            console.error("Product not found during update:", productId);
-            continue;
-          }
-
-          const productToUpdate = products[0] as Product & { isSold: boolean };
-          productToUpdate.isSold = true
-          await payload.update({
-            collection: "products",
-            data: { isSold: true },
-            where: { id: { equals: productId } },
-          });
-
-          console.log(`Product ${productId} marked as sold.`);
+        if (!products.length) {
+          console.error("Product not found during update:", productId);
+          continue;
         }
-      } else {
-        console.log(`Order ${orderId} is not yet paid.`);
-      }
 
-      return { isPaid: order._isPaid };
-    }),
+        const productToUpdate = products[0] as Product & { isSold: boolean };
+        productToUpdate.isSold = true
+        await payload.update({
+          collection: "products",
+          data: { isSold: true },
+          where: { id: { equals: productId } },
+        });
+
+        console.log(`Product ${productId} marked as sold.`);
+      }
+    } else {
+      console.log(`Order ${orderId} is not yet paid.`);
+    }
+
+    return { isPaid: order._isPaid };
+  }),
 });
