@@ -1,10 +1,33 @@
-import { Access, CollectionConfig } from "payload/types";
+import { Access, CollectionConfig, Document } from "payload/types";
+import { getPayloadClient } from "../get-payload";
 
 const yourOwn: Access = ({ req: { user } }) => {
   if (user?.role === "admin") return true;
   return {
     user: user?.id,
   };
+};
+
+const updateProductAsSold = async ({ operation, doc, previousDoc }: { operation: string, doc: Document, previousDoc: Document }) => {
+  if (operation === "update" && doc.data._isPaid && !previousDoc.data._isPaid) {
+    const payload = await getPayloadClient();
+
+    const productsToUpdate = doc.data.products || [];
+    await Promise.all(
+      productsToUpdate.map(async (productId: string) => {
+        try {
+          await payload.update({
+            collection: 'products',
+            id: productId,
+            data: { isSold: true },
+          });
+          console.log(`Product ${productId} marked as sold.`);
+        } catch (error) {
+          console.error(`Failed to mark product ${productId} as sold:`, error);
+        }
+      })
+    );
+  }
 };
 
 export const Orders: CollectionConfig = {
@@ -50,4 +73,7 @@ export const Orders: CollectionConfig = {
       hasMany: true,
     },
   ],
+  hooks: {
+    afterChange: [updateProductAsSold]
+  }
 };
