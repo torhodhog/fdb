@@ -142,7 +142,7 @@ export interface ProductFile {
  */
 export interface Order {
   id: string;
-  _isPaid: boolean;
+  _isPaid?: boolean | null;
   user: string | User;
   products: (string | Product)[];
   updatedAt: string;

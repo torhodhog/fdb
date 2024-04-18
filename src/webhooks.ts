@@ -4,11 +4,6 @@ import { WebhookRequest } from "./server";
 
 import type Stripe from "stripe";
 import { getPayloadClient } from "./get-payload";
-import { Product } from "./payload-types";
-import { Resend } from "resend";
-import { ReceiptEmailHtml } from "./components/emails/ReceiptEmail";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const stripeWebhookHandler = async (
   req: express.Request,
@@ -18,83 +13,84 @@ export const stripeWebhookHandler = async (
   const body = webhookRequest.rawBody;
   const signature = req.headers["stripe-signature"] || "";
 
-  let event;
   try {
-    event = stripe.webhooks.constructEvent(
+    const event = stripe.webhooks.constructEvent(
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET || ""
     );
+    console.log("Stripe event constructed successfully:", event.id);
 
-    // Log the full details of the Stripe event right after verifying it
-    console.log("Received Stripe event:", JSON.stringify(event, null, 2)); // Provides a detailed printout of the event data
-
+    if (event.type === "checkout.session.completed") {
+      console.log("Handling checkout.session.completed event");
+      handleCheckoutSessionCompleted(event, res);
+      return;
+    } else {
+      console.log("Received non-handled event type:", event.type);
+    }
   } catch (err) {
-    return res
-      .status(400)
-      .send(
-        `Webhook Error: ${err instanceof Error ? err.message : "Unknown Error"}`
-      );
+    console.error("Error processing webhook event:", err);
+    return res.status(400).send(`Webhook Error: ${(err as Error).message}`);
   }
 
+  return res.status(200).send("Event received, no action required.");
+};
+
+
+async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.Response) {
   const session = event.data.object as Stripe.Checkout.Session;
 
-  if (!session?.metadata?.userId || !session?.metadata?.orderId) {
-    return res.status(400).send(`Webhook Error: No user present in metadata`);
+  if (!session.metadata?.orderId) {
+    console.error("Missing orderId in session metadata", session.id);
+    return res.status(400).send("Webhook Error: Missing orderId in metadata");
   }
-  console.log("Webhook event type:", event.type);
 
-  if (event.type === "checkout.session.completed") {
-    const payload = await getPayloadClient();
-
+  const payload = await getPayloadClient();
+  try {
     const { docs: orders } = await payload.find({
       collection: "orders",
-      where: {
-        id: {
-          equals: session.metadata.orderId,
-        },
-      },
+      where: { id: { equals: session.metadata.orderId } },
       depth: 2,
     });
 
-    const [order] = orders;
-
-    if (!order) {
-      console.error("Order not found");
-      return res.status(404).json({ error: "No such order exists." });
+    if (!orders || orders.length === 0) {
+      console.error("No order found with ID:", session.metadata.orderId);
+      return res.status(404).send("Order not found");
     }
 
-    // Update payment status if not already paid
-    if (!order._isPaid) {
-        console.log("Attempting to update order payment status for order ID:", order.id);
-        const updateResult = await payload.update({
-            collection: "orders",
-            id: order.id,
-            data: { _isPaid: true },
-        });
-        console.log("Order payment status update result:", updateResult);
-    }
+    const order = orders[0];
+if (!order) {
+  console.error("No order found with ID:", session.metadata.orderId);
+  return res.status(404).send("Order not found");
+}
 
-    // Mark all products in the order as sold
-for (const product of order.products) {
-  const productId = typeof product === "object" ? product.id : product;
-
+let retries = 3;
+while (retries > 0) {
   try {
-    console.log(`Attempting to mark product ${productId} as sold.`);
-    const updatedProduct = await payload.update({
-      collection: "products",
-      id: productId,
-      data: { isSold: true },
+    // Add a delay before each update attempt
+    await new Promise(resolve => setTimeout(resolve, 10000));
+    
+    const updateResult = await payload.update({
+      collection: "orders",
+      id: order.id,
+      data: { _isPaid: true },
     });
-    console.log(`Successfully updated product ${productId} as sold:`, updatedProduct);
+    console.log(`_isPaid status updated for order ${order.id}:`, updateResult);
+    break;
   } catch (error) {
-    console.error(`Error updating product ${productId} as sold:`, error);
+    if (error instanceof Error && 'code' in error && error['code'] === 112) { // WriteConflict error code
+      console.error("Write conflict error, retrying...", error);
+      retries--;
+      continue;
+    }
+    console.error("Error updating order:", error);
+    return res.status(500).send("Internal server error during webhook processing.");
   }
 }
 
-
-    res.status(200).send("Order processed and products updated as sold.");
-  }
-
-  return res.status(200).send();
-};
+return res.status(200).send("Checkout session completed successfully processed.");
+} catch (error) {
+  console.error("Error processing checkout.session.completed event:", error);
+  return res.status(500).send("Internal server error during webhook processing.");
+}
+}

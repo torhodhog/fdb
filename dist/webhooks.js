@@ -39,94 +39,104 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.stripeWebhookHandler = void 0;
 var stripe_1 = require("./lib/stripe");
 var get_payload_1 = require("./get-payload");
-var resend_1 = require("resend");
-var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event, session, payload, orders, order, updateResult, _i, _a, product, productId, updatedProduct, error_1;
-    var _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                webhookRequest = req;
-                body = webhookRequest.rawBody;
-                signature = req.headers["stripe-signature"] || "";
-                try {
-                    event = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
-                    // Log the full details of the Stripe event right after verifying it
-                    console.log("Received Stripe event:", JSON.stringify(event, null, 2)); // Provides a detailed printout of the event data
-                }
-                catch (err) {
-                    return [2 /*return*/, res
-                            .status(400)
-                            .send("Webhook Error: ".concat(err instanceof Error ? err.message : "Unknown Error"))];
-                }
-                session = event.data.object;
-                if (!((_b = session === null || session === void 0 ? void 0 : session.metadata) === null || _b === void 0 ? void 0 : _b.userId) || !((_c = session === null || session === void 0 ? void 0 : session.metadata) === null || _c === void 0 ? void 0 : _c.orderId)) {
-                    return [2 /*return*/, res.status(400).send("Webhook Error: No user present in metadata")];
-                }
-                console.log("Webhook event type:", event.type);
-                if (!(event.type === "checkout.session.completed")) return [3 /*break*/, 11];
-                return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
-            case 1:
-                payload = _d.sent();
-                return [4 /*yield*/, payload.find({
-                        collection: "orders",
-                        where: {
-                            id: {
-                                equals: session.metadata.orderId,
-                            },
-                        },
-                        depth: 2,
-                    })];
-            case 2:
-                orders = (_d.sent()).docs;
-                order = orders[0];
-                if (!order) {
-                    console.error("Order not found");
-                    return [2 /*return*/, res.status(404).json({ error: "No such order exists." })];
-                }
-                if (!!order._isPaid) return [3 /*break*/, 4];
-                console.log("Attempting to update order payment status for order ID:", order.id);
-                return [4 /*yield*/, payload.update({
-                        collection: "orders",
-                        id: order.id,
-                        data: { _isPaid: true },
-                    })];
-            case 3:
-                updateResult = _d.sent();
-                console.log("Order payment status update result:", updateResult);
-                _d.label = 4;
-            case 4:
-                _i = 0, _a = order.products;
-                _d.label = 5;
-            case 5:
-                if (!(_i < _a.length)) return [3 /*break*/, 10];
-                product = _a[_i];
-                productId = typeof product === "object" ? product.id : product;
-                _d.label = 6;
-            case 6:
-                _d.trys.push([6, 8, , 9]);
-                return [4 /*yield*/, payload.update({
-                        collection: "products",
-                        id: productId,
-                        data: { isSold: true },
-                    })];
-            case 7:
-                updatedProduct = _d.sent();
-                console.log("Updated product as sold:", updatedProduct);
-                return [3 /*break*/, 9];
-            case 8:
-                error_1 = _d.sent();
-                console.error("Error updating product as sold:", error_1);
-                return [3 /*break*/, 9];
-            case 9:
-                _i++;
-                return [3 /*break*/, 5];
-            case 10:
-                res.status(200).send("Order processed and products updated as sold.");
-                _d.label = 11;
-            case 11: return [2 /*return*/, res.status(200).send()];
+    var webhookRequest, body, signature, event_1;
+    return __generator(this, function (_a) {
+        webhookRequest = req;
+        body = webhookRequest.rawBody;
+        signature = req.headers["stripe-signature"] || "";
+        try {
+            event_1 = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
+            console.log("Stripe event constructed successfully:", event_1.id);
+            if (event_1.type === "checkout.session.completed") {
+                console.log("Handling checkout.session.completed event");
+                handleCheckoutSessionCompleted(event_1, res);
+                return [2 /*return*/];
+            }
+            else {
+                console.log("Received non-handled event type:", event_1.type);
+            }
         }
+        catch (err) {
+            console.error("Error processing webhook event:", err);
+            return [2 /*return*/, res.status(400).send("Webhook Error: ".concat(err.message))];
+        }
+        return [2 /*return*/, res.status(200).send("Event received, no action required.")];
     });
 }); };
 exports.stripeWebhookHandler = stripeWebhookHandler;
+function handleCheckoutSessionCompleted(event, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var session, payload, orders, order, retries, updateResult, error_1, error_2;
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    session = event.data.object;
+                    if (!((_a = session.metadata) === null || _a === void 0 ? void 0 : _a.orderId)) {
+                        console.error("Missing orderId in session metadata", session.id);
+                        return [2 /*return*/, res.status(400).send("Webhook Error: Missing orderId in metadata")];
+                    }
+                    return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+                case 1:
+                    payload = _b.sent();
+                    _b.label = 2;
+                case 2:
+                    _b.trys.push([2, 11, , 12]);
+                    return [4 /*yield*/, payload.find({
+                            collection: "orders",
+                            where: { id: { equals: session.metadata.orderId } },
+                            depth: 2,
+                        })];
+                case 3:
+                    orders = (_b.sent()).docs;
+                    if (!orders || orders.length === 0) {
+                        console.error("No order found with ID:", session.metadata.orderId);
+                        return [2 /*return*/, res.status(404).send("Order not found")];
+                    }
+                    order = orders[0];
+                    if (!order) {
+                        console.error("No order found with ID:", session.metadata.orderId);
+                        return [2 /*return*/, res.status(404).send("Order not found")];
+                    }
+                    retries = 3;
+                    _b.label = 4;
+                case 4:
+                    if (!(retries > 0)) return [3 /*break*/, 10];
+                    _b.label = 5;
+                case 5:
+                    _b.trys.push([5, 8, , 9]);
+                    // Add a delay before each update attempt
+                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 10000); })];
+                case 6:
+                    // Add a delay before each update attempt
+                    _b.sent();
+                    return [4 /*yield*/, payload.update({
+                            collection: "orders",
+                            id: order.id,
+                            data: { _isPaid: true },
+                        })];
+                case 7:
+                    updateResult = _b.sent();
+                    console.log("_isPaid status updated for order ".concat(order.id, ":"), updateResult);
+                    return [3 /*break*/, 10];
+                case 8:
+                    error_1 = _b.sent();
+                    if (error_1 instanceof Error && 'code' in error_1 && error_1['code'] === 112) { // WriteConflict error code
+                        console.error("Write conflict error, retrying...", error_1);
+                        retries--;
+                        return [3 /*break*/, 4];
+                    }
+                    console.error("Error updating order:", error_1);
+                    return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
+                case 9: return [3 /*break*/, 4];
+                case 10: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
+                case 11:
+                    error_2 = _b.sent();
+                    console.error("Error processing checkout.session.completed event:", error_2);
+                    return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
+                case 12: return [2 /*return*/];
+            }
+        });
+    });
+}

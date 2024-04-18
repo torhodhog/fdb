@@ -60,7 +60,6 @@ export const paymentRouter = router({
       const order = await payload.create({
         collection: "orders",
         data: {
-          _isPaid: false,
           products: filteredProducts.map((prod) => prod.id),
           user: user.id,
         },
@@ -108,58 +107,25 @@ export const paymentRouter = router({
       }
     }),
 
-    pollOrderStatus: privateProcedure
-.input(z.object({ orderId: z.string() }))
-.query(async ({ input }) => {
-  const { orderId } = input;
-  console.log("Polling status for order:", orderId);
+  pollOrderStatus: privateProcedure
+    .input(z.object({ orderId: z.string() }))
+    .query(async ({ input }) => {
+      const { orderId } = input;
+      console.log("Polling status for order:", orderId);
 
-  const payload = await getPayloadClient();
-  const { docs: orders } = await payload.find({
-    collection: "orders",
-    where: { id: { equals: orderId } },
-  });
-
-  if (!orders.length) {
-    console.error("Order not found:", orderId);
-    throw new TRPCError({ code: "NOT_FOUND" });
-  }
-
-  const [order] = orders;
-  console.log("Order found:", order.id, "Paid status:", order._isPaid);
-
-  if (order._isPaid) {
-  console.log("Order is paid, marking products as sold...");
-  for (const productId of order.products as string[]) {
-    try {
-      const { docs: productDocs } = await payload.find({
-        collection: "products",
-        where: { id: { equals: productId } },
+      const payload = await getPayloadClient();
+      const { docs: orders } = await payload.find({
+        collection: "orders",
+        where: { id: { equals: orderId } },
       });
 
-      if (!productDocs.length) {
-        console.error("Product not found:", productId);
-        continue;
+      if (!orders.length) {
+        console.error("Order not found:", orderId);
+        throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      const product = productDocs[0];
+      const [order] = orders;
 
-      if (!product.isSold) {
-        await payload.update({
-          collection: "products",
-          id: productId,
-          data: { isSold: true },
-        });
-        console.log(`Product ${productId} marked as sold.`);
-      } else {
-        console.log(`Product ${productId} already marked as sold.`);
-      }
-    } catch (error) {
-      console.error("Error updating product:", productId, error);
-    }
-  }
-}
-
-  return { isPaid: order._isPaid };
-}),
+      return { isPaid: order._isPaid };
+    }),
 });

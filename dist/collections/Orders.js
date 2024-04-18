@@ -45,7 +45,7 @@ exports.Orders = {
             admin: {
                 hidden: true,
             },
-            required: true,
+            required: false,
         },
         {
             name: "user",

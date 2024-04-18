@@ -31,7 +31,7 @@ export const Orders: CollectionConfig = {
       admin: {
         hidden: true,
       },
-      required: true,
+      required: false,
     },
     {
       name: "user",
