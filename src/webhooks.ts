@@ -36,7 +36,6 @@ export const stripeWebhookHandler = async (
   return res.status(200).send("Event received, no action required.");
 };
 
-
 async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.Response) {
   const session = event.data.object as Stripe.Checkout.Session;
 
@@ -65,10 +64,11 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     }
 
     let retries = 3;
+    let delay = 1000;  // Start delay at 1 second
     while (retries > 0) {
       try {
         // Add a delay before each update attempt
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, delay));
 
         const updateResult = await payload.update({
           collection: "orders",
@@ -92,13 +92,9 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
 
         break;  // Exit the loop if successful
       } catch (error) {
-        if (error instanceof Error && 'code' in error && (error as any).code === 112) { // WriteConflict error code
-          console.error("Write conflict error, retrying...", error);
-          retries--;
-          continue;
-        }
-        console.error("Error updating order:", error);
-        return res.status(500).send("Internal server error during webhook processing.");
+        console.error("Write conflict error, retrying...", error);
+        retries--;
+        delay *= 2;  // Double the delay with each retry
       }
     }
 

@@ -67,7 +67,7 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
 exports.stripeWebhookHandler = stripeWebhookHandler;
 function handleCheckoutSessionCompleted(event, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, payload, orders, order, retries, updateResult, error_1, error_2;
+        var session, payload, orders, order, retries, delay_1, updateResult, error_1, error_2;
         var _this = this;
         var _a;
         return __generator(this, function (_b) {
@@ -101,6 +101,7 @@ function handleCheckoutSessionCompleted(event, res) {
                         return [2 /*return*/, res.status(404).send("Order not found")];
                     }
                     retries = 3;
+                    delay_1 = 1000;
                     _b.label = 4;
                 case 4:
                     if (!(retries > 0)) return [3 /*break*/, 12];
@@ -108,7 +109,7 @@ function handleCheckoutSessionCompleted(event, res) {
                 case 5:
                     _b.trys.push([5, 10, , 11]);
                     // Add a delay before each update attempt
-                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 1000); })];
+                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, delay_1); })];
                 case 6:
                     // Add a delay before each update attempt
                     _b.sent();
@@ -144,13 +145,10 @@ function handleCheckoutSessionCompleted(event, res) {
                 case 9: return [3 /*break*/, 12]; // Exit the loop if successful
                 case 10:
                     error_1 = _b.sent();
-                    if (error_1 instanceof Error && 'code' in error_1 && error_1.code === 112) { // WriteConflict error code
-                        console.error("Write conflict error, retrying...", error_1);
-                        retries--;
-                        return [3 /*break*/, 4];
-                    }
-                    console.error("Error updating order:", error_1);
-                    return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
+                    console.error("Write conflict error, retrying...", error_1);
+                    retries--;
+                    delay_1 *= 2; // Double the delay with each retry
+                    return [3 /*break*/, 11];
                 case 11: return [3 /*break*/, 4];
                 case 12: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
                 case 13:
