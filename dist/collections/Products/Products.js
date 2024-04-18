@@ -125,11 +125,16 @@ exports.Products = {
         afterChange: [syncUser],
         beforeChange: [
             function (args) { return __awaiter(void 0, void 0, void 0, function () {
-                var data, createdProduct, price, updated, data, updatedProduct, newPrice, updated;
+                var user, data, createdProduct, price, updated, data, updatedProduct, newPrice, updated;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             console.log('Anonymous function in beforeChange hooks called');
+                            user = args.req.user;
+                            if (!user) {
+                                console.error('req.user is undefined');
+                                return [2 /*return*/, args.data];
+                            }
                             if (!(args.operation === "create")) return [3 /*break*/, 3];
                             data = args.data;
                             return [4 /*yield*/, stripe_1.stripe.products.create({
@@ -137,6 +142,7 @@ exports.Products = {
                                 })];
                         case 1:
                             createdProduct = _a.sent();
+                            console.log('Created product:', createdProduct);
                             return [4 /*yield*/, stripe_1.stripe.prices.create({
                                     currency: "nok",
                                     unit_amount: Math.round(data.price * 100), // Convert price to øre
@@ -144,7 +150,7 @@ exports.Products = {
                                 })];
                         case 2:
                             price = _a.sent();
-                            updated = __assign(__assign({}, data), { stripeId: createdProduct.id, priceId: price.id });
+                            updated = __assign(__assign({}, data), { stripeId: createdProduct.id, priceId: price.id, user: user.id });
                             return [2 /*return*/, updated];
                         case 3:
                             if (!(args.operation === "update")) return [3 /*break*/, 6];
@@ -161,7 +167,7 @@ exports.Products = {
                                 })];
                         case 5:
                             newPrice = _a.sent();
-                            updated = __assign(__assign({}, data), { stripeId: updatedProduct.id, priceId: newPrice.id });
+                            updated = __assign(__assign({}, data), { stripeId: updatedProduct.id, priceId: newPrice.id, user: user.id });
                             return [2 /*return*/, updated];
                         case 6: return [2 /*return*/];
                     }

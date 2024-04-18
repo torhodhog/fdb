@@ -73,12 +73,19 @@ export const Products: CollectionConfig = {
     async (args) => {
       console.log('Anonymous function in beforeChange hooks called');
 
+      const user = args.req.user;
+      if (!user) {
+        console.error('req.user is undefined');
+        return args.data;
+      }
+
       if (args.operation === "create") {
         const data = args.data as Product;
 
         const createdProduct = await stripe.products.create({
           name: data.name,
         });
+        console.log('Created product:', createdProduct)
 
         const price = await stripe.prices.create({
           currency: "nok",
@@ -90,6 +97,7 @@ export const Products: CollectionConfig = {
           ...data,
           stripeId: createdProduct.id,
           priceId: price.id, // Use the ID from the created price
+          user: user.id, // Add the user ID
         };
 
         return updated;
@@ -110,6 +118,7 @@ export const Products: CollectionConfig = {
           ...data,
           stripeId: updatedProduct.id,
           priceId: newPrice.id, // Use the ID from the new price
+          user: user.id, // Add the user ID
         };
 
         return updated;
