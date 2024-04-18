@@ -40,122 +40,96 @@ exports.stripeWebhookHandler = void 0;
 var stripe_1 = require("./lib/stripe");
 var get_payload_1 = require("./get-payload");
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event_1;
+    var webhookRequest, body, signature, event_1, payload, err_1;
     return __generator(this, function (_a) {
-        webhookRequest = req;
-        body = webhookRequest.rawBody;
-        signature = req.headers["stripe-signature"] || "";
-        try {
-            event_1 = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
-            console.log("Stripe event constructed successfully:", event_1.id);
-            if (event_1.type === "checkout.session.completed") {
+        switch (_a.label) {
+            case 0:
+                webhookRequest = req;
+                body = webhookRequest.rawBody;
+                signature = req.headers["stripe-signature"] || "";
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 6, , 7]);
+                event_1 = stripe_1.stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "");
+                console.log("Stripe event constructed successfully:", event_1.id);
+                return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+            case 2:
+                payload = _a.sent();
+                if (!(event_1.type === "checkout.session.completed")) return [3 /*break*/, 4];
                 console.log("Handling checkout.session.completed event");
-                handleCheckoutSessionCompleted(event_1, res);
+                return [4 /*yield*/, handleCheckoutSessionCompleted(event_1, res, req, payload)];
+            case 3:
+                _a.sent(); // Correctly pass the initialized payload
                 return [2 /*return*/];
-            }
-            else {
+            case 4:
                 console.log("Received non-handled event type:", event_1.type);
-            }
+                _a.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
+                err_1 = _a.sent();
+                console.error("Error processing webhook event:", err_1);
+                return [2 /*return*/, res.status(400).send("Webhook Error: ".concat(err_1.message))];
+            case 7: return [2 /*return*/, res.status(200).send("Event received, no action required.")];
         }
-        catch (err) {
-            console.error("Error processing webhook event:", err);
-            return [2 /*return*/, res.status(400).send("Webhook Error: ".concat(err.message))];
-        }
-        return [2 /*return*/, res.status(200).send("Event received, no action required.")];
     });
 }); };
 exports.stripeWebhookHandler = stripeWebhookHandler;
-function handleCheckoutSessionCompleted(event, res) {
+function handleCheckoutSessionCompleted(event, res, req, payload) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, payload, orders, order, retries, delay_1, updateResult, error_1, error_2;
-        var _this = this;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var session, orders, order, _i, _a, product, productId, error_1;
+        var _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     session = event.data.object;
-                    if (!((_a = session.metadata) === null || _a === void 0 ? void 0 : _a.orderId)) {
+                    if (!((_b = session.metadata) === null || _b === void 0 ? void 0 : _b.orderId)) {
                         console.error("Missing orderId in session metadata", session.id);
                         return [2 /*return*/, res.status(400).send("Webhook Error: Missing orderId in metadata")];
                     }
-                    return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+                    _c.label = 1;
                 case 1:
-                    payload = _b.sent();
-                    _b.label = 2;
-                case 2:
-                    _b.trys.push([2, 13, , 14]);
+                    _c.trys.push([1, 8, , 9]);
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
                             where: { id: { equals: session.metadata.orderId } },
-                            depth: 2,
                         })];
-                case 3:
-                    orders = (_b.sent()).docs;
+                case 2:
+                    orders = (_c.sent()).docs;
                     if (!orders || orders.length === 0) {
                         console.error("No order found with ID:", session.metadata.orderId);
                         return [2 /*return*/, res.status(404).send("Order not found")];
                     }
                     order = orders[0];
-                    if (!order) {
-                        console.error("No order found with ID:", session.metadata.orderId);
-                        return [2 /*return*/, res.status(404).send("Order not found")];
-                    }
-                    retries = 3;
-                    delay_1 = 1000;
-                    _b.label = 4;
-                case 4:
-                    if (!(retries > 0)) return [3 /*break*/, 12];
-                    _b.label = 5;
-                case 5:
-                    _b.trys.push([5, 10, , 11]);
-                    // Add a delay before each update attempt
-                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, delay_1); })];
-                case 6:
-                    // Add a delay before each update attempt
-                    _b.sent();
                     return [4 /*yield*/, payload.update({
                             collection: "orders",
                             id: order.id,
                             data: { _isPaid: true },
                         })];
-                case 7:
-                    updateResult = _b.sent();
-                    console.log("_isPaid status updated for order ".concat(order.id, ":"), updateResult);
-                    if (!(order.products && order.products.length > 0)) return [3 /*break*/, 9];
-                    return [4 /*yield*/, Promise.all(order.products.map(function (product) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!(typeof product === 'object' && product.id)) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, payload.update({
-                                                collection: "products",
-                                                id: product.id,
-                                                data: { isSold: true },
-                                            })];
-                                    case 1:
-                                        _a.sent();
-                                        _a.label = 2;
-                                    case 2: return [2 /*return*/];
-                                }
-                            });
-                        }); }))];
+                case 3:
+                    _c.sent();
+                    _i = 0, _a = order.products;
+                    _c.label = 4;
+                case 4:
+                    if (!(_i < _a.length)) return [3 /*break*/, 7];
+                    product = _a[_i];
+                    productId = typeof product === 'string' ? product : product.id;
+                    return [4 /*yield*/, payload.update({
+                            collection: "products",
+                            id: productId,
+                            data: { isSold: true },
+                        })];
+                case 5:
+                    _c.sent();
+                    _c.label = 6;
+                case 6:
+                    _i++;
+                    return [3 /*break*/, 4];
+                case 7: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
                 case 8:
-                    _b.sent();
-                    _b.label = 9;
-                case 9: return [3 /*break*/, 12]; // Exit the loop if successful
-                case 10:
-                    error_1 = _b.sent();
-                    console.error("Write conflict error, retrying...", error_1);
-                    retries--;
-                    delay_1 *= 2; // Double the delay with each retry
-                    return [3 /*break*/, 11];
-                case 11: return [3 /*break*/, 4];
-                case 12: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
-                case 13:
-                    error_2 = _b.sent();
-                    console.error("Error processing checkout.session.completed event:", error_2);
+                    error_1 = _c.sent();
+                    console.error("Error processing checkout.session.completed event:", error_1);
                     return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
-                case 14: return [2 /*return*/];
+                case 9: return [2 /*return*/];
             }
         });
     });
