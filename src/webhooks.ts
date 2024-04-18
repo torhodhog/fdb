@@ -59,38 +59,52 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     }
 
     const order = orders[0];
-if (!order) {
-  console.error("No order found with ID:", session.metadata.orderId);
-  return res.status(404).send("Order not found");
-}
-
-let retries = 3;
-while (retries > 0) {
-  try {
-    // Add a delay before each update attempt
-    await new Promise(resolve => setTimeout(resolve, 10000));
-    
-    const updateResult = await payload.update({
-      collection: "orders",
-      id: order.id,
-      data: { _isPaid: true },
-    });
-    console.log(`_isPaid status updated for order ${order.id}:`, updateResult);
-    break;
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error['code'] === 112) { // WriteConflict error code
-      console.error("Write conflict error, retrying...", error);
-      retries--;
-      continue;
+    if (!order) {
+      console.error("No order found with ID:", session.metadata.orderId);
+      return res.status(404).send("Order not found");
     }
-    console.error("Error updating order:", error);
+
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        // Add a delay before each update attempt
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const updateResult = await payload.update({
+          collection: "orders",
+          id: order.id,
+          data: { _isPaid: true },
+        });
+        console.log(`_isPaid status updated for order ${order.id}:`, updateResult);
+
+        // After updating order as paid, mark products as sold
+        if (order.products && order.products.length > 0) {
+          await Promise.all(order.products.map(async (product) => {
+            if (typeof product === 'object' && product.id) {
+              await payload.update({
+                collection: "products",
+                id: product.id,
+                data: { isSold: true },
+              });
+            }
+          }));
+        }
+
+        break;  // Exit the loop if successful
+      } catch (error) {
+        if (error instanceof Error && 'code' in error && (error as any).code === 112) { // WriteConflict error code
+          console.error("Write conflict error, retrying...", error);
+          retries--;
+          continue;
+        }
+        console.error("Error updating order:", error);
+        return res.status(500).send("Internal server error during webhook processing.");
+      }
+    }
+
+    return res.status(200).send("Checkout session completed successfully processed.");
+  } catch (error) {
+    console.error("Error processing checkout.session.completed event:", error);
     return res.status(500).send("Internal server error during webhook processing.");
   }
-}
-
-return res.status(200).send("Checkout session completed successfully processed.");
-} catch (error) {
-  console.error("Error processing checkout.session.completed event:", error);
-  return res.status(500).send("Internal server error during webhook processing.");
-}
 }
