@@ -76,7 +76,7 @@ export const paymentRouter = router({
         quantity: 1,
       }));
 
-      const deliveryFee = 87;
+      const deliveryFee = 1;
       line_items.push({
         price_data: {
           currency: "nok",
