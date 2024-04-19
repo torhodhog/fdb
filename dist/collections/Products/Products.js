@@ -46,64 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Products = void 0;
 var config_1 = require("../../config");
 var stripe_1 = require("../../lib/stripe");
-var addUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-    var user;
-    var req = _b.req, data = _b.data;
-    return __generator(this, function (_c) {
-        console.log('addUser function called');
-        user = req.user;
-        if (!user) {
-            console.error('req.user is undefined');
-            return [2 /*return*/, data];
-        }
-        return [2 /*return*/, __assign(__assign({}, data), { user: user.id })];
-    });
-}); };
-var syncUser = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-    var fullUser, products, allIDs_1, createdProductIDs, dataToUpdate;
-    var req = _b.req, doc = _b.doc;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
-            case 0: return [4 /*yield*/, req.payload.findByID({
-                    collection: "users",
-                    id: req.user.id,
-                })];
-            case 1:
-                fullUser = _c.sent();
-                if (!(fullUser && typeof fullUser === "object")) return [3 /*break*/, 3];
-                products = fullUser.products;
-                allIDs_1 = __spreadArray([], ((products === null || products === void 0 ? void 0 : products.map(function (product) {
-                    return typeof product === "object" ? product.id : product;
-                })) || []), true);
-                createdProductIDs = allIDs_1.filter(function (id, index) { return allIDs_1.indexOf(id) === index; });
-                dataToUpdate = __spreadArray(__spreadArray([], createdProductIDs, true), [doc.id], false);
-                return [4 /*yield*/, req.payload.update({
-                        collection: "users",
-                        id: fullUser.id,
-                        data: {
-                            products: dataToUpdate,
-                        },
-                    })];
-            case 2:
-                _c.sent();
-                _c.label = 3;
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
 var isAdmin = function (_a) {
     var _user = _a.req.user;
     var user = _user;
@@ -111,6 +57,41 @@ var isAdmin = function (_a) {
         return false;
     return user.role === "admin";
 };
+var markAsSold = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var stripeProduct;
+    var req = _b.req, doc = _b.doc;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                // Sjekk om produktet er solgt
+                if (doc.isSold) {
+                    return [2 /*return*/];
+                }
+                // Sjekk om stripeId er definert
+                if (!doc.stripeId) {
+                    console.error('stripeId is undefined');
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, stripe_1.stripe.products.retrieve(doc.stripeId)];
+            case 1:
+                stripeProduct = _c.sent();
+                if (!(stripeProduct.metadata && stripeProduct.metadata.sold === 'true')) return [3 /*break*/, 3];
+                // Oppdater produktet i databasen
+                return [4 /*yield*/, req.payload.update({
+                        collection: 'products',
+                        id: doc.id,
+                        data: {
+                            isSold: true,
+                        },
+                    })];
+            case 2:
+                // Oppdater produktet i databasen
+                _c.sent();
+                _c.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.Products = {
     slug: "products",
     admin: {
@@ -122,7 +103,7 @@ exports.Products = {
         delete: isAdmin,
     },
     hooks: {
-        afterChange: [syncUser],
+        afterChange: [markAsSold],
         beforeChange: [
             function (args) { return __awaiter(void 0, void 0, void 0, function () {
                 var user, data, createdProduct, price, updated, data, updatedProduct, newPrice, updated;
@@ -173,7 +154,6 @@ exports.Products = {
                     }
                 });
             }); },
-            addUser,
         ],
     },
     fields: [
