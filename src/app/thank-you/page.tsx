@@ -78,7 +78,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                     {order.user.email}
                   </span>
                 ) : null}
-                . Ta kontakt med oss hvis du har noen spørsmål.
+                . Ta kontakt med oss hvis du har noen spørsmål rundt ditt kjøp.
               </p>
             ) : (
               <p className="mt-2 text-base text-muted-foreground">
