@@ -47,6 +47,12 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     return res.status(400).send("Webhook Error: Missing orderId in metadata");
   }
 
+  // Check if userId exists in metadata
+  if (!session.metadata?.userId) {
+    console.error("Missing userId in session metadata", session.id);
+    return res.status(400).send("Webhook Error: Missing userId in metadata");
+  }
+
   try {
     const { docs: orders } = await payload.find({
       collection: "orders",
@@ -61,19 +67,19 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     const order = orders[0];
 
     await payload.update({
-      collection: "orders",
-      id: order.id,
-      data: { _isPaid: true },
-    });
+  collection: "orders",
+  id: order.id,
+  data: { _isPaid: true, user: session.metadata.userId },
+});
 
     for (const product of order.products) {
-  const productId = typeof product === 'string' ? product : product.id;
-  await payload.update({
-    collection: "products",
-    id: productId,
-    data: { isSold: true },
-  });
-}
+      const productId = typeof product === 'string' ? product : product.id;
+      await payload.update({
+        collection: "products",
+        id: productId,
+        data: { isSold: true },
+      });
+    }
 
     return res.status(200).send("Checkout session completed successfully processed.");
   } catch (error) {

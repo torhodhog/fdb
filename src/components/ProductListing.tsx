@@ -49,7 +49,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
           <ImageSlider urls={validUrls} />
 
           {product.isSold ? (
-            <p className="font-bold">Dette produktet er dessverre solgt</p>
+            <p className=" text-gray-400 mt-8">Dette produktet er dessverre solgt</p>
           ) : (
             <>
               <h3 className="mt-4 font-medium text-sm">{product.name}</h3>

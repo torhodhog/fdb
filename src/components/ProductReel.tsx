@@ -13,31 +13,42 @@ interface ProductReelProps {
   href?: string;
   query: TQueryValidator;
   size?: string;
+  sortBy?: 'string'
+  sortOrder?: 'asc' | 'desc'; 
+  hideSoldItems?: boolean;
 }
+
 
 const FALLBACK_LIMIT = 4;
 
 const ProductReel = (props: ProductReelProps) => {
-  const { title, subtitle, href, query, size } = props;
+  const { title, subtitle, href, query, size, sortBy = 'createdAt', sortOrder = 'desc', hideSoldItems=false } = props;
 
   const { data: queryResults, isLoading } =
-    trpc.getInfiniteProducts.useInfiniteQuery(
-      {
-        limit: query.limit ?? FALLBACK_LIMIT,
-        query: query,
+  trpc.getInfiniteProducts.useInfiniteQuery(
+    
+    {
+      limit: 20, // Increase this number
+      query: {
+        ...query,
+        sortBy,
+        sortOrder,
       },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextPage,
-        
-      }
-    );
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    }
+  
+  );
+console.log(queryResults)
 
   const products = queryResults?.pages.flatMap((page) => page.items);
 
   const filteredProducts = products?.filter(product => 
-    (size ? product.size === size : true) && // Filtrer basert på størrelse
-    (query.searchTerm ? product.name.includes(query.searchTerm) : true) // Filtrer basert på søkeord
-  );
+    (size ? product.size === size : true) &&
+    (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
+    (!hideSoldItems || !product.isSold) // Update this line
+  ).slice(0,8);
 
   let map: (Product | null)[] = [];
   if (filteredProducts && filteredProducts.length) {

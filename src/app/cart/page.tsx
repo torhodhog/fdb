@@ -11,15 +11,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+
 const Page = () => {
   const { items, removeItem } = useCart();
+
+ let userId;
+if (typeof window !== 'undefined') {
+  userId = localStorage.getItem('userId');
+}
+
 
   const router = useRouter();
 
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
-        if (url) router.push(url);
+        if (url) router.push(url);   
       },
     });
 

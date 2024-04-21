@@ -77,24 +77,29 @@ exports.stripeWebhookHandler = stripeWebhookHandler;
 function handleCheckoutSessionCompleted(event, res, req, payload) {
     return __awaiter(this, void 0, void 0, function () {
         var session, orders, order, _i, _a, product, productId, error_1;
-        var _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
                     session = event.data.object;
                     if (!((_b = session.metadata) === null || _b === void 0 ? void 0 : _b.orderId)) {
                         console.error("Missing orderId in session metadata", session.id);
                         return [2 /*return*/, res.status(400).send("Webhook Error: Missing orderId in metadata")];
                     }
-                    _c.label = 1;
+                    // Check if userId exists in metadata
+                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) {
+                        console.error("Missing userId in session metadata", session.id);
+                        return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
+                    }
+                    _d.label = 1;
                 case 1:
-                    _c.trys.push([1, 8, , 9]);
+                    _d.trys.push([1, 8, , 9]);
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
                             where: { id: { equals: session.metadata.orderId } },
                         })];
                 case 2:
-                    orders = (_c.sent()).docs;
+                    orders = (_d.sent()).docs;
                     if (!orders || orders.length === 0) {
                         console.error("No order found with ID:", session.metadata.orderId);
                         return [2 /*return*/, res.status(404).send("Order not found")];
@@ -103,12 +108,12 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                     return [4 /*yield*/, payload.update({
                             collection: "orders",
                             id: order.id,
-                            data: { _isPaid: true },
+                            data: { _isPaid: true, user: session.metadata.userId },
                         })];
                 case 3:
-                    _c.sent();
+                    _d.sent();
                     _i = 0, _a = order.products;
-                    _c.label = 4;
+                    _d.label = 4;
                 case 4:
                     if (!(_i < _a.length)) return [3 /*break*/, 7];
                     product = _a[_i];
@@ -119,14 +124,14 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                             data: { isSold: true },
                         })];
                 case 5:
-                    _c.sent();
-                    _c.label = 6;
+                    _d.sent();
+                    _d.label = 6;
                 case 6:
                     _i++;
                     return [3 /*break*/, 4];
                 case 7: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
                 case 8:
-                    error_1 = _c.sent();
+                    error_1 = _d.sent();
                     console.error("Error processing checkout.session.completed event:", error_1);
                     return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
                 case 9: return [2 /*return*/];
