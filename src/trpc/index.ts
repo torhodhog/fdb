@@ -1,9 +1,9 @@
-import { z } from 'zod'
-import { authRouter } from './auth-router'
-import { publicProcedure, router } from './trpc'
-import { QueryValidator } from '../lib/validators/query-validator'
-import { getPayloadClient } from '../get-payload'
-import { paymentRouter } from './payment-router'
+import { z } from "zod";
+import { authRouter } from "./auth-router";
+import { publicProcedure, router } from "./trpc";
+import { QueryValidator } from "../lib/validators/query-validator";
+import { getPayloadClient } from "../get-payload";
+import { paymentRouter } from "./payment-router";
 
 export const appRouter = router({
   auth: authRouter,
@@ -14,35 +14,49 @@ export const appRouter = router({
       z.object({
         limit: z.number().min(1).max(100),
         cursor: z.number().nullish(),
-        query: QueryValidator,
+        query: QueryValidator.extend({
+          sortBy: z.string().optional(),
+          sortOrder: z.enum(["asc", "desc"]).optional(),
+        }),
       })
     )
     .query(async ({ input }) => {
       console.log(input); // log the input
 
-      const { cursor } = input;
-      const { sort, limit, searchTerm, liga_system, ...queryOpts } = input.query;
+      const { cursor, query } = input;
+      const {
+        sortBy = "createdAt",
+        sortOrder = "desc",
+        sort,
+        limit,
+        searchTerm,
+        liga_system,
+        ...queryOpts
+      } = query;
 
       const payload = await getPayloadClient();
 
       const parsedQueryOpts: Record<string, any> = {};
 
       Object.entries(queryOpts).forEach(([key, value]) => {
-  if (key === 'onSale') {
-    parsedQueryOpts[key] = { equals: value === 'true' || value === true };
-  } else {
-    parsedQueryOpts[key] = { equals: value };
-  }
-});
+        if (key === "onSale") {
+          parsedQueryOpts[key] = { equals: value === "true" || value === true };
+        } else {
+          parsedQueryOpts[key] = { equals: value };
+        }
+      });
 
       if (searchTerm) {
-        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };
+        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
       }
       if (liga_system) {
         parsedQueryOpts.liga_system = { equals: liga_system };
       }
 
       const page = cursor || 1;
+
+      const sortDirection = sortOrder === "desc" ? "-" : "+";
+      const sortString = `${sortDirection}${sortBy}`;
 
       const {
         docs: items,
@@ -56,7 +70,7 @@ export const appRouter = router({
           },
           ...parsedQueryOpts,
         },
-        sort,
+        sort: sortString,
         depth: 1,
         limit,
         page,

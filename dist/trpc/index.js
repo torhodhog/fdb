@@ -72,49 +72,54 @@ exports.appRouter = (0, trpc_1.router)({
         .input(zod_1.z.object({
         limit: zod_1.z.number().min(1).max(100),
         cursor: zod_1.z.number().nullish(),
-        query: query_validator_1.QueryValidator,
+        query: query_validator_1.QueryValidator.extend({
+            sortBy: zod_1.z.string().optional(),
+            sortOrder: zod_1.z.enum(["asc", "desc"]).optional(),
+        }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, _c, sort, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, _d, items, hasNextPage, nextPage;
+        var cursor, query, _c, sortBy, _d, sortOrder, sort, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, sortDirection, sortString, _e, items, hasNextPage, nextPage;
         var input = _b.input;
-        return __generator(this, function (_e) {
-            switch (_e.label) {
+        return __generator(this, function (_f) {
+            switch (_f.label) {
                 case 0:
                     console.log(input); // log the input
-                    cursor = input.cursor;
-                    _c = input.query, sort = _c.sort, limit = _c.limit, searchTerm = _c.searchTerm, liga_system = _c.liga_system, queryOpts = __rest(_c, ["sort", "limit", "searchTerm", "liga_system"]);
+                    cursor = input.cursor, query = input.query;
+                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, sort = query.sort, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, queryOpts = __rest(query, ["sortBy", "sortOrder", "sort", "limit", "searchTerm", "liga_system"]);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
-                    payload = _e.sent();
+                    payload = _f.sent();
                     parsedQueryOpts = {};
                     Object.entries(queryOpts).forEach(function (_a) {
                         var key = _a[0], value = _a[1];
-                        if (key === 'onSale') {
-                            parsedQueryOpts[key] = { equals: value === 'true' || value === true };
+                        if (key === "onSale") {
+                            parsedQueryOpts[key] = { equals: value === "true" || value === true };
                         }
                         else {
                             parsedQueryOpts[key] = { equals: value };
                         }
                     });
                     if (searchTerm) {
-                        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, 'i') };
+                        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
                     }
                     if (liga_system) {
                         parsedQueryOpts.liga_system = { equals: liga_system };
                     }
                     page = cursor || 1;
+                    sortDirection = sortOrder === "desc" ? "-" : "+";
+                    sortString = "".concat(sortDirection).concat(sortBy);
                     return [4 /*yield*/, payload.find({
                             collection: "products",
                             where: __assign({ approvedForSale: {
                                     equals: "approved",
                                 } }, parsedQueryOpts),
-                            sort: sort,
+                            sort: sortString,
                             depth: 1,
                             limit: limit,
                             page: page,
                         })];
                 case 2:
-                    _d = _e.sent(), items = _d.docs, hasNextPage = _d.hasNextPage, nextPage = _d.nextPage;
+                    _e = _f.sent(), items = _e.docs, hasNextPage = _e.hasNextPage, nextPage = _e.nextPage;
                     return [2 /*return*/, {
                             items: items,
                             nextPage: hasNextPage ? nextPage : null,

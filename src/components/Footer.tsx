@@ -40,12 +40,36 @@ const Footer = () => {
                 <div className="text-center relative mx-auto max-w-sm">
                   <h3 className="font-semibold text-gray-900">Følg oss</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Følg oss på ditt foretrukne sosiale medium.{" "}
+                    via sosiale medier.{" "}
                   </p>
-                  <div className="space-x-4 mt-8 ">
-                  <FontAwesomeIcon className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black" icon={faTiktok} size="2x" />
-                  <FontAwesomeIcon className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black" icon={faFacebook} size="2x" />
-                  <FontAwesomeIcon className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black" icon={faInstagram} size="2x" />
+                  <div className="space-x-8 mt-8 ">
+                    <FontAwesomeIcon
+                      className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black"
+                      icon={faTiktok}
+                      size="2x"
+                    />
+                    <a
+                      href="https://www.facebook.com/fotballdraktbutikken"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black"
+                        icon={faFacebook}
+                        size="2x"
+                      />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/fotballdraktbutikken/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black"
+                        icon={faInstagram}
+                        size="2x"
+                      />
+                    </a>
                   </div>
                 </div>
               </div>

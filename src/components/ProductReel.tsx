@@ -24,11 +24,9 @@ const FALLBACK_LIMIT = 4;
 const ProductReel = (props: ProductReelProps) => {
   const { title, subtitle, href, query, size, sortBy = 'createdAt', sortOrder = 'desc', hideSoldItems=false } = props;
 
-  const { data: queryResults, isLoading } =
-  trpc.getInfiniteProducts.useInfiniteQuery(
-    
+  const { data: queryResults, isLoading, isError, error } = trpc.getInfiniteProducts.useInfiniteQuery(
     {
-      limit: 20, // Increase this number
+      limit: 20,
       query: {
         ...query,
         sortBy,
@@ -38,25 +36,24 @@ const ProductReel = (props: ProductReelProps) => {
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
     }
-  
   );
-console.log(queryResults)
 
-  const products = queryResults?.pages.flatMap((page) => page.items);
+  console.log('Query Results:', queryResults);
+  console.log('Query Error:', error);
 
-  const filteredProducts = products?.filter(product => 
-    (size ? product.size === size : true) &&
-    (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
-    (!hideSoldItems || !product.isSold) // Update this line
-  ).slice(0,8);
-
-  let map: (Product | null)[] = [];
-  if (filteredProducts && filteredProducts.length) {
-    map = filteredProducts;
-  } else if (isLoading) {
-    map = new Array<null>(query.limit ?? FALLBACK_LIMIT).fill(null);
+  if (isError) {
+    return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
+  const products = queryResults?.pages.flatMap((page) => page.items) || [];
+
+  const filteredProducts = products.filter(product => 
+    (size ? product.size === size : true) &&
+    (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
+    (!hideSoldItems || !product.isSold)
+  ).slice(0,8);
+
+  let map = filteredProducts.length ? filteredProducts : new Array<null>(query.limit ?? FALLBACK_LIMIT).fill(null);
   return (
     <section className="py-12">
       <div className="md:flex md:items-center md:justify-between mb-4">
