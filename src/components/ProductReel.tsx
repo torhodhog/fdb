@@ -51,7 +51,7 @@ const ProductReel = (props: ProductReelProps) => {
     (size ? product.size === size : true) &&
     (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
     (!hideSoldItems || !product.isSold)
-  ).slice(0,8);
+  )
 
   let map = filteredProducts.length ? filteredProducts : new Array<null>(query.limit ?? FALLBACK_LIMIT).fill(null);
   return (
