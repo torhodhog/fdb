@@ -38,7 +38,7 @@ export default function Home() {
           href="/products"
           hideSoldItems // Add this line
           query={{
-           
+            limit: 9,
             sortBy: "createdAt",
             sortOrder: "desc",
           }}

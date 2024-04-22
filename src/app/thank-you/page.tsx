@@ -50,7 +50,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
     const price = product.salePrice || product.price;
     return total + price;
   }, 0);
-  const deliveryFee = orderTotal >= 1500 ? 0 : 87;
+  const deliveryFee = orderTotal >= 1500 ? 0 : 1;
 
   return (
     <main className="relative lg:min-h-full">

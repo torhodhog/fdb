@@ -86,14 +86,9 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                         console.error("Missing orderId in session metadata", session.id);
                         return [2 /*return*/, res.status(400).send("Webhook Error: Missing orderId in metadata")];
                     }
-                    // Check if userId exists in metadata
-                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) {
-                        console.error("Missing userId in session metadata", session.id);
-                        return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
-                    }
                     _d.label = 1;
                 case 1:
-                    _d.trys.push([1, 8, , 9]);
+                    _d.trys.push([1, 10, , 11]);
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
                             where: { id: { equals: session.metadata.orderId } },
@@ -105,6 +100,7 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                         return [2 /*return*/, res.status(404).send("Order not found")];
                     }
                     order = orders[0];
+                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) return [3 /*break*/, 8];
                     return [4 /*yield*/, payload.update({
                             collection: "orders",
                             id: order.id,
@@ -131,10 +127,14 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                     return [3 /*break*/, 4];
                 case 7: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
                 case 8:
+                    console.error("Missing userId in session metadata", session.id);
+                    return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
+                case 9: return [3 /*break*/, 11];
+                case 10:
                     error_1 = _d.sent();
                     console.error("Error processing checkout.session.completed event:", error_1);
                     return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
-                case 9: return [2 /*return*/];
+                case 11: return [2 /*return*/];
             }
         });
     });

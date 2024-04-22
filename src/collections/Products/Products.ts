@@ -63,29 +63,31 @@ export const Products: CollectionConfig = {
         }
 
         if (args.operation === "create") {
-          const data = args.data as Product;
+  const data = args.data as Product;
 
-          const createdProduct = await stripe.products.create({
-            name: data.name,
-          });
-          console.log('Created product:', createdProduct)
+  const createdProduct = await stripe.products.create({
+    name: data.name,
+  });
+  console.log('Created product:', createdProduct)
 
-          const price = await stripe.prices.create({
-            currency: "nok",
-            unit_amount: Math.round(data.price * 100), // Convert price to øre
-            product: createdProduct.id,
-          });
+  const price = await stripe.prices.create({
+    currency: "nok",
+    unit_amount: Math.round(data.price * 100), // Convert price to øre
+    product: createdProduct.id,
+  });
 
-          const updated: Product = {
-            ...data,
-            stripeId: createdProduct.id,
-            priceId: price.id, // Use the ID from the created price
-            user: user.id, // Add the user ID
-          };
+  const updated: Partial<Product> = {
+    ...data,
+    stripeId: createdProduct.id,
+    priceId: price.id, // Use the ID from the created price
+    user: user.id, // Add the user ID
+  };
 
-          return updated;
-        } else if (args.operation === "update") {
-          const data = args.data as Product;
+  return updated;
+} else if (args.operation === "update") {
+  const data = args.data as Product;
+
+
 
           const updatedProduct = await stripe.products.update(data.stripeId!, {
             name: data.name,

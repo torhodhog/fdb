@@ -47,30 +47,26 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     return res.status(400).send("Webhook Error: Missing orderId in metadata");
   }
 
-  // Check if userId exists in metadata
-  if (!session.metadata?.userId) {
-    console.error("Missing userId in session metadata", session.id);
-    return res.status(400).send("Webhook Error: Missing userId in metadata");
+ try {
+  const { docs: orders } = await payload.find({
+    collection: "orders",
+    where: { id: { equals: session.metadata.orderId } },
+  });
+
+  if (!orders || orders.length === 0) {
+    console.error("No order found with ID:", session.metadata.orderId);
+    return res.status(404).send("Order not found");
   }
 
-  try {
-    const { docs: orders } = await payload.find({
-      collection: "orders",
-      where: { id: { equals: session.metadata.orderId } },
-    });
+  const order = orders[0];
 
-    if (!orders || orders.length === 0) {
-      console.error("No order found with ID:", session.metadata.orderId);
-      return res.status(404).send("Order not found");
-    }
-
-    const order = orders[0];
-
+  // Check if userId exists in metadata
+  if (session.metadata?.userId) {
     await payload.update({
-  collection: "orders",
-  id: order.id,
-  data: { _isPaid: true, user: session.metadata.userId },
-});
+      collection: "orders",
+      id: order.id,
+      data: { _isPaid: true, user: session.metadata.userId },
+    });
 
     for (const product of order.products) {
       const productId = typeof product === 'string' ? product : product.id;
@@ -82,8 +78,11 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     }
 
     return res.status(200).send("Checkout session completed successfully processed.");
-  } catch (error) {
-    console.error("Error processing checkout.session.completed event:", error);
-    return res.status(500).send("Internal server error during webhook processing.");
+  } else {
+    console.error("Missing userId in session metadata", session.id);
+    return res.status(400).send("Webhook Error: Missing userId in metadata");
   }
-}
+} catch (error) {
+  console.error("Error processing checkout.session.completed event:", error);
+  return res.status(500).send("Internal server error during webhook processing.");
+}}
