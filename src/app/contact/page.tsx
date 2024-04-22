@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
-import { Resend } from 'resend';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMapMarkerAlt, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -47,6 +48,7 @@ export default function Contact() {
     }
   };
   return (
+    <>
     <form
       onSubmit={handleSubmit}
       className="flex flex-col
@@ -118,5 +120,19 @@ export default function Contact() {
         Submit
       </button>
     </form>
-  );
+  
+
+<div className="flex justify-center items-center flex-col gap-y-3 mb-8">
+  <p>
+    <FontAwesomeIcon icon={faMapMarkerAlt} color="green" /> Brunestykket 2, 5039 Bergen
+  </p>
+  <p>
+    <FontAwesomeIcon icon={faEnvelope} color="green" /> Mail: fdb@fotballdraktbutikken.com
+  </p>
+  <p>
+    <FontAwesomeIcon icon={faPhone} color="green" /> Telefon: +47 979 39 973
+  </p>
+</div>
+</>
+);
 }

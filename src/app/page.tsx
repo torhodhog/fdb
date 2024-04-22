@@ -47,7 +47,7 @@ export default function Home() {
         />
         <ProductReel
   title="Salgsprodukter"
-  href="/sale" // Lenke til salgssiden
+  href="/Sale" // Lenke til salgssiden
   showSaleItems // Vis bare produkter på salg
   query={{
     limit: 6,

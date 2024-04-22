@@ -86,3 +86,4 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
   console.error("Error processing checkout.session.completed event:", error);
   return res.status(500).send("Internal server error during webhook processing.");
 }}
+
