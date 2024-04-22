@@ -5,6 +5,8 @@ import React from "react";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
+import { Play } from "next/font/google";
+import PlayVideo from "@/components/PlayVideo";
 
 const perks = [
   {
@@ -38,11 +40,21 @@ export default function Home() {
           href="/products"
           hideSoldItems // Add this line
           query={{
-            limit: 9,
+            limit: 6,
             sortBy: "createdAt",
             sortOrder: "desc",
           }}
         />
+        <ProductReel
+  title="Salgsprodukter"
+  href="/sale" // Lenke til salgssiden
+  showSaleItems // Vis bare produkter på salg
+  query={{
+    limit: 6,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  }}
+/>
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">
@@ -67,6 +79,11 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </MaxWidthWrapper>
+        <MaxWidthWrapper>
+          <div>
+            <PlayVideo />  
           </div>
         </MaxWidthWrapper>
       </section>

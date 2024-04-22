@@ -125,22 +125,22 @@ const MobileNav = () => {
         </div>
       )}
 
-      <div className="fixed bottom-0 right-0 left-0 w-full bg-black bg-opacity-95 rounded-t-lg shadow-md lg:hidden">
-        <div className="flex justify-around items-center py-5 text-white">
-          <Link href="/">
-            <Home className="h-6 w-6" />
-          </Link>
-          <Link href="/products">
-            <Box className="h-6 w-6" />
-          </Link>
-          <Link href="/Sale">
-            <Tag className="h-6 w-6" />
-          </Link>
-          <Link href="/cart">
-            <ShoppingCart className="h-6 w-6" />
-          </Link>
-        </div>
-      </div>
+      <div className="fixed inset-x-0 bottom-0 w-full bg-gray-600 bg-opacity-95 rounded-t-lg shadow-md lg:hidden">
+  <div className="flex justify-around items-center py-5 text-white">
+    <Link href="/">
+      <Home className="h-6 w-6" />
+    </Link>
+    <Link href="/products">
+      <Box className="h-6 w-6" />
+    </Link>
+    <Link href="/Sale">
+      <Tag className="h-6 w-6" />
+    </Link>
+    <Link href="/cart">
+      <ShoppingCart className="h-6 w-6" />
+    </Link>
+  </div>
+</div>
     </div>
   );
 };

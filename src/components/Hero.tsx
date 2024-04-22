@@ -17,29 +17,43 @@ const Hero: FC = () => {
         />
       </div>
       <div
-        className="relative w-full pl-0 pr-0 block lg:hidden"
-        style={{ height: "80vh" }}
+        className="relative w-full pl-0 pr-0 block lg:hidden flex flex-col items-center"
+        style={{ height: "90vh" }} // Increase the height
       >
         <Image
-  src="/logo.png"
-  alt="Hero Logo Mobile"
-  width={500}
-  height={300}
-  objectFit="cover"
-  objectPosition="top"
-  style={{ marginTop: '20px' }}
-/>
+          src="/cellheroimage.jpg"
+          alt="Hero Logo Mobile"
+          layout="intrinsic"
+          width={800}
+          height={700}
+          objectFit="cover"
+          objectPosition="top"
+        />
+        <div className="text-center mt-4"> 
+          <h3>Ditt hjem for fotballhistorie</h3>
+        </div>
         <Link href="/products">
-          <div
-            className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1"
-            style={{ top: "80%" }}
-          >
-            <span className="text-sm font-extrabold text-pink-700 hover:text-blue-500">
-              Se hele kolleksjonen
-            </span>{" "}
-            <span aria-hidden="true">&rarr;</span>
-          </div>
-        </Link>
+  <div
+    className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1"
+    style={{ bottom: "30%" }} // Adjust the position
+  >
+    <span className="text-sm font-extrabold text-pink-700 hover:text-blue-500">
+      Se hele kolleksjonen
+    </span>{" "}
+    <span aria-hidden="true">&rarr;</span>
+  </div>
+</Link>
+<Link href="/contact">
+  <div
+    className="absolute left-1/2 transform -translate-x-1/2 z-10 bg-slate-50 rounded-md p-1"
+    style={{ bottom: "25%" }} // Adjust the position
+  >
+    <span className="text-sm font-extrabold text-pink-700 hover:text-blue-500">
+      Kontakt
+    </span>{" "}
+    <span aria-hidden="true">&rarr;</span>
+  </div>
+</Link>
       </div>
     </div>
   );

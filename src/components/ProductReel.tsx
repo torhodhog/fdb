@@ -16,6 +16,7 @@ interface ProductReelProps {
   sortBy?: 'string'
   sortOrder?: 'asc' | 'desc'; 
   hideSoldItems?: boolean;
+  showSaleItems?: boolean;
 }
 
 
@@ -26,7 +27,7 @@ const ProductReel = (props: ProductReelProps) => {
 
   const { data: queryResults, isLoading, isError, error } = trpc.getInfiniteProducts.useInfiniteQuery(
     {
-      limit: 20,
+      limit: 4, // Set limit to 4
       query: {
         ...query,
         sortBy,
@@ -48,11 +49,12 @@ const ProductReel = (props: ProductReelProps) => {
   const products = queryResults?.pages.flatMap((page) => page.items) || [];
 
   const filteredProducts = products.filter(product => 
-    (size ? product.size === size : true) &&
-    (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
-    (!hideSoldItems || !product.isSold)
-  )
-
+  (size ? product.size === size : true) &&
+  (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
+  (!product.isSold) && // Check if product is sold
+  (!hideSoldItems || !product.onSale) &&
+  (!props.showSaleItems || product.onSale)
+)
   let map = filteredProducts.length ? filteredProducts : new Array<null>(query.limit ?? FALLBACK_LIMIT).fill(null);
   return (
     <section className="py-12">
@@ -69,13 +71,13 @@ const ProductReel = (props: ProductReelProps) => {
         </div>
 
         {href ? (
-          <Link
-            href="/products"
-            className="hidden text-sm font-medium text-blue-600 hover:text-blue-500 md:block"
-          >
-            Se hele kolleksjonen <span aria-hidden="true">&rarr;</span>
-          </Link>
-        ) : null}
+    <Link
+      href={href}
+      className="hidden text-sm font-extrabold text-gray-600 hover:text-blue-500 md:block"
+    >
+      {props.showSaleItems ? 'Se alle salgsvarer' : 'Se hele kolleksjonen'} <span aria-hidden="true">&rarr;</span>
+    </Link>
+  ) : null}
       </div>
 
       <div className="relative">

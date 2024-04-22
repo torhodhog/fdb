@@ -26,7 +26,7 @@ const PlayVideo = () => {
             muted={isMuted}
             controls={false} // Skjuler standard kontroller
          >
-            <source src="/fdb-promo.mp4" type="video/mp4" />
+            <source src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/promofdb.mp4" type="video/mp4" />
             Din nettleser støtter ikke video-taggen.
          </video>
          <button
@@ -36,9 +36,7 @@ const PlayVideo = () => {
             {isMuted ? 'Slå på lyd' : 'Slå av lyd'}
          </button>
       </div>
-  );
-}
-
-
+   );
+};
 
 export default PlayVideo;
