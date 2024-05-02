@@ -6,13 +6,13 @@ import { slateEditor } from "@payloadcms/richtext-slate";
 import dotenv from "dotenv";
 import path from "path";
 import { buildConfig } from "payload/config";
+import { RichTextAdapter } from "payload/types";
 
 import { Media } from "./collections/Media";
 import { Orders } from "./collections/Orders";
 import { ProductFiles } from "./collections/ProductFile";
 import { Products } from "./collections/Products/Products";
 import { Users } from "./collections/Users";
-import { RichTextAdapter } from "payload/types";
 
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
@@ -29,7 +29,7 @@ export default buildConfig({
     bundler: webpackBundler(),
     meta: {
       titleSuffix: "- Fotballdraktbutikken",
-      favicon: "/favicon.ico",
+      favicon: "/logo.png",
       ogImage: "/thumbnail.jpg",
     },
   },
