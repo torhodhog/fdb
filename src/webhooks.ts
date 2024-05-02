@@ -1,9 +1,17 @@
 import express from "express";
-import { stripe } from "./lib/stripe";
-import { WebhookRequest } from "./server";
 import { Payload } from "payload";
+import { Resend } from "resend";
+
+import { ReceiptEmailHtml } from "./components/emails/ReceiptEmail";
+import { stripe } from "./lib/stripe";
+import { Product } from "./payload-types";
+import { WebhookRequest } from "./server";
+import { paymentRouter } from "./trpc/payment-router";
+
 import type Stripe from "stripe";
 import { getPayloadClient } from "./get-payload";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const stripeWebhookHandler = async (
   req: express.Request,
@@ -38,8 +46,12 @@ export const stripeWebhookHandler = async (
   return res.status(200).send("Event received, no action required.");
 };
 
-
-async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.Response, req: express.Request, payload: Payload) {
+async function handleCheckoutSessionCompleted(
+  event: Stripe.Event,
+  res: express.Response,
+  req: express.Request,
+  payload: Payload
+) {
   const session = event.data.object as Stripe.Checkout.Session;
 
   if (!session.metadata?.orderId) {
@@ -47,43 +59,78 @@ async function handleCheckoutSessionCompleted(event: Stripe.Event, res: express.
     return res.status(400).send("Webhook Error: Missing orderId in metadata");
   }
 
- try {
-  const { docs: orders } = await payload.find({
-    collection: "orders",
-    where: { id: { equals: session.metadata.orderId } },
-  });
-
-  if (!orders || orders.length === 0) {
-    console.error("No order found with ID:", session.metadata.orderId);
-    return res.status(404).send("Order not found");
-  }
-
-  const order = orders[0];
-
-  // Check if userId exists in metadata
-  if (session.metadata?.userId) {
-    await payload.update({
+  try {
+    const { docs: orders } = await payload.find({
       collection: "orders",
-      id: order.id,
-      data: { _isPaid: true, user: session.metadata.userId },
+      where: { id: { equals: session.metadata.orderId } },
     });
 
-    for (const product of order.products) {
-      const productId = typeof product === 'string' ? product : product.id;
-      await payload.update({
-        collection: "products",
-        id: productId,
-        data: { isSold: true },
-      });
+    if (!orders || orders.length === 0) {
+      console.error("No order found with ID:", session.metadata.orderId);
+      return res.status(404).send("Order not found");
     }
 
-    return res.status(200).send("Checkout session completed successfully processed.");
-  } else {
-    console.error("Missing userId in session metadata", session.id);
-    return res.status(400).send("Webhook Error: Missing userId in metadata");
-  }
-} catch (error) {
-  console.error("Error processing checkout.session.completed event:", error);
-  return res.status(500).send("Internal server error during webhook processing.");
-}}
+    const order = orders[0];
 
+    // Check if userId exists in metadata
+    if (session.metadata?.userId) {
+      await payload.update({
+        collection: "orders",
+        id: order.id,
+        data: { _isPaid: true, user: session.metadata.userId },
+      });
+
+      for (const product of order.products) {
+        const productId = typeof product === "string" ? product : product.id;
+        await payload.update({
+          collection: "products",
+          id: productId,
+          data: { isSold: true },
+        });
+      }
+
+      // Send receipt
+      try {
+        const { docs: users } = await payload.find({
+          collection: "users",
+          where: { id: { equals: session.metadata.userId } },
+        });
+
+        if (!users || users.length === 0) {
+          console.error("No user found with ID:", session.metadata.userId);
+          return res.status(404).send("User not found");
+        }
+
+        const user = users[0];
+
+        const data = await resend.emails.send({
+          from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
+          to: [user.email],
+          subject: "Takk for din bestilling. Her er din kvittering..",
+          html: ReceiptEmailHtml({
+            date: new Date(),
+            email: user.email,
+            orderId: session.metadata.orderId,
+            products: order.products as Product[],
+            deliveryFee: (order as any).deliveryFee,
+          }),
+        });
+        res.status(200).json({ data });
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+
+      return res
+        .status(200)
+        .send("Checkout session completed successfully processed.");
+    } else {
+      console.error("Missing userId in session metadata", session.id);
+      return res.status(400).send("Webhook Error: Missing userId in metadata");
+    }
+  } catch (error) {
+    console.error("Error processing checkout.session.completed event:", error);
+    return res
+      .status(500)
+      .send("Internal server error during webhook processing.");
+  }
+}
