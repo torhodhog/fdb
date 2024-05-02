@@ -1,12 +1,11 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-
+import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
+import { Play } from "next/font/google";
 import React from "react";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
-import { Play } from "next/font/google";
-import PlayVideo from "@/components/PlayVideo";
 
 const perks = [
   {
@@ -40,7 +39,7 @@ export default function Home() {
           href="/products"
           hideSoldItems // Add this line
           query={{
-            limit: 6,
+            limit: 8,
             sortBy: "createdAt",
             sortOrder: "desc",
           }}
