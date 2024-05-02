@@ -1,9 +1,12 @@
+'use client'
+
 import { PRODUCT_CATEGORIES } from '@/config'
 import { useCart } from '@/hooks/use-cart'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@/payload-types'
 import { ImageIcon, X } from 'lucide-react'
 import Image from 'next/image'
+import { useEffect } from 'react';
 
 const CartItem = ({ product }: { product: Product }) => {
   const { image } = product.images[0]
@@ -14,6 +17,19 @@ const CartItem = ({ product }: { product: Product }) => {
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === product.category
   )?.label
+
+  useEffect(() => {
+  const checkAvailability = async () => {
+    const response = await fetch(`/api/products/${product.id}`);
+    const data = await response.json();
+
+    if (data.isSold) {
+      removeItem(product.id);
+    }
+  };
+
+  checkAvailability();
+}, [product, removeItem]);
 
   return (
     <div className='space-y-3 py-2'>
