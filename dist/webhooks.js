@@ -37,8 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.stripeWebhookHandler = void 0;
+var resend_1 = require("resend");
+var ReceiptEmail_1 = require("./components/emails/ReceiptEmail");
 var stripe_1 = require("./lib/stripe");
 var get_payload_1 = require("./get-payload");
+var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var webhookRequest, body, signature, event_1, payload, err_1;
     return __generator(this, function (_a) {
@@ -76,7 +79,7 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
 exports.stripeWebhookHandler = stripeWebhookHandler;
 function handleCheckoutSessionCompleted(event, res, req, payload) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, orders, order, _i, _a, product, productId, error_1;
+        var session, orders, order, _i, _a, product, productId, users, user, data, error_1, error_2;
         var _b, _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
@@ -88,7 +91,7 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                     }
                     _d.label = 1;
                 case 1:
-                    _d.trys.push([1, 10, , 11]);
+                    _d.trys.push([1, 14, , 15]);
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
                             where: { id: { equals: session.metadata.orderId } },
@@ -100,7 +103,7 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                         return [2 /*return*/, res.status(404).send("Order not found")];
                     }
                     order = orders[0];
-                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) return [3 /*break*/, 8];
+                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) return [3 /*break*/, 12];
                     return [4 /*yield*/, payload.update({
                             collection: "orders",
                             id: order.id,
@@ -113,7 +116,7 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                 case 4:
                     if (!(_i < _a.length)) return [3 /*break*/, 7];
                     product = _a[_i];
-                    productId = typeof product === 'string' ? product : product.id;
+                    productId = typeof product === "string" ? product : product.id;
                     return [4 /*yield*/, payload.update({
                             collection: "products",
                             id: productId,
@@ -125,16 +128,53 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                 case 6:
                     _i++;
                     return [3 /*break*/, 4];
-                case 7: return [2 /*return*/, res.status(200).send("Checkout session completed successfully processed.")];
+                case 7:
+                    _d.trys.push([7, 10, , 11]);
+                    return [4 /*yield*/, payload.find({
+                            collection: "users",
+                            where: { id: { equals: session.metadata.userId } },
+                        })];
                 case 8:
-                    console.error("Missing userId in session metadata", session.id);
-                    return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
-                case 9: return [3 /*break*/, 11];
+                    users = (_d.sent()).docs;
+                    if (!users || users.length === 0) {
+                        console.error("No user found with ID:", session.metadata.userId);
+                        return [2 /*return*/, res.status(404).send("User not found")];
+                    }
+                    user = users[0];
+                    return [4 /*yield*/, resend.emails.send({
+                            from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
+                            to: [user.email],
+                            subject: "Takk for din bestilling. Her er din kvittering..",
+                            html: (0, ReceiptEmail_1.ReceiptEmailHtml)({
+                                date: new Date(),
+                                email: user.email,
+                                orderId: session.metadata.orderId,
+                                products: order.products,
+                                deliveryFee: order.deliveryFee,
+                            }),
+                        })];
+                case 9:
+                    data = _d.sent();
+                    res.status(200).json({ data: data });
+                    return [3 /*break*/, 11];
                 case 10:
                     error_1 = _d.sent();
-                    console.error("Error processing checkout.session.completed event:", error_1);
-                    return [2 /*return*/, res.status(500).send("Internal server error during webhook processing.")];
-                case 11: return [2 /*return*/];
+                    res.status(500).json({ error: error_1 });
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/, res
+                        .status(200)
+                        .send("Checkout session completed successfully processed.")];
+                case 12:
+                    console.error("Missing userId in session metadata", session.id);
+                    return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
+                case 13: return [3 /*break*/, 15];
+                case 14:
+                    error_2 = _d.sent();
+                    console.error("Error processing checkout.session.completed event:", error_2);
+                    return [2 /*return*/, res
+                            .status(500)
+                            .send("Internal server error during webhook processing.")];
+                case 15: return [2 /*return*/];
             }
         });
     });

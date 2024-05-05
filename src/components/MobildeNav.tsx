@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const pathname = usePathname();
 
@@ -27,16 +28,47 @@ const MobileNav = () => {
     else document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
+  // Listen to scroll event
+  // Listen to scroll event
+useEffect(() => {
+  let timeoutId: NodeJS.Timeout;
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    setIsScrolled(currentScrollY > 0);
+
+    // Clear the timeout if it's already set
+    if (timeoutId) clearTimeout(timeoutId);
+
+    // Set the timeout to hide the navbar after 1 second
+    timeoutId = setTimeout(() => {
+      setIsScrolled(false);
+    }, 1000);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+
+    // Clear the timeout when the component is unmounted
+    if (timeoutId) clearTimeout(timeoutId);
+  };
+}, []);
+
+  // Don't render if not scrolled
+  // if (!isScrolled) return null;
+
+
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
-      >
-        <Menu className="ml-4 h-6 w-6" aria-hidden="true" />
-      </button>
-
+       <button
+  type="button"
+  onClick={() => setIsOpen(!isOpen)}
+  className="lg:hidden fixed top-0 -m-2 inline-flex items-center justify-center rounded-md p-2 mt-8 text-gray-400"
+>
+  <Menu className="ml-4 h-6 w-6" aria-hidden="true" />
+</button>
       {isOpen && (
         <div>
           <div className="relative z-40 lg:hidden">
@@ -125,7 +157,11 @@ const MobileNav = () => {
         </div>
       )}
 
-      <div className="fixed inset-x-0 bottom-0 w-full bg-gray-600 bg-opacity-95 rounded-t-lg shadow-md lg:hidden">
+      <div
+  className={`fixed inset-x-0 bottom-0 w-full bg-gray-600 bg-opacity-95 rounded-t-lg shadow-md lg:hidden transition-opacity duration-500 ${
+    isScrolled ? 'opacity-100' : 'opacity-0'
+  }`}
+>
   <div className="flex justify-around items-center py-5 text-white">
     <Link href="/">
       <Home className="h-6 w-6" />

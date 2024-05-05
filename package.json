@@ -37,6 +37,8 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-email/components": "^0.0.11",
+    "@react-three/drei": "^9.105.6",
+    "@react-three/fiber": "^8.16.3",
     "@swc-node/register": "^1.9.0",
     "@swc/core": "^1.3.107",
     "@tanstack/react-query": "4.36.1",
@@ -71,6 +73,7 @@
     "swiper": "^11.0.4",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.164.1",
     "zod": "^3.22.4",
     "zustand": "^4.5.2"
   },
