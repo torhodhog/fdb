@@ -1,45 +1,67 @@
-'use client'
+"use client";
 
-import { PerspectiveCamera, Preload, Scroll, ScrollControls } from "@react-three/drei";
+import {
+  PerspectiveCamera,
+  Preload,
+  Scroll,
+  ScrollControls,
+} from "@react-three/drei";
 import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 const Hero: FC = () => {
   return (
-    <div className="relative flex lg:flex-row flex-col-reverse">
-      <div className="relative w-full lg:block hidden mt-6" style={{ height: "600px" }}>
-        <Image
-          src="https://forsoker-ny-botte.s3.amazonaws.com/hero.png"
-          alt="Hero Logo"
-          layout="fill"
-          objectFit="cover"
-        />
+    <div className="relative z-[-10] flex lg:flex-row flex-col-reverse lg:h-[80vh] h-[40vh]">
+      <div
+        className="relative w-full lg:block hidden mt-6 spin"
+        style={{ height: "600px" }}
+      >
+        <div className="absolute inset-0">
+          <Image
+            src="/cellheroimage.jpg"
+            alt="Hero Logo"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
       </div>
-      
-      <div className="relative w-full pl-0 pr-0 block lg:hidden flex flex-col items-center" style={{ height: "90vh" }}>
-        
-        
+
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .spin {
+          animation: spin 20s linear infinite;
+        }
+      `}</style>
+
+      <div
+        className="relative w-full pl-0 pr-0 block lg:hidden flex flex-col items-center"
+        style={{ height: "90vh" }}
+      >
         <div className="relative z-10 flex flex-col items-center">
-          <div className="w-40 h-40 rounded-full overflow-hidden">
-            <Image
-              src="/cellheroimage.jpg"
-              alt="Hero Logo Mobile"
-              layout="fill"
-              objectFit="cover"
-              objectPosition="top"
-              className="mt-55"
-            />
+          <div className="w-40 h-40 rounded-full overflow-hidden relative">
+            <div className="absolute inset-0 spin">
+              <Image
+                src="/cellheroimage.jpg"
+                alt="Hero Logo"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
           </div>
-          
-          <div className="text-center mt-4"> 
-            <h3>Ditt hjem for fotballhistorie</h3>
-          </div>
-          
-         <Link href="/products">
+
+          <Link href="/products">
   <div
-    className="absolute left-1/2 transform -translate-x-1/2 z-10 w-full"
-    style={{ bottom: "-70%" }} // Adjust the position
+    className="absolute left-0 z-10 w-full"
+    style={{ bottom: "-80%" }} // Adjust the position
   >
     <span className="text-base font-extrabold text-pink-700 hover:text-blue-500">
       Se hele kolleksjonen
@@ -48,21 +70,35 @@ const Hero: FC = () => {
   </div>
 </Link>
 
-<Link href="/contact">
+<Link href="/sale">
   <div
-    className="absolute left-1/2 transform -translate-x-1/2 z-10 "
-    style={{ bottom: "-90%" }} // Adjust the position
+    className="absolute left-0 z-10 "
+    style={{ bottom: "-120%" }} // Adjust the position
   >
     <span className="text-base font-extrabold text-pink-700 hover:text-blue-500">
-      Kontakt
+      Salg
     </span>{" "}
     <span aria-hidden="true">&rarr;</span>
   </div>
 </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .spin {
+          animation: spin 20s linear infinite;
+        }
+      `}</style>
     </div>
-    
   );
 };
 

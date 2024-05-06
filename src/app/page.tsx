@@ -81,9 +81,9 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
         <MaxWidthWrapper>
-          <div>
-            <PlayVideo />  
-          </div>
+          <div className="lg:block hidden">
+  <PlayVideo />  
+</div>
         </MaxWidthWrapper>
       </section>
     </>
