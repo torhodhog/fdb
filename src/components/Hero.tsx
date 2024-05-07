@@ -61,7 +61,7 @@ const Hero: FC = () => {
           <Link href="/products">
   <div
     className="absolute left-0 z-10 w-full"
-    style={{ bottom: "-80%" }} // Adjust the position
+    style={{ bottom: "-60%" }} // Adjust the position
   >
     <span className="text-base font-extrabold text-pink-700 hover:text-blue-500">
       Se hele kolleksjonen
@@ -73,7 +73,7 @@ const Hero: FC = () => {
 <Link href="/sale">
   <div
     className="absolute left-0 z-10 "
-    style={{ bottom: "-120%" }} // Adjust the position
+    style={{ bottom: "-80%" }} // Adjust the position
   >
     <span className="text-base font-extrabold text-pink-700 hover:text-blue-500">
       Salg
