@@ -12,8 +12,8 @@ import Link from "next/link";
 
 const Hero: FC = () => {
   return (
-    <div className="relative z-[-10] flex lg:flex-row flex-col-reverse lg:h-[65vh] h-[40vh]">
-    <div className="relative w-full lg:block hidden mt-6" style={{ 
+<div className="relative z-[-10] flex lg:flex-row flex-col-reverse lg:h-auto h-[40vh]">   
+ <div className="relative w-full lg:block hidden mt-6" style={{ 
     height: "600px",
     backgroundImage: `url(/herotest.png)`,
     backgroundSize: 'cover',
