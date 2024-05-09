@@ -69,7 +69,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           size={size}
           query={{
             category,
-            limit: 80,
+            limit: 280,
             sort: sort === "desc" || sort === "asc" ? sort : undefined,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
