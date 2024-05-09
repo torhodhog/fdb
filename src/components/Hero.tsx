@@ -12,35 +12,41 @@ import Link from "next/link";
 
 const Hero: FC = () => {
   return (
-    <div className="relative z-[-10] flex lg:flex-row flex-col-reverse lg:h-[80vh] h-[40vh]">
-      <div
-        className="relative w-full lg:block hidden mt-6 spin"
-        style={{ height: "600px" }}
-      >
-        <div className="absolute inset-0">
-          <Image
-            src="/cellheroimage.jpg"
-            alt="Hero Logo"
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-      </div>
+    <div className="relative z-[-10] flex lg:flex-row flex-col-reverse lg:h-[65vh] h-[40vh]">
+    <div className="relative w-full lg:block hidden mt-6" style={{ 
+    height: "600px",
+    backgroundImage: `url(/herotest.png)`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+}}>
+  <div className="absolute inset-0 flex justify-center items-center">
+    <div className="w-80 h-80 rounded-full overflow-hidden spin" style={{ margin: 0, padding: 0 }}>
+      <Image
+        src="/cellheroimage.png"
+        alt="Hero Logo"
+        layout="fill"
+        objectFit="cover"
+      />
+    </div>
+  </div>
+</div>
 
-      <style jsx>{`
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
+<style jsx>{`
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 
-        .spin {
-          animation: spin 20s linear infinite;
-        }
-      `}</style>
+  .spin {
+    animation: spin 20s linear infinite;
+  }
+`}</style>
+
+
 
       <div
         className="relative w-full pl-0 pr-0 block lg:hidden flex flex-col items-center"

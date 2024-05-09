@@ -1,7 +1,6 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
-import { Play } from "next/font/google";
 import React from "react";
 
 import Hero from "../components/Hero";
@@ -45,15 +44,15 @@ export default function Home() {
           }}
         />
         <ProductReel
-  title="Salgsprodukter"
-  href="/Sale" // Lenke til salgssiden
-  showSaleItems // Vis bare produkter på salg
-  query={{
-    limit: 6,
-    sortBy: "createdAt",
-    sortOrder: "desc",
-  }}
-/>
+          title="Salgsprodukter"
+          href="/Sale" // Lenke til salgssiden
+          showSaleItems // Vis bare produkter på salg
+          query={{
+            limit: 6,
+            sortBy: "createdAt",
+            sortOrder: "desc",
+          }}
+        />
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">
@@ -82,8 +81,8 @@ export default function Home() {
         </MaxWidthWrapper>
         <MaxWidthWrapper>
           <div className="lg:block hidden">
-  <PlayVideo />  
-</div>
+            <PlayVideo />
+          </div>
         </MaxWidthWrapper>
       </section>
     </>
