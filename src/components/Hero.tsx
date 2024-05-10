@@ -53,11 +53,10 @@ const Hero: FC = () => {
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-auto h-auto  overflow-hidden relative">
             <img
-              src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Asset+4-100.jpg"
-              alt="Hero Logo"
-              layout="fill"
-              objectFit="cover"
-            />
+  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Asset+4-100.jpg"
+  alt="Hero Logo"
+  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+/>
           </div>
         </div>
       </div>

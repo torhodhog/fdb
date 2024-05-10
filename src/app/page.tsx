@@ -44,7 +44,7 @@ export default function Home() {
             sortOrder: "desc",
           }}
         />
-        <Link href="/Sale">
+       
           <Link href="/Sale">
             <img
               className="mt-12"
@@ -53,7 +53,7 @@ export default function Home() {
               style={{ width: "100%", height: "auto" }}
             />
           </Link>
-        </Link>
+       
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">
