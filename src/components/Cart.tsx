@@ -34,7 +34,7 @@ const Cart = () => {
     0
   );
 
-  const deliveryFee = cartTotal >= 1500 ? 0 : 1;
+  const deliveryFee = cartTotal >= 1500 ? 0 : 73;
 
   const fee = 73
   return (
