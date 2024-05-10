@@ -36,7 +36,7 @@ const Cart = () => {
 
   const deliveryFee = cartTotal >= 1500 ? 0 : 1;
 
-  // const fee = 1
+  const fee = 73
   return (
     <Sheet>
       <SheetTrigger className="group -m-2 flex items-center p-2">
