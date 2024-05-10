@@ -48,13 +48,20 @@ const ProductReel = (props: ProductReelProps) => {
 
   const products = queryResults?.pages.flatMap((page) => page.items) || [];
 
+  console.log('Products before filtering:', products);
+
+
   const filteredProducts = products.filter(product => 
-  (size ? product.size === size : true) &&
-  (query.searchTerm ? product.name.includes(query.searchTerm) : true) &&
-  (!product.isSold) && // Check if product is sold
-  (!hideSoldItems || !product.onSale) &&
-  (!props.showSaleItems || product.onSale)
-)
+    (size ? product.size === size : true) && // Sjekker om størrelsen matcher, hvis størrelse er angitt
+    (query.searchTerm ? product.name.includes(query.searchTerm) : true) && // Inkluderer produkter basert på søketerm, hvis angitt
+    (!product.isSold) && // Ekskluderer produkter som er merket som solgt
+    (!hideSoldItems || !product.isSold) && // Skjuler solgte produkter hvis hideSoldItems er true
+    (!props.showSaleItems || product.onSale) // Viser kun produkter på salg hvis showSaleItems er true
+  );
+
+  console.log('Products after filtering:', products);
+
+  
   let map = filteredProducts.length ? filteredProducts : new Array<null>(query.limit ?? FALLBACK_LIMIT).fill(null);
   return (
     <section className="py-12">

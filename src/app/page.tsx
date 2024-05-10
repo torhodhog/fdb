@@ -2,7 +2,8 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import React from "react";
-
+import Link from 'next/link';
+import Image from 'next/image';
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 
@@ -43,16 +44,18 @@ export default function Home() {
             sortOrder: "desc",
           }}
         />
-        <ProductReel
-          title="Salgsprodukter"
-          href="/Sale" // Lenke til salgssiden
-          showSaleItems // Vis bare produkter på salg
-          query={{
-            limit: 6,
-            sortBy: "createdAt",
-            sortOrder: "desc",
-          }}
-        />
+        <Link href="/Sale">
+  
+       <Link href="/Sale">
+  <img
+  className="mt-12"
+    src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
+    alt="Salg"
+    style={{ width: '100%', height: 'auto' }}
+  />
+</Link>
+  
+</Link>
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">

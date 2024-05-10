@@ -16,7 +16,7 @@ const Navbar = async () => {
   const { user } = await getServerSideUser(nextCookies);
 
   return (
-    <div className=" top-0 inset-x-0 z-50">
+    <div className=" top-0 inset-x-0 z-50 sticky bg-white">
       <header className="relative bg-transparent lg:bg-background">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">

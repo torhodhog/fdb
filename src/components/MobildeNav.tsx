@@ -65,7 +65,7 @@ useEffect(() => {
        <button
   type="button"
   onClick={() => setIsOpen(!isOpen)}
-  className="lg:hidden fixed top-0 -m-2 inline-flex items-center justify-center rounded-md p-2 mt-8 text-gray-400"
+  className="lg:hidden absolute top-0 -m-2 inline-flex items-center justify-center rounded-md p-2 mt-8 text-gray-400"
 >
   <Menu className="ml-4 h-6 w-6" aria-hidden="true" />
 </button>

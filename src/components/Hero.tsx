@@ -64,7 +64,7 @@ const Hero: FC = () => {
             </div>
           </div>
 
-          <Link href="/products">
+          <Link href="/Products">
   <div
     className="absolute left-0 z-10 w-full"
     style={{ bottom: "-60%" }} // Adjust the position
@@ -76,7 +76,7 @@ const Hero: FC = () => {
   </div>
 </Link>
 
-<Link href="/sale">
+<Link href="/Sale">
   <div
     className="absolute left-0 z-10 "
     style={{ bottom: "-80%" }} // Adjust the position
