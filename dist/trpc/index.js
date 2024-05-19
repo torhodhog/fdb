@@ -60,32 +60,32 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.appRouter = void 0;
 var zod_1 = require("zod");
-var auth_router_1 = require("./auth-router");
-var trpc_1 = require("./trpc");
-var query_validator_1 = require("../lib/validators/query-validator");
 var get_payload_1 = require("../get-payload");
+var query_validator_1 = require("../lib/validators/query-validator");
+var auth_router_1 = require("./auth-router");
 var payment_router_1 = require("./payment-router");
+var trpc_1 = require("./trpc");
 exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
     getInfiniteProducts: trpc_1.publicProcedure
         .input(zod_1.z.object({
-        limit: zod_1.z.number().min(1).max(100),
-        cursor: zod_1.z.number().nullish(),
+        limit: zod_1.z.number().min(1).max(100).default(20),
+        cursor: zod_1.z.number().nullish(), // Cursor for pagination
         query: query_validator_1.QueryValidator.extend({
             sortBy: zod_1.z.string().optional(),
             sortOrder: zod_1.z.enum(["asc", "desc"]).optional(),
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, sortBy, _d, sortOrder, sort, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, sortDirection, sortString, _e, items, hasNextPage, nextPage;
+        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, sortDirection, sortString, _e, items, hasNextPage, nextPage;
         var input = _b.input;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
                     console.log(input); // log the input
                     cursor = input.cursor, query = input.query;
-                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, sort = query.sort, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, queryOpts = __rest(query, ["sortBy", "sortOrder", "sort", "limit", "searchTerm", "liga_system"]);
+                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, queryOpts = __rest(query, ["sortBy", "sortOrder", "limit", "searchTerm", "liga_system"]);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _f.sent();
@@ -123,6 +123,7 @@ exports.appRouter = (0, trpc_1.router)({
                     return [2 /*return*/, {
                             items: items,
                             nextPage: hasNextPage ? nextPage : null,
+                            previousPage: page > 1 ? page - 1 : null,
                         }];
             }
         });

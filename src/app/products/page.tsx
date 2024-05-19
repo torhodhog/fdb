@@ -30,51 +30,56 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20; // Show 20 products per page
 
   return (
     <>
-       <MaxWidthWrapper className="relative">
-    <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
-      {/* Gruppering for søkefelt og knapp */}
-      <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
-        <Input
-          className="flex-grow"
-          type="search"
-          placeholder="Søk etter drakter"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <Button type="submit">Søk</Button>
-      </div>
-      <div>
-        <Select
-          className="sm:absolute sm:right-0"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-        >
-          <option value="">Alle størrelser</option>
-          <option value="S">Small</option>
-          <option value="M">Medium</option>
-          <option value="L">Large</option>
-          <option value="XL">Extra Large</option>
-          <option value="XXL">XXL</option>
-        </Select>
-      </div>
-    </div>
-  </MaxWidthWrapper>
+      <MaxWidthWrapper className="relative">
+        <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
+          {/* Gruppering for søkefelt og knapp */}
+          <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
+            <Input
+              className="flex-grow"
+              type="search"
+              placeholder="Søk etter drakter"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button type="submit">Søk</Button>
+          </div>
+          <div>
+            <Select
+              className="sm:absolute sm:right-0"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+            >
+              <option value="">Alle størrelser</option>
+              <option value="S">Small</option>
+              <option value="M">Medium</option>
+              <option value="L">Large</option>
+              <option value="XL">Extra Large</option>
+              <option value="XXL">XXL</option>
+            </Select>
+          </div>
+        </div>
+      </MaxWidthWrapper>
 
       <MaxWidthWrapper>
-        <ProductReel
-          title={label ?? "Alle produkter"}
-          size={size}
-          query={{
-            category,
-            limit: 280,
-            sort: sort === "desc" || sort === "asc" ? sort : undefined,
-            searchTerm: searchTerm,
-            liga_system: ligaSystem,
-          }}
-        />
+      <ProductReel
+  title={label ?? "Alle produkter"}
+  size={size}
+  query={{
+    category,
+    sort: sort === "desc" || sort === "asc" ? sort : undefined,
+    searchTerm: searchTerm,
+    liga_system: ligaSystem,
+  }}
+  page={currentPage}
+  setPage={setCurrentPage} // Pass setPage prop
+  itemsPerPage={itemsPerPage} // Pass itemsPerPage prop
+/>
+
       </MaxWidthWrapper>
     </>
   );

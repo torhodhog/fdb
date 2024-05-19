@@ -1,9 +1,10 @@
 import { z } from "zod";
-import { authRouter } from "./auth-router";
-import { publicProcedure, router } from "./trpc";
-import { QueryValidator } from "../lib/validators/query-validator";
+
 import { getPayloadClient } from "../get-payload";
+import { QueryValidator } from "../lib/validators/query-validator";
+import { authRouter } from "./auth-router";
 import { paymentRouter } from "./payment-router";
+import { publicProcedure, router } from "./trpc";
 
 export const appRouter = router({
   auth: authRouter,
@@ -12,8 +13,8 @@ export const appRouter = router({
   getInfiniteProducts: publicProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100),
-        cursor: z.number().nullish(),
+        limit: z.number().min(1).max(100).default(20),
+        cursor: z.number().nullish(), // Cursor for pagination
         query: QueryValidator.extend({
           sortBy: z.string().optional(),
           sortOrder: z.enum(["asc", "desc"]).optional(),
@@ -27,7 +28,6 @@ export const appRouter = router({
       const {
         sortBy = "createdAt",
         sortOrder = "desc",
-        sort,
         limit,
         searchTerm,
         liga_system,
@@ -79,6 +79,7 @@ export const appRouter = router({
       return {
         items,
         nextPage: hasNextPage ? nextPage : null,
+        previousPage: page > 1 ? page - 1 : null,
       };
     }),
 });
