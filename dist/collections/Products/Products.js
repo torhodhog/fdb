@@ -350,5 +350,11 @@ exports.Products = {
             }); }),
             required: true,
         },
+        {
+            name: "teaser",
+            label: "Teaser",
+            type: "checkbox",
+            defaultValue: false,
+        },
     ],
 };

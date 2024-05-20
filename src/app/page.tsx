@@ -1,9 +1,10 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
-import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 
@@ -44,15 +45,16 @@ export default function Home() {
             sortOrder: "desc",
           }}
         />
-       
-          <Link href="/Sale">
-            <img
-              className="mt-12"
-              src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
-              alt="Salg"
-              style={{ width: "100%", height: "auto" }}
-            />
-          </Link>
+                    <Link href="/Sale">
+                      <Image
+                        className="mt-12"
+                        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
+                        alt="Salg"
+                        layout="responsive" // Add the layout prop with value "responsive"
+                        width={1000} // Add the width prop with the desired width value
+                        height={500} // Add the height prop with the desired height value
+                      />
+                    </Link>
        
       </MaxWidthWrapper>
 

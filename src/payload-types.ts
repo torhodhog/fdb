@@ -71,6 +71,7 @@ export interface Product {
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
   category: 'ui_kits' | 'Kontakt';
+  teaser?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }

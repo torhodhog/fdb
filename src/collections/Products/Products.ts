@@ -296,5 +296,11 @@ export const Products: CollectionConfig = {
       })),
       required: true,
     },
+    {
+  name: "teaser",
+  label: "Teaser",
+  type: "checkbox",
+  defaultValue: false,
+},
   ],
 };
