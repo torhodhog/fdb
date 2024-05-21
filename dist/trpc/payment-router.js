@@ -56,7 +56,7 @@ exports.paymentRouter = (0, trpc_1.router)({
         }),
     }))
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var user, productIds, leveringsinfo, payload, products, filteredProducts, order, line_items, deliveryFee, stripeSession, err_1;
+        var user, productIds, leveringsinfo, payload, products, filteredProducts, order, line_items, deliveryFee, customer, stripeSession, err_1;
         var ctx = _b.ctx, input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -115,7 +115,19 @@ exports.paymentRouter = (0, trpc_1.router)({
                     console.log("Line items prepared for Stripe Checkout");
                     _c.label = 4;
                 case 4:
-                    _c.trys.push([4, 6, , 7]);
+                    _c.trys.push([4, 7, , 8]);
+                    return [4 /*yield*/, stripe_1.stripe.customers.create({
+                            name: leveringsinfo.navn,
+                            phone: leveringsinfo.telefonnummer,
+                            address: {
+                                line1: leveringsinfo.adresse,
+                                city: leveringsinfo.by,
+                                postal_code: leveringsinfo.postnummer,
+                                country: leveringsinfo.land,
+                            },
+                        })];
+                case 5:
+                    customer = _c.sent();
                     return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
                             success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
@@ -124,16 +136,17 @@ exports.paymentRouter = (0, trpc_1.router)({
                             shipping_address_collection: { allowed_countries: ["NO"] },
                             line_items: line_items,
                             metadata: { userId: user.id, orderId: order.id },
+                            customer: customer.id, // Refer to the customer by ID
                         })];
-                case 5:
+                case 6:
                     stripeSession = _c.sent();
                     console.log("Stripe Session created:", stripeSession.id);
                     return [2 /*return*/, { url: stripeSession.url }];
-                case 6:
+                case 7:
                     err_1 = _c.sent();
                     console.error("Failed to create Stripe session:", err_1);
                     return [2 /*return*/, { url: null }];
-                case 7: return [2 /*return*/];
+                case 8: return [2 /*return*/];
             }
         });
     }); }),

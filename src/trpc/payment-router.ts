@@ -89,22 +89,35 @@ export const paymentRouter = router({
       console.log("Line items prepared for Stripe Checkout");
 
       try {
-        const stripeSession = await stripe.checkout.sessions.create({
-          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-          payment_method_types: ["card", "klarna"],
-          mode: "payment",
-          shipping_address_collection: { allowed_countries: ["NO"] },
-          line_items,
-          metadata: { userId: user.id, orderId: order.id },
-        });
+  // Create a customer in Stripe
+  const customer = await stripe.customers.create({
+    name: leveringsinfo.navn,
+    phone: leveringsinfo.telefonnummer,
+    address: {
+      line1: leveringsinfo.adresse,
+      city: leveringsinfo.by,
+      postal_code: leveringsinfo.postnummer,
+      country: leveringsinfo.land,
+    },
+  });
 
-        console.log("Stripe Session created:", stripeSession.id);
-        return { url: stripeSession.url };
-      } catch (err) {
-        console.error("Failed to create Stripe session:", err);
-        return { url: null };
-      }
+  const stripeSession = await stripe.checkout.sessions.create({
+    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+    payment_method_types: ["card", "klarna"],
+    mode: "payment",
+    shipping_address_collection: { allowed_countries: ["NO"] },
+    line_items,
+    metadata: { userId: user.id, orderId: order.id },
+    customer: customer.id, // Refer to the customer by ID
+  });
+
+  console.log("Stripe Session created:", stripeSession.id);
+  return { url: stripeSession.url };
+} catch (err) {
+  console.error("Failed to create Stripe session:", err);
+  return { url: null };
+}
     }),
 
   pollOrderStatus: privateProcedure
