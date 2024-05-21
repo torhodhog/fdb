@@ -7,7 +7,6 @@ import Providers from "@/components/Providers";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +29,7 @@ export default function RootLayout({
           inter.className
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system">
+        <ThemeProvider attribute="class" defaultTheme="light">
           <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
