@@ -15,18 +15,17 @@ import { useEffect, useState } from "react";
 const Page = () => {
   const { items, removeItem } = useCart();
 
- let userId;
-if (typeof window !== 'undefined') {
-  userId = localStorage.getItem('userId');
-}
-
+  let userId;
+  if (typeof window !== 'undefined') {
+    userId = localStorage.getItem('userId');
+  }
 
   const router = useRouter();
 
   const { mutate: createCheckoutSession, isLoading } =
     trpc.payment.createSession.useMutation({
       onSuccess: ({ url }) => {
-        if (url) router.push(url);   
+        if (url) router.push(url);
       },
     });
 
@@ -42,8 +41,24 @@ if (typeof window !== 'undefined') {
     0
   );
 
-  const deliveryFee = cartTotal >= 1500 ? 0 : 1;
+  const deliveryFee = cartTotal >= 1500 ? 0 : 73;
   // const deliveryFee = 87;
+
+  const handleCheckout = () => {
+    const leveringsinfo = {
+      navn: "Brukerens navn",
+      adresse: "Brukerens adresse",
+      postnummer: "Brukerens postnummer",
+      by: "Brukerens by",
+      telefonnummer: "Brukerens telefonnummer".substring(0, 20), // Truncate phone number
+      land: "Brukerens land",
+    };
+
+    createCheckoutSession({
+      productIds,
+      leveringsinfo,
+    });
+  };
 
   return (
     <div className="bg-white">
@@ -207,26 +222,14 @@ if (typeof window !== 'undefined') {
             <div className="mt-6">
               <Button
                 disabled={items.length === 0 || isLoading}
-                onClick={() =>
-                  createCheckoutSession({
-                    productIds,
-                    leveringsinfo: {
-                      navn: "Brukerens navn",
-                      adresse: "Brukerens adresse",
-                      postnummer: "Brukerens postnummer",
-                      by: "Brukerens by",
-                      telefonnummer: "Brukerens telefonnummer",
-                      land: "Brukerens land",
-                    },
-                  })
-                }
+                onClick={handleCheckout}
                 className="w-full"
                 size="lg"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
                 ) : null}
-                Checkout
+                Kjøp
               </Button>
             </div>
           </section>
