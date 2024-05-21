@@ -56,12 +56,12 @@ const Hero: FC = () => {
         style={{ height: "90vh" }}
       >
         <div className="relative z-10 flex flex-col items-center w-full h-full">
-          <Image
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herotv.jpg"
-            alt="Hero Logo"
-            fill
-            style={{ objectFit: 'contain' }}
-          />
+        <Image
+  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/test+hero+telefon.png"
+  alt="Hero Logo"
+  fill
+  style={{ objectFit: 'contain' }}
+/>
         </div>
       </div>
     </div>
