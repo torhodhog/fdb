@@ -51,7 +51,7 @@ exports.paymentRouter = (0, trpc_1.router)({
             adresse: zod_1.z.string(),
             postnummer: zod_1.z.string(),
             by: zod_1.z.string(),
-            telefonnummer: zod_1.z.string(),
+            telefonnummer: zod_1.z.string().max(20), // Ensure maximum length
             land: zod_1.z.string(),
         }),
     }))
@@ -118,7 +118,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                     _c.trys.push([4, 7, , 8]);
                     return [4 /*yield*/, stripe_1.stripe.customers.create({
                             name: leveringsinfo.navn,
-                            phone: leveringsinfo.telefonnummer,
+                            phone: leveringsinfo.telefonnummer.substring(0, 20), // Truncate phone number
                             address: {
                                 line1: leveringsinfo.adresse,
                                 city: leveringsinfo.by,
