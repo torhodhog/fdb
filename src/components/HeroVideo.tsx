@@ -20,7 +20,7 @@ const HeroVideo: FC = () => {
   };
 
   return (
-    <div className="relative w-full lg:block hidden mt-6" style={{ height: "600px" }}>
+    <div className="relative w-full md:block hidden mt-6" style={{ height: "600px" }}>
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover cursor-pointer"
