@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(true);
 
   const pathname = usePathname();
 
@@ -23,38 +23,38 @@ const MobileNav = () => {
     }
   };
 
-  useEffect(() => {
-    if (isOpen) document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
-  }, [isOpen]);
+//   useEffect(() => {
+//     if (isOpen) document.body.classList.add("overflow-hidden");
+//     else document.body.classList.remove("overflow-hidden");
+//   }, [isOpen]);
 
-  // Listen to scroll event
-  // Listen to scroll event
-useEffect(() => {
-  let timeoutId: NodeJS.Timeout;
+//   // Listen to scroll event
+//   // Listen to scroll event
+// useEffect(() => {
+//   let timeoutId: NodeJS.Timeout;
 
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-    setIsScrolled(currentScrollY > 0);
+//   const handleScroll = () => {
+//     const currentScrollY = window.scrollY;
+//     setIsScrolled(currentScrollY > 0);
 
-    // Clear the timeout if it's already set
-    if (timeoutId) clearTimeout(timeoutId);
+//     // Clear the timeout if it's already set
+//     if (timeoutId) clearTimeout(timeoutId);
 
-    // Set the timeout to hide the navbar after 1 second
-    timeoutId = setTimeout(() => {
-      setIsScrolled(false);
-    }, 1000);
-  };
+//     // Set the timeout to hide the navbar after 1 second
+//     timeoutId = setTimeout(() => {
+//       setIsScrolled(false);
+//     }, 1000);
+//   };
 
-  window.addEventListener("scroll", handleScroll);
+//   window.addEventListener("scroll", handleScroll);
 
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
+//   return () => {
+//     window.removeEventListener("scroll", handleScroll);
 
-    // Clear the timeout when the component is unmounted
-    if (timeoutId) clearTimeout(timeoutId);
-  };
-}, []);
+//     // Clear the timeout when the component is unmounted
+//     if (timeoutId) clearTimeout(timeoutId);
+//   };
+// }, []);
 
   // Don't render if not scrolled
   // if (!isScrolled) return null;

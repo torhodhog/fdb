@@ -9,7 +9,7 @@ const HeroVideo = dynamic(() => import("./HeroVideo"), { ssr: false });
 
 const Hero: FC = () => {
   return (
-    <div className="relative flex lg:flex-row flex-col-reverse lg:h-auto h-[40vh]">
+    <div className="relative flex lg:flex-row flex-col-reverse lg:h-auto h-[auto]">
       {/* Desktop View with Video */}
       <HeroVideo />
 
