@@ -23,26 +23,26 @@ const Hero: FC = () => {
   };
 
   return (
-    <div className="relative  flex lg:flex-row flex-col-reverse lg:h-auto h-[40vh]">
+    <div className="relative flex lg:flex-row flex-col-reverse lg:h-auto h-[40vh]">
       {/* Desktop View with Video */}
       <div className="relative w-full lg:block hidden mt-6" style={{ height: "600px" }}>
         <video
-  ref={videoRef}
-  className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-  autoPlay
-  loop
-  muted={isMuted}
-  controls={false}
-  onClick={toggleMute}
->
-  <source src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herovideo.mp4" type="video/mp4" />
-</video>
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+          autoPlay
+          loop
+          muted={isMuted}
+          controls={false}
+          onClick={toggleMute}
+        >
+          <source src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herovideo.mp4" type="video/mp4" />
+        </video>
         <button
-  onClick={toggleMute}
-  className="absolute bottom-3 right-3 bg-white bg-opacity-75 rounded p-2 text-sm text-gray-700 hover:bg-opacity-100 z-10"
->
-  {isMuted ? 'Slå på lyd' : 'Slå av lyd'}
-</button>
+          onClick={toggleMute}
+          className="absolute bottom-3 right-3 bg-white bg-opacity-75 rounded p-2 text-sm text-gray-700 hover:bg-opacity-100 z-10"
+        >
+          {isMuted ? 'Slå på lyd' : 'Slå av lyd'}
+        </button>
         <div className="absolute inset-0 flex justify-center items-center">
           <div className="w-80 h-80 rounded-full overflow-hidden spin" style={{ margin: 0, padding: 0 }}>
             {/* Her kan du legge til eventuelle andre bilder eller innhold */}
@@ -51,17 +51,14 @@ const Hero: FC = () => {
       </div>
 
       {/* Mobile View with Image */}
-      <div
-        className="relative w-full pl-0 pr-0 block lg:hidden flex flex-col items-center"
-        style={{ height: "90vh" }}
-      >
+      <div className="relative w-full flex flex-col items-center justify-center lg:hidden" style={{ height: "90vh", padding: "10vh 0" }}>
         <div className="relative z-10 flex flex-col items-center w-full h-full">
-        <Image
-  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/test+hero+telefon.png"
-  alt="Hero Logo"
-  fill
-  style={{ objectFit: 'contain' }}
-/>
+          <Image
+            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/test+hero+telefon.png"
+            alt="Hero Logo"
+            fill
+            style={{ objectFit: 'contain', maxWidth: '100%', maxHeight: '100%' }}
+          />
         </div>
       </div>
     </div>
