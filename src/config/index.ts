@@ -6,12 +6,12 @@ export const PRODUCT_CATEGORIES = [
       {
         name: "Alle produkter",
         href: "/products",
-        imageSrc: "/ui-kits/products.png",
+        imageSrc: "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/produkter.jpg",
       },
       {
         name: "Salg",
         href: "/Sale",
-        imageSrc: "/salg.png",
+        imageSrc: "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/salg.jpg",
       },
     ],
   },
@@ -22,7 +22,7 @@ export const PRODUCT_CATEGORIES = [
       {
         name: "Kontakt Oss",
         href: "/contact",
-        imageSrc: "/icons/bestsellers.jpg",
+        imageSrc: "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/kontakt.jpg",
       },
     ],
   },

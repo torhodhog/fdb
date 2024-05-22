@@ -62,28 +62,23 @@ const NavItem = ({
                 <div className="col-span-4 col-start-1 grid grid-cols-3 gap-x-8">
                   {category.featured.map((item) => (
                     <div
-                      onClick={() => close}
+                      onClick={() => close()}
                       key={item.name}
                       className="group relative text-base sm:text-sm"
                     >
-                      <div className="relative aspect-video overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                        <Image
-                          src={item.imageSrc}
-                          alt="product category image"
-                          fill
-                          className="object-cover object-center"
-                        />
-                      </div>
-
-                      <Link
-                        href={item.href}
-                        className="mt-6 block font-medium text-gray-900"
-                      >
-                        {item.name}
+                      <Link href={item.href} className="block">
+                        <div className="relative aspect-video overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
+                          <Image
+                            src={item.imageSrc}
+                            alt={item.name}
+                            fill
+                            className="object-cover object-center"
+                          />
+                        </div>
+                        <span className="mt-6 block font-medium text-gray-900">
+                          {item.name}
+                        </span>
                       </Link>
-                      <p className="mt-1" aria-hidden="true">
-                        
-                      </p>
                     </div>
                   ))}
                 </div>
