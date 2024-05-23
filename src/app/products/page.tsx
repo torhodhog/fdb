@@ -31,7 +31,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 16; // Show 20 products per page
+  const itemsPerPage = 16; 
 
   return (
     <>
@@ -74,10 +74,10 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
     sort: sort === "desc" || sort === "asc" ? sort : undefined,
     searchTerm: searchTerm,
     liga_system: ligaSystem,
-    limit: 16, // Set limit directly in the query
+    limit: 16, // Setter limiten her heller. 
   }}
   page={currentPage}
-  setPage={setCurrentPage} // Pass setPage prop
+  setPage={setCurrentPage} 
 />
 
       </MaxWidthWrapper>

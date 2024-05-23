@@ -51,14 +51,15 @@ export default function Home() {
           }}
         />
         <Link href="/Sale">
-          <Image
-            className="mt-12"
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
-            alt="Salg"
-            layout="responsive"
-            width={1000}
-            height={500}
-          />
+     <div style={{ position: 'relative', width: '100%', height: '30rem', marginBottom: '12'}}>
+  <Image
+    className="mt-12 mb-12"
+    src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/salle.png"
+    alt="Salg"
+    layout="fill"
+    objectFit="cover"
+  />
+</div>
         </Link>
       </MaxWidthWrapper>
 
