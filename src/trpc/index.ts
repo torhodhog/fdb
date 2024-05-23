@@ -35,6 +35,7 @@ export const appRouter = router({
       } = query;
 
       const payload = await getPayloadClient();
+      const page = cursor ?? 1;
 
       const parsedQueryOpts: Record<string, any> = {};
 
@@ -47,40 +48,42 @@ export const appRouter = router({
       });
 
       if (searchTerm) {
-        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
-      }
+  parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
+}
       if (liga_system) {
         parsedQueryOpts.liga_system = { equals: liga_system };
       }
 
-      const page = cursor || 1;
+      
 
       const sortDirection = sortOrder === "desc" ? "-" : "+";
       const sortString = `${sortDirection}${sortBy}`;
 
       const {
-        docs: items,
-        hasNextPage,
-        nextPage,
-      } = await payload.find({
-        collection: "products",
-        where: {
-          approvedForSale: {
-            equals: "approved",
-          },
-          ...parsedQueryOpts,
-        },
-        sort: sortString,
-        depth: 1,
-        limit,
-        page,
-      });
+  docs: items,
+  hasNextPage,
+  nextPage,
+} = await payload.find({
+  collection: "products",
+  where: {
+    approvedForSale: {
+      equals: "approved",
+    },
+    ...parsedQueryOpts,
+  },
+  sort: sortString,
+  depth: 1,
+  limit,
+  page,
+});
 
-      return {
-        items,
-        nextPage: hasNextPage ? nextPage : null,
-        previousPage: page > 1 ? page - 1 : null,
-      };
+console.log(`Page: ${page}, Next Page: ${nextPage}, Has Next Page: ${hasNextPage}`);
+
+return {
+  items,
+  nextPage: hasNextPage ? nextPage : null,
+  previousPage: page > 1 ? page - 1 : null,
+};
     }),
 });
 

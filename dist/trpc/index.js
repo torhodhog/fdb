@@ -78,7 +78,7 @@ exports.appRouter = (0, trpc_1.router)({
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, queryOpts, payload, parsedQueryOpts, page, sortDirection, sortString, _e, items, hasNextPage, nextPage;
+        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, hasNextPage, nextPage;
         var input = _b.input;
         return __generator(this, function (_f) {
             switch (_f.label) {
@@ -89,6 +89,7 @@ exports.appRouter = (0, trpc_1.router)({
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _f.sent();
+                    page = cursor !== null && cursor !== void 0 ? cursor : 1;
                     parsedQueryOpts = {};
                     Object.entries(queryOpts).forEach(function (_a) {
                         var key = _a[0], value = _a[1];
@@ -105,7 +106,6 @@ exports.appRouter = (0, trpc_1.router)({
                     if (liga_system) {
                         parsedQueryOpts.liga_system = { equals: liga_system };
                     }
-                    page = cursor || 1;
                     sortDirection = sortOrder === "desc" ? "-" : "+";
                     sortString = "".concat(sortDirection).concat(sortBy);
                     return [4 /*yield*/, payload.find({
@@ -120,6 +120,7 @@ exports.appRouter = (0, trpc_1.router)({
                         })];
                 case 2:
                     _e = _f.sent(), items = _e.docs, hasNextPage = _e.hasNextPage, nextPage = _e.nextPage;
+                    console.log("Page: ".concat(page, ", Next Page: ").concat(nextPage, ", Has Next Page: ").concat(hasNextPage));
                     return [2 /*return*/, {
                             items: items,
                             nextPage: hasNextPage ? nextPage : null,

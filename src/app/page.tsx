@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
@@ -31,6 +32,10 @@ const perks = [
 export default function Home() {
   return (
     <>
+      <Head>
+        <title>Home - Fotballdraktbutikken</title>
+        <meta name="description" content="Welcome to Fotballdraktbutikken" />
+      </Head>
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">
           <Hero />
@@ -38,24 +43,23 @@ export default function Home() {
         <ProductReel
           title="Nye produkter"
           href="/products"
-          hideSoldItems // Add this line
+          hideSoldItems
           query={{
             limit: 8,
             sortBy: "createdAt",
             sortOrder: "desc",
           }}
         />
-                    <Link href="/Sale">
-                      <Image
-                        className="mt-12"
-                        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
-                        alt="Salg"
-                        layout="responsive" // Add the layout prop with value "responsive"
-                        width={1000} // Add the width prop with the desired width value
-                        height={500} // Add the height prop with the desired height value
-                      />
-                    </Link>
-       
+        <Link href="/Sale">
+          <Image
+            className="mt-12"
+            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALG.jpg"
+            alt="Salg"
+            layout="responsive"
+            width={1000}
+            height={500}
+          />
+        </Link>
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">
