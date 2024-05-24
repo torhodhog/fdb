@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from "next/head";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
@@ -50,17 +50,19 @@ export default function Home() {
             sortOrder: "desc",
           }}
         />
+      </MaxWidthWrapper>
+      <MaxWidthWrapper>
         <Link href="/Sale">
-  <div className="relative w-full h-64 md:h-96 lg:h-128 mt-24 mb-40">
-    <Image
-      className="mt-12 mb-12"
-      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/salle.png"
-      alt="Salg"
-      layout="fill"
-      objectFit="cover"
-    />
-  </div>
-</Link>
+          <div className="relative w-full h-96 md:h-128 lg:h-192 mt-24 mb-40">
+            <Image
+              className="mt-12 mb-12"
+              src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/REDIGERTSALG.png"
+              alt="Salg"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        </Link>
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">
