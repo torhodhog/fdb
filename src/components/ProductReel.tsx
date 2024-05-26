@@ -12,7 +12,7 @@ interface ProductReelProps {
   query: TQueryValidator;
   size?: string;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc'; 
+  sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
   showSaleItems?: boolean;
   page?: number;
@@ -23,19 +23,33 @@ interface ProductReelProps {
 const itemsPerPage = 20; // Show 20 products per page
 
 const ProductReel = (props: ProductReelProps) => {
-  const { title, subtitle, href, query, size, sortBy = 'createdAt', sortOrder = 'desc', hideSoldItems=false, page = 1, setPage } = props;
+  const {
+    title,
+    subtitle,
+    href,
+    query,
+    size,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    hideSoldItems = false,
+    page = 1,
+    setPage,
+  } = props;
 
-  const { data: queryResults, isLoading, isError, error } = trpc.getInfiniteProducts.useQuery(
-    {
-      limit: itemsPerPage, // Setter limit til itemsPerPage
-      cursor: page, // Inkluderer current page som cursor
-      query: {
-        ...query,
-        sortBy,
-        sortOrder,
-      },
-    }
-  );
+  const {
+    data: queryResults,
+    isLoading,
+    isError,
+    error,
+  } = trpc.getInfiniteProducts.useQuery({
+    limit: itemsPerPage, // Setter limit til itemsPerPage
+    cursor: page, // Inkluderer current page som cursor
+    query: {
+      ...query,
+      sortBy,
+      sortOrder,
+    },
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -47,15 +61,18 @@ const ProductReel = (props: ProductReelProps) => {
 
   const products = queryResults?.items || [];
 
-  const filteredProducts = products.filter(product => 
-    (!size || product.size === size) &&
-    (!query.searchTerm || product.name.includes(query.searchTerm)) &&
-    (!product.isSold || !hideSoldItems) &&
-    (!props.showSaleItems || product.onSale)
+  const filteredProducts = products.filter(
+    (product) =>
+      (!size || product.size === size) &&
+      (!query.searchTerm || product.name.includes(query.searchTerm)) &&
+      (!product.isSold || !hideSoldItems) &&
+      (!props.showSaleItems || product.onSale)
   );
 
-  let map = filteredProducts.length ? filteredProducts : new Array<null>(itemsPerPage).fill(null);
-  
+  let map = filteredProducts.length
+    ? filteredProducts
+    : new Array<null>(itemsPerPage).fill(null);
+
   return (
     <section className="py-12">
       <div className="md:flex md:items-center md:justify-between mb-4">
@@ -75,7 +92,10 @@ const ProductReel = (props: ProductReelProps) => {
             href={href}
             className="hidden text-sm font-extrabold text-gray-600 hover:text-blue-500 md:block"
           >
-            {props.showSaleItems ? 'Se alle salgsvarer' : 'Se hele kolleksjonen'} <span aria-hidden="true">&rarr;</span>
+            {props.showSaleItems
+              ? "Se alle salgsvarer"
+              : "Se hele kolleksjonen"}{" "}
+            <span aria-hidden="true">&rarr;</span>
           </Link>
         ) : null}
       </div>
@@ -95,15 +115,18 @@ const ProductReel = (props: ProductReelProps) => {
       </div>
       {setPage && (
         <div className="flex justify-between mt-4">
-          <button 
-            onClick={() => setPage(queryResults?.previousPage || 1)} 
+          <button
+            onClick={() => setPage(queryResults?.previousPage || 1)}
             disabled={!queryResults?.previousPage}
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Forrige
           </button>
-          <button 
-            onClick={() => setPage(queryResults?.nextPage || page + 1)}
+          <button
+            onClick={() => {
+              setPage(queryResults?.nextPage || page + 1);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
             Neste
