@@ -175,12 +175,12 @@ const Page = async ({ params }: PageProps) => {
         </div>
       </div>
 
-      <ProductReel
-        href="/product"
-        query={{ category: product.category, limit: 4 }}
-        title={`Lignende ${label}`}
-        subtitle={`Finn lignende kvalitetsdraker ${label} som '${product.name}' drakten`}
-      />
+     <ProductReel
+  href="/product"
+  query={{ liga_system: product.liga_system || undefined, limit: 4 }}
+  title={`Lignende produkter`}
+  subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
+/>
     </MaxWidthWrapper>
   );
 };
