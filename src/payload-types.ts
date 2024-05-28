@@ -68,6 +68,7 @@ export interface Product {
     id?: string | null;
   }[];
   liga_system?: string | null;
+  nasjon?: string | null;
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
   category: 'ui_kits' | 'Kontakt';

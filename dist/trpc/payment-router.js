@@ -128,6 +128,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                         })];
                 case 5:
                     customer = _c.sent();
+                    console.log("Stripe customer created with ID:", customer.id);
                     return [4 /*yield*/, stripe_1.stripe.checkout.sessions.create({
                             success_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(order.id),
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
@@ -144,8 +145,8 @@ exports.paymentRouter = (0, trpc_1.router)({
                     return [2 /*return*/, { url: stripeSession.url }];
                 case 7:
                     err_1 = _c.sent();
-                    console.error("Failed to create Stripe session:", err_1);
-                    return [2 /*return*/, { url: null }];
+                    console.error("Failed to create Stripe session:", err_1.message); // Improved error logging
+                    throw new server_1.TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err_1.message });
                 case 8: return [2 /*return*/];
             }
         });

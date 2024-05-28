@@ -9,7 +9,7 @@ import path from "path";
 import { PayloadRequest } from 'payload/types';
 import { parse } from "url";
 
-import  { Products } from './collections/Products/Products'
+import { Products } from './collections/Products/Products'
 import { getPayloadClient } from "./get-payload";
 import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
@@ -18,7 +18,6 @@ import { stripeWebhookHandler } from './webhooks'
 interface MyRequest extends Request {
   payload: PayloadRequest['payload'];
 }
-
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -45,13 +44,13 @@ const start = async () => {
   });
 
   app.post(
-  "/api/webhooks/stripe",
-  webhookMiddleware,
-  async (req: express.Request, res: express.Response) => {
-    console.log("Received Stripe webhook event"); 
-    await stripeWebhookHandler(req, res);
-  }
-);
+    "/api/webhooks/stripe",
+    webhookMiddleware,
+    async (req: express.Request, res: express.Response) => {
+      console.log("Received Stripe webhook event"); 
+      await stripeWebhookHandler(req, res);
+    }
+  );
 
   const payload = await getPayloadClient({
     initOptions: {
@@ -98,40 +97,65 @@ const start = async () => {
       createContext,
     })
   );
-app.get('/api/products', async (req: Request, res) => {
-  const myReq = req as MyRequest;
 
-  const searchTerm = (myReq.query as any).searchTerm;
-  const ligaSystem = (myReq.query as any).liga_system;
-  const onSale = (myReq.query as any).onSale;
-
-  console.log('searchTerm:', searchTerm);
-  console.log('ligaSystem:', ligaSystem);
-  console.log('onSale:', onSale);
-
-  let query: Record<string, any> = {};
-  if (searchTerm) {
-    query.name = { $regex: new RegExp(searchTerm, 'i') };
-  }
-  if (ligaSystem) {
-    query.liga_system = ligaSystem;
-  }
-  if (onSale) {
-    query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
-  }
-
-  console.log('query:', query);
-
-  const { docs: products } = await myReq.payload.find({
-    collection: 'products',
-    where: query,
+  app.get('/api/products', async (req: Request, res) => {
+    const myReq = req as MyRequest;
+  
+    const searchTerm = (myReq.query as any).searchTerm;
+    const ligaSystem = (myReq.query as any).liga_system;
+    const onSale = (myReq.query as any).onSale;
+    const page = parseInt((myReq.query as any).page) || 1;
+    const limit = parseInt((myReq.query as any).limit) || 20;
+  
+    console.log('searchTerm:', searchTerm);
+    console.log('ligaSystem:', ligaSystem);
+    console.log('onSale:', onSale);
+    console.log('page:', page);
+    console.log('limit:', limit);
+  
+    let query: Record<string, any> = {};
+    if (searchTerm) {
+      query.name = { $regex: new RegExp(searchTerm, 'i') };
+    }
+    if (ligaSystem) {
+      query.liga_system = ligaSystem;
+    }
+    if (onSale) {
+      query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
+    }
+  
+    console.log('query:', query);
+  
+    try {
+      const totalItemsResult = await myReq.payload.find({
+        collection: 'products',
+        where: query,
+        limit: 0, // Ensures we only get the count
+      });
+  
+      console.log('totalItemsResult:', totalItemsResult);
+  
+      const totalItems = totalItemsResult.totalDocs || 0;
+      console.log('totalItems:', totalItems);
+  
+      const { docs: products } = await myReq.payload.find({
+        collection: 'products',
+        where: query,
+        limit,
+        page,
+      });
+  
+      console.log('products:', products);
+  
+      res.json({ items: products, totalItems });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
+  
 
-  res.json(products);
-});
   app.use((req, res) => nextHandler(req, res));
-
-  // ...resten av koden...
 
   nextApp.prepare().then(() => {
     payload.logger.info("Next.js started");

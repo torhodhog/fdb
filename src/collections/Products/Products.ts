@@ -264,6 +264,11 @@ export const Products: CollectionConfig = {
       type: "text",
     },
     {
+  name: "nasjon",
+  label: "Nasjon",
+  type: "text",
+},
+    {
       name: "tilstand",
       label: "Tilstand",
       type: "select",

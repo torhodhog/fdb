@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Select from "@/components/ui/select";
-import { Product } from "@/payload-types";
 
 type Param = string | string[] | undefined;
 
@@ -31,22 +30,25 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 16; 
+  const itemsPerPage = 16;
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+  };
 
   return (
     <>
       <MaxWidthWrapper className="relative">
         <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
-          {/* Gruppering for søkefelt og knapp */}
           <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
             <Input
               className="flex-grow"
               type="search"
-              placeholder="Søk etter drakter"
+              placeholder="Under utvikling..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button type="submit">Søk</Button>
+            <Button onClick={handleSearch} type="submit">Søk</Button>
           </div>
           <div>
             <Select
@@ -66,20 +68,19 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
       </MaxWidthWrapper>
 
       <MaxWidthWrapper>
-      <ProductReel
-  title={label ?? "Alle produkter"}
-  size={size}
-  query={{
-    category,
-    sort: sort === "desc" || sort === "asc" ? sort : undefined,
-    searchTerm: searchTerm,
-    liga_system: ligaSystem,
-    limit: 16, // Setter limiten her heller. 
-  }}
-  page={currentPage}
-  setPage={setCurrentPage} 
-/>
-
+        <ProductReel
+          title={label ?? "Alle produkter"}
+          query={{
+            category,
+            sort: sort === "desc" || sort === "asc" ? sort : undefined,
+            searchTerm: searchTerm,
+            liga_system: ligaSystem,
+            size: size, // Include size in the query object
+            limit: itemsPerPage,
+          }}
+          page={currentPage}
+          setPage={setCurrentPage}
+        />
       </MaxWidthWrapper>
     </>
   );

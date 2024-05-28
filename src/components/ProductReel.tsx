@@ -9,8 +9,7 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator;
-  size?: string;
+  query: TQueryValidator & { size?: string }; // Include size in query type
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
@@ -18,6 +17,13 @@ interface ProductReelProps {
   page?: number;
   setPage?: (page: number) => void; // Set setPage as optional
   itemsPerPage?: number;
+}
+
+interface QueryResults {
+  items: Product[];
+  totalItems: number;
+  previousPage?: number;
+  nextPage?: number;
 }
 
 const itemsPerPage = 20; // Show 20 products per page
@@ -28,7 +34,6 @@ const ProductReel = (props: ProductReelProps) => {
     subtitle,
     href,
     query,
-    size,
     sortBy = "createdAt",
     sortOrder = "desc",
     hideSoldItems = false,
@@ -49,7 +54,9 @@ const ProductReel = (props: ProductReelProps) => {
       sortBy,
       sortOrder,
     },
-  });
+  }) as { data: QueryResults; isLoading: boolean; isError: boolean; error: any };
+
+  console.log("queryResults:", queryResults);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -59,12 +66,16 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
+  // If totalItems is not returned, calculate it from the length of the items array
   const products = queryResults?.items || [];
+  const totalItems = queryResults?.totalItems ?? products.length;
+  console.log("totalItems:", totalItems);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const filteredProducts = products.filter(
     (product) =>
-      (!size || product.size === size) &&
-      (!query.searchTerm || product.name.includes(query.searchTerm)) &&
+      (!query.size || product.size === query.size) &&
+      (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
       (!product.isSold || !hideSoldItems) &&
       (!props.showSaleItems || product.onSale)
   );
@@ -114,7 +125,7 @@ const ProductReel = (props: ProductReelProps) => {
         </div>
       </div>
       {setPage && (
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-4 items-center">
           <button
             onClick={() => setPage(queryResults?.previousPage || 1)}
             disabled={!queryResults?.previousPage}
@@ -122,6 +133,9 @@ const ProductReel = (props: ProductReelProps) => {
           >
             Forrige
           </button>
+          <span className="text-gray-700 dark:text-gray-300">
+            Side: {page} 
+          </span>
           <button
             onClick={() => {
               setPage(queryResults?.nextPage || page + 1);

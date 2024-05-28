@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
-import { PRODUCT_CATEGORIES } from "@/config";
 import ImageSlider from "./ImageSlider";
 
 interface ProductListingProps {
@@ -37,57 +36,55 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
     })
     .filter(Boolean) as string[];
 
-  if (isVisible && product) {
-    return (
-      <Link
-        className={cn("invisible h-full w-full cursor-pointer group/main", {
-          "visible animate-in fade-in-5": isVisible,
-        })}
-        href={`/product/${product.id}`}
-      >
-        <div className="flex flex-col w-full">
-          <ImageSlider urls={validUrls} />
+  return (
+    <Link
+      className={cn("invisible h-full w-full cursor-pointer group/main", {
+        "visible animate-in fade-in-5": isVisible,
+      })}
+      href={`/product/${product.id}`}
+    >
+      <div className="flex flex-col w-full">
+        <ImageSlider urls={validUrls} />
 
-          {product.isSold ? (
-            <p className=" text-gray-400 mt-8">
-              Dette produktet er dessverre solgt
+        {product.isSold ? (
+          <p className=" text-gray-400 mt-8">
+            Dette produktet er dessverre solgt
+          </p>
+        ) : (
+          <>
+            <h3 className="mt-4 font-medium text-sm">{product.name}</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Størrelse: {product.size}
             </p>
-          ) : (
-            <>
-              <h3 className="mt-4 font-medium text-sm">{product.name}</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Størrelse: {product.size}
-              </p>
-              {product.onSale &&
-              product.salePrice !== null &&
-              product.salePrice !== undefined ? (
-                <>
-                  <p
-                    className="mt-1 font-medium text-sm font-bla"
-                    style={{ textDecoration: "line-through" }}
-                  >
-                    {formatPrice(product.price)}
-                  </p>
-                  <p
-                    className="mt-1 font-medium text-sm font-bla"
-                    style={{ color: "red" }}
-                  >
-                    {formatPrice(product.salePrice)} (
-                    {Math.round((1 - product.salePrice / product.price) * 100)}%
-                    off)
-                  </p>
-                </>
-              ) : (
-                <p className="mt-1 font-medium text-sm font-bla">
+            {product.onSale &&
+            product.salePrice !== null &&
+            product.salePrice !== undefined ? (
+              <>
+                <p
+                  className="mt-1 font-medium text-sm font-bla"
+                  style={{ textDecoration: "line-through" }}
+                >
                   {formatPrice(product.price)}
                 </p>
-              )}
-            </>
-          )}
-        </div>
-      </Link>
-    );
-  }
+                <p
+                  className="mt-1 font-medium text-sm font-bla"
+                  style={{ color: "red" }}
+                >
+                  {formatPrice(product.salePrice)} (
+                  {Math.round((1 - product.salePrice / product.price) * 100)}%
+                  off)
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 font-medium text-sm font-bla">
+                {formatPrice(product.price)}
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </Link>
+  );
 };
 
 const ProductPlaceholder = () => {

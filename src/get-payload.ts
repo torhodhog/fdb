@@ -40,10 +40,12 @@ export const getPayloadClient = async ({
   }
 
   if (cached.client) {
+    console.log("Returning cached Payload client");
     return cached.client;
   }
 
   if (!cached.promise) {
+    console.log("Initializing new Payload client");
     cached.promise = payload.init({
       email: {
         transport: transporter,
@@ -58,8 +60,10 @@ export const getPayloadClient = async ({
 
   try {
     cached.client = await cached.promise;
+    console.log("Payload client initialized successfully");
   } catch (e: unknown) {
     cached.promise = null;
+    console.error("Failed to initialize Payload client", e);
     throw e;
   }
 

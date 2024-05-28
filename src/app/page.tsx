@@ -1,7 +1,7 @@
-import Head from "next/head";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -64,6 +64,7 @@ export default function Home() {
           </div>
         </Link>
       </MaxWidthWrapper>
+
 
       <section className="border-t border-gray-200  z-0">
         <MaxWidthWrapper className="py-20">

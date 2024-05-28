@@ -150,7 +150,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                     createContext: createContext,
                 }));
                 app.get('/api/products', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-                    var myReq, searchTerm, ligaSystem, onSale, query, products;
+                    var myReq, searchTerm, ligaSystem, onSale, page, limit, query, totalItemsResult, totalItems, products, error_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -158,9 +158,13 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 searchTerm = myReq.query.searchTerm;
                                 ligaSystem = myReq.query.liga_system;
                                 onSale = myReq.query.onSale;
+                                page = parseInt(myReq.query.page) || 1;
+                                limit = parseInt(myReq.query.limit) || 20;
                                 console.log('searchTerm:', searchTerm);
                                 console.log('ligaSystem:', ligaSystem);
                                 console.log('onSale:', onSale);
+                                console.log('page:', page);
+                                console.log('limit:', limit);
                                 query = {};
                                 if (searchTerm) {
                                     query.name = { $regex: new RegExp(searchTerm, 'i') };
@@ -172,19 +176,40 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
                                 }
                                 console.log('query:', query);
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 4, , 5]);
                                 return [4 /*yield*/, myReq.payload.find({
                                         collection: 'products',
                                         where: query,
+                                        limit: 0, // Ensures we only get the count
                                     })];
-                            case 1:
+                            case 2:
+                                totalItemsResult = _a.sent();
+                                console.log('totalItemsResult:', totalItemsResult);
+                                totalItems = totalItemsResult.totalDocs || 0;
+                                console.log('totalItems:', totalItems);
+                                return [4 /*yield*/, myReq.payload.find({
+                                        collection: 'products',
+                                        where: query,
+                                        limit: limit,
+                                        page: page,
+                                    })];
+                            case 3:
                                 products = (_a.sent()).docs;
-                                res.json(products);
-                                return [2 /*return*/];
+                                console.log('products:', products);
+                                res.json({ items: products, totalItems: totalItems });
+                                return [3 /*break*/, 5];
+                            case 4:
+                                error_1 = _a.sent();
+                                console.error('Error fetching products:', error_1);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                                return [3 /*break*/, 5];
+                            case 5: return [2 /*return*/];
                         }
                     });
                 }); });
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
-                // ...resten av koden...
                 next_utils_1.nextApp.prepare().then(function () {
                     payload.logger.info("Next.js started");
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {

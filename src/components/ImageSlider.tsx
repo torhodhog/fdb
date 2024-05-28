@@ -15,9 +15,7 @@ interface ImageSliderProps {
 }
 
 const ImageSlider = ({ urls }: ImageSliderProps) => {
-  const [swiper, setSwiper] = useState<null | SwiperType>(
-    null
-  )
+  const [swiper, setSwiper] = useState<null | SwiperType>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
   const [slideConfig, setSlideConfig] = useState({
@@ -40,7 +38,7 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
   const inactiveStyles = 'hidden text-gray-400'
 
   return (
-    <div className='group relative bg-zinc-100 aspect-square overflow-hidden '>
+    <div className='group relative bg-zinc-100 aspect-square overflow-hidden'>
       <div className='absolute z-10 inset-0 opacity-0 group-hover:opacity-100 transition'>
         <button
           onClick={(e) => {
@@ -57,7 +55,7 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
             }
           )}
           aria-label='next image'>
-          <ChevronRight className='h-4 w-4 text-zinc-700' />{' '}
+          <ChevronRight className='h-4 w-4 text-zinc-700' />
         </button>
         <button
           onClick={(e) => {
@@ -70,7 +68,7 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
               !slideConfig.isBeginning,
           })}
           aria-label='previous image'>
-          <ChevronLeft className='h-4 w-4 text-zinc-700' />{' '}
+          <ChevronLeft className='h-4 w-4 text-zinc-700' />
         </button>
       </div>
 
@@ -86,15 +84,17 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
         slidesPerView={1}
         className='h-full w-full'>
         {urls.map((url, i) => (
-         <SwiperSlide key={i} className='-z-10 relative h-full w-full'>
+          <SwiperSlide key={i} className='-z-10 relative h-full w-full'>
             <Image
-               className='-z-10 object-center'
-               src={url}
-               alt='Product image'
-               layout='fill'
-               objectFit='cover'
+              className='-z-10 object-center'
+              src={url}
+              alt={`Product image ${i + 1}`}
+              fill
+              sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ objectFit: 'cover' }}
+              priority={i === 0} // Legger til priority for det første bildet
             />
-         </SwiperSlide>
+          </SwiperSlide>
         ))}
       </Swiper>
     </div>

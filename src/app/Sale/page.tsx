@@ -47,11 +47,11 @@ const SalePage = () => {
       <MaxWidthWrapper>
         <ProductReel
           title="Salg"
-          size={size}
           query={{
             limit: 80,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
+            size: size, // Include size in the query object
             onSale: true,
           }}
         />

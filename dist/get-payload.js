@@ -98,9 +98,11 @@ var getPayloadClient = function () {
                         throw new Error("PAYLOAD_SECRET is missing");
                     }
                     if (cached.client) {
+                        console.log("Returning cached Payload client");
                         return [2 /*return*/, cached.client];
                     }
                     if (!cached.promise) {
+                        console.log("Initializing new Payload client");
                         cached.promise = payload_1.default.init(__assign({ email: {
                                 transport: transporter,
                                 fromAddress: "fdb@fotballdraktbutikken.com",
@@ -114,10 +116,12 @@ var getPayloadClient = function () {
                     return [4 /*yield*/, cached.promise];
                 case 2:
                     _b.client = _d.sent();
+                    console.log("Payload client initialized successfully");
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _d.sent();
                     cached.promise = null;
+                    console.error("Failed to initialize Payload client", e_1);
                     throw e_1;
                 case 4: return [2 /*return*/, cached.client];
             }
