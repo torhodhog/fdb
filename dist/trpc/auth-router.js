@@ -72,6 +72,7 @@ exports.authRouter = (0, trpc_1.router)({
                             data: {
                                 email: email,
                                 password: password,
+                                phone: "",
                                 role: "user",
                             },
                         })];

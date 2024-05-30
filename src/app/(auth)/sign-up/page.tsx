@@ -54,8 +54,8 @@ const Page = () => {
     },
   });
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    mutate({ email, password });
+  const onSubmit = ({ email, password, phone }: TAuthCredentialsValidator) => {
+    mutate({ email, password, phone });
   };
 
   return (
@@ -81,45 +81,58 @@ const Page = () => {
           </div>
 
           <div className="grid gap-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-2">
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    {...register("email")}
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.email,
-                    })}
-                    placeholder="you@example.com"
-                  />
-                  {errors?.email && (
-                    <p className="text-sm text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+  <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="grid gap-2">
+      <div className="grid gap-1 py-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          {...register("email")}
+          className={cn({
+            "focus-visible:ring-red-500": errors.email,
+          })}
+          placeholder="you@example.com"
+        />
+        {errors?.email && (
+          <p className="text-sm text-red-500">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
 
-                <div className="grid gap-1 py-2">
-                  <Label htmlFor="password">Passord</Label>
-                  <Input
-                    {...register("password")}
-                    type="password"
-                    className={cn({
-                      "focus-visible:ring-red-500": errors.password,
-                    })}
-                    placeholder="Passord"
-                  />
-                  {errors?.password && (
-                    <p className="text-sm text-red-500">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
+      <div className="grid gap-1 py-2">
+        <Label htmlFor="phone">Telefon</Label>
+        <Input
+          {...register("phone")}
+          placeholder="Telefonnummer"
+        />
+        {errors?.phone && (
+          <p className="text-sm text-red-500">
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
 
-                <Button>Sign up</Button>
-              </div>
-            </form>
-          </div>
+      <div className="grid gap-1 py-2">
+        <Label htmlFor="password">Passord</Label>
+        <Input
+          {...register("password")}
+          type="password"
+          className={cn({
+            "focus-visible:ring-red-500": errors.password,
+          })}
+          placeholder="Passord"
+        />
+        {errors?.password && (
+          <p className="text-sm text-red-500">
+            {errors.password.message}
+          </p>
+        )}
+      </div>
+
+      <Button>Sign up</Button>
+    </div>
+  </form>
+</div>
         </div>
       </div>
     </>

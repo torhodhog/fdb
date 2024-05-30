@@ -67,5 +67,11 @@ export const Users: CollectionConfig = {
         { label: 'User', value: 'user' },
       ],
     },
+    {
+  name: 'phone',
+  label: 'Phone',
+  type: 'text',
+  required: true,
+},
   ],
 }

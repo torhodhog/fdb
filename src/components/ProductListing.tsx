@@ -10,9 +10,10 @@ import ImageSlider from "./ImageSlider";
 interface ProductListingProps {
   product: Product | null;
   index: number;
+  currentPage: number;  // Legg til denne linjen for å motta currentPage prop
 }
 
-const ProductListing = ({ product, index }: ProductListingProps) => {
+const ProductListing = ({ product, index, currentPage }: ProductListingProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,12 +37,17 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
     })
     .filter(Boolean) as string[];
 
+  const handleClick = () => {
+    localStorage.setItem("currentPage", String(currentPage));
+  };
+
   return (
     <Link
       className={cn("invisible h-full w-full cursor-pointer group/main", {
         "visible animate-in fade-in-5": isVisible,
       })}
-      href={`/product/${product.id}`}
+      href={`/product/${product.id}?page=${currentPage}`}  // Oppdatert lenke med page parameter
+      onClick={handleClick}  // Lagre currentPage ved klikk
     >
       <div className="flex flex-col w-full">
         <ImageSlider urls={validUrls} />
@@ -91,11 +97,11 @@ const ProductPlaceholder = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
-        <Skeleton className="h-full w-full" />
+        <Skeleton className="w-full h-full" />
       </div>
-      <Skeleton className="mt-4 w-2/3 h-4 rounded-lg" />
-      <Skeleton className="mt-2 w-16 h-4 rounded-lg" />
-      <Skeleton className="mt-2 w-12 h-4 rounded-lg" />
+      <Skeleton className="h-5 w-4/6 mt-4" />
+      <Skeleton className="h-5 w-3/6 mt-2" />
+      <Skeleton className="h-5 w-2/6 mt-2" />
     </div>
   );
 };

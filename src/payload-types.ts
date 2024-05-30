@@ -27,6 +27,7 @@ export interface User {
   products?: (string | Product)[] | null;
   product_files?: (string | ProductFile)[] | null;
   role: 'admin' | 'user';
+  phone: string;
   updatedAt: string;
   createdAt: string;
   email: string;

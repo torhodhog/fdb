@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import {
   AuthCredentialsValidator,
   TAuthCredentialsValidator,
+  TSignInCredentialsValidator,
 } from "@/lib/validators/account-credentials-validators";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
@@ -61,10 +62,9 @@ const Page = () => {
     },
   });
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    signIn({ email, password });
-  };
-
+const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
+  signIn({ email, password, phone: '' });
+};
   return (
     <>
       <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">

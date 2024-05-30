@@ -129,6 +129,7 @@ const ProductReel = (props: ProductReelProps) => {
                 key={`product-${i}`}
                 product={product}
                 index={i}
+                currentPage={page}  // Pass currentPage prop to ProductListing
               />
             ))}
           </div>
@@ -162,5 +163,3 @@ const ProductReel = (props: ProductReelProps) => {
 };
 
 export default ProductReel;
-
-

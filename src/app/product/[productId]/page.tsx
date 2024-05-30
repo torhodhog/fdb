@@ -3,16 +3,17 @@ import ImageSlider from "@/components/ImageSlider";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
 import { PRODUCT_CATEGORIES } from "@/config";
-import { getPayloadClient } from "@/get-payload";
 import { formatPrice } from "@/lib/utils";
-import { Label } from "@radix-ui/react-dropdown-menu";
 import { Check, Shield } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import { fetchProduct } from "@/lib/getProducts";
 interface PageProps {
   params: {
     productId: string;
+  };
+  searchParams: {
+    [key: string]: string;
   };
 }
 
@@ -21,25 +22,11 @@ const BREADCRUMBS = [
   { id: 2, name: "Products", href: "/products" },
 ];
 
-const Page = async ({ params }: PageProps) => {
+const Page = async ({ params, searchParams }: PageProps) => {
   const { productId } = params;
+  const page = searchParams.page || "1";
 
-  const payload = await getPayloadClient();
-
-  const { docs: products } = await payload.find({
-    collection: "products",
-    limit: 1,
-    where: {
-      id: {
-        equals: productId,
-      },
-      approvedForSale: {
-        equals: "approved",
-      },
-    },
-  });
-
-  const [product] = products;
+  const product = await fetchProduct(productId);
 
   if (!product) return notFound();
 
@@ -60,11 +47,10 @@ const Page = async ({ params }: PageProps) => {
   };
 
   const price = product.salePrice || product.price;
-  
   const isOnSale = Boolean(product.salePrice);
 
   return (
-    <MaxWidthWrapper className="bg-white ">
+    <MaxWidthWrapper className="bg-white">
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
           <div className="lg:max-w-lg lg:self-end">
@@ -92,6 +78,10 @@ const Page = async ({ params }: PageProps) => {
                 </li>
               ))}
             </ol>
+
+            <Link href={`/products?page=${page}`} className="text-blue-500 hover:underline">
+              Tilbake til produktsiden
+            </Link>
 
             <div className="mt-4">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -129,12 +119,10 @@ const Page = async ({ params }: PageProps) => {
                 <h2 className="text-lg font-bold">Trykk:</h2>
                 {product.trykk === "Ja" ? (
                   <span className="text-green-500">
-                    {/* Replace with your check icon */}
                     ✔
                   </span>
                 ) : (
                   <span className="text-red-500" style={{ fontSize: '0.75rem' }}>
-                    {/* Replace with your cross icon */}
                     Nei
                   </span>
                 )}
@@ -175,12 +163,13 @@ const Page = async ({ params }: PageProps) => {
         </div>
       </div>
 
-     <ProductReel
-  href="/product"
-  query={{ liga_system: product.liga_system || undefined, limit: 4 }}
-  title={`Lignende produkter`}
-  subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
-/>
+      <ProductReel
+        href="/product"
+        query={{ liga_system: product.liga_system || undefined, limit: 4 }}
+        title={`Lignende produkter`}
+        subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
+        page={parseInt(page, 10)} // Pass page parameter to ProductReel
+      />
     </MaxWidthWrapper>
   );
 };
