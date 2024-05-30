@@ -5,7 +5,7 @@ import { FC } from 'react';
 
 const FinalSale = ({ src, alt }: { src: string, alt: string }) => (
    <div className="relative w-full h-[32vh]">
-      <Link href="http://localhost:3000/finalesale">
+      <Link href="/finalesale">
         
             <Image
                src={src}
