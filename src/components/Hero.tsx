@@ -14,15 +14,10 @@ const Hero: FC = () => {
       <HeroVideo />
 
       {/* Mobile View with Image */}
-      <div className="relative w-full flex flex-col items-center justify-center lg:hidden" style={{ height: "100vh" }}>
-        <div className="relative z-10 flex flex-col items-center w-full h-full">
-          <Image
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/test+hero+telefon.png"
-            alt="Hero Logo"
-            layout="fill"
-            objectFit="cover"
-            style={{ width: '100%', height: '100%' }}
-          />
+      <div className="relative w-full flex flex-col items-center justify-center lg:hidden" style={{ height: "20vh" }}>
+        <div className="relative z-10 flex flex-col items-center w-full h-full mt-20">
+          <h1 className="font-mono font-bold text-2xl">Velkommen til fotballdraktbutikken</h1>
+          <p className="text-center font-mono">Vi leverer kvalitetsdrakter fra flere tiår.</p>
         </div>
       </div>
     </div>

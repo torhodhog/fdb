@@ -21,7 +21,7 @@ const Navbar = async () => {
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-28 items-center">
-              <MobileNav />
+              {user && <MobileNav user={user}/>}
 
               <div className="ml-4 hidden lg:flex lg:ml-0">
                 <Link href="/">

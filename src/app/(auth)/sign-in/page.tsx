@@ -63,8 +63,9 @@ const Page = () => {
   });
 
 const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
-  signIn({ email, password, phone: '' });
+  signIn({ email, password, phone });
 };
+
   return (
     <>
       <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">

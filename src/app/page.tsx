@@ -55,7 +55,9 @@ export default function Home() {
         />
       </MaxWidthWrapper>
       <MaxWidthWrapper>
+      <div className="relative w-full h-96 md:h-128 lg:h-192 mt-24 mb-40">
   <FinalSale src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/cl.jpg" alt="Final Sale" />
+  </div>
 </MaxWidthWrapper>
       <MaxWidthWrapper>
   <Link href="/Sale">
