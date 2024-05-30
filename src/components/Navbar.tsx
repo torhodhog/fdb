@@ -5,15 +5,16 @@ import Link from "next/link";
 import Cart from "./Cart";
 import { Icons } from "./Icons";
 import MaxWidthWrapper from "./MaxWidthWrapper";
-import MobileNav from "./MobildeNav";
+import MobileNav from "./MobildeNav"; // Sørg for at importen er korrekt her
 import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
+import { User as UserType } from "@/payload-types";
 
 const Navbar = async () => {
   const nextCookies = cookies();
-  const { user } = await getServerSideUser(nextCookies);
+  const { user }: { user: UserType | null } = await getServerSideUser(nextCookies);
 
   return (
     <div className=" top-0 inset-x-0 z-50 sticky bg-white">
@@ -21,7 +22,7 @@ const Navbar = async () => {
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-28 items-center">
-              {user && <MobileNav user={user}/>}
+              <MobileNav user={user} /> {/* Pass user prop to MobileNav for mobile view */}
 
               <div className="ml-4 hidden lg:flex lg:ml-0">
                 <Link href="/">
@@ -35,49 +36,38 @@ const Navbar = async () => {
 
               <div className="ml-auto flex items-center">
                 <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  {user ? null : (
-                    <div className="hidden lg:flex">
-                      <Link
-                        href="/sign-in"
-                        className={buttonVariants({
-                          variant: "ghost",
-                        })}
-                      >
-                        Logg inn
-                      </Link>
-                    </div>
-                  )}
-
-                  {user ? null : (
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  )}
-
                   {user ? (
-                    <UserAccountNav user={user} />
+                    <UserAccountNav user={user} /> // Desktop view user account navigation
                   ) : (
-                    <div className="hidden lg:flex">
-                      <Link
-                        href="/sign-up"
-                        className={buttonVariants({
-                          variant: "ghost",
-                        })}
-                      >
-                        Opprett konto
-                      </Link>
-                    </div>
+                    <>
+                      <div className="hidden lg:flex">
+                        <Link
+                          href="/sign-in"
+                          className={buttonVariants({
+                            variant: "ghost",
+                          })}
+                        >
+                          Logg inn
+                        </Link>
+                      </div>
+
+                      <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+
+                      <div className="hidden lg:flex">
+                        <Link
+                          href="/sign-up"
+                          className={buttonVariants({
+                            variant: "ghost",
+                          })}
+                        >
+                          Opprett konto
+                        </Link>
+                      </div>
+                    </>
                   )}
 
-                  {user ? (
+                  {user && (
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  ) : null}
-
-                  {user ? null : (
-                    <div className="flex lg:ml-6">
-                      <span
-                        className="h-6 w-px bg-gray-200"
-                        aria-hidden="true"
-                      />
-                    </div>
                   )}
 
                   <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex">

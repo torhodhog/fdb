@@ -2,31 +2,23 @@
 
 import { Home, ShoppingCart, Percent, Box } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { User as UserType } from "@/payload-types";
 
-type User = UserType & {
-  name?: string; // name is optional
-};
-
-const MobileNav = ({ user }: { user: User }) => {
-  const pathname = usePathname();
-  const isLoggedIn = !!user && !!user.email;
-
-  console.log('User:', user);  // Debugging: Log user object
+const MobileNav = ({ user }: { user: UserType | null }) => {
+  const isLoggedIn = Boolean(user);
 
   return (
     <div>
       <div className="fixed top-0 w-full bg-white bg-opacity-95 lg:hidden mt-10">
         <div className="flex justify-around items-center py-5 text-black">
           <Link href="/contact">Kontakt oss</Link>
-          {!isLoggedIn ? (
+          {isLoggedIn ? (
+            <Link href="/profile">Min konto</Link>
+          ) : (
             <>
               <Link href="/sign-in">Logg inn</Link>
               <Link href="/sign-up">Opprett konto</Link>
             </>
-          ) : (
-            <Link href="/profile"></Link>
           )}
         </div>
       </div>
@@ -52,6 +44,3 @@ const MobileNav = ({ user }: { user: User }) => {
 };
 
 export default MobileNav;
-
-
-
