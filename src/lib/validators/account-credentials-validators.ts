@@ -5,14 +5,16 @@ export const AuthCredentialsValidator = z.object({
   password: z
     .string()
     .min(8, { message: "Passordet må være minst 8 tegn langt" }),
-  phone: z.string().refine(phone => {
+  phone: z.string().optional().refine(phone => {
+    if (phone === undefined) {
+      return true; // allow undefined phone numbers
+    }
     const phoneRegex = /^\d{8}$/;
     return phoneRegex.test(phone);
   }, {
     message: "Telefonnummeret er ikke gyldig",
   }),
 });
-
 export const SignInCredentialsValidator = z.object({
   email: z.string().email(),
   password: z

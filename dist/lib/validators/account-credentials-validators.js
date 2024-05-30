@@ -7,7 +7,10 @@ exports.AuthCredentialsValidator = zod_1.z.object({
     password: zod_1.z
         .string()
         .min(8, { message: "Passordet må være minst 8 tegn langt" }),
-    phone: zod_1.z.string().refine(function (phone) {
+    phone: zod_1.z.string().optional().refine(function (phone) {
+        if (phone === undefined) {
+            return true; // allow undefined phone numbers
+        }
         var phoneRegex = /^\d{8}$/;
         return phoneRegex.test(phone);
     }, {
