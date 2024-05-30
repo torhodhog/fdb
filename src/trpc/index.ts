@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { getPayloadClient } from "../get-payload";
 import { QueryValidator } from "../lib/validators/query-validator";
 import { authRouter } from "./auth-router";
@@ -18,11 +17,12 @@ export const appRouter = router({
         query: QueryValidator.extend({
           sortBy: z.string().optional(),
           sortOrder: z.enum(["asc", "desc"]).optional(),
+          names: z.array(z.string()).optional(), // Add names to query schema
         }),
       })
     )
     .query(async ({ input }) => {
-      console.log(input); // log the input
+      console.log("Input received:", input); // Log the input
 
       const { cursor, query } = input;
       const {
@@ -31,6 +31,7 @@ export const appRouter = router({
         limit,
         searchTerm,
         liga_system,
+        names, // Add names from input
         ...queryOpts
       } = query;
 
@@ -48,42 +49,48 @@ export const appRouter = router({
       });
 
       if (searchTerm) {
-  parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
-}
+        parsedQueryOpts.name = { $regex: new RegExp(searchTerm, "i") };
+      }
       if (liga_system) {
         parsedQueryOpts.liga_system = { equals: liga_system };
       }
-
-      
+      if (names) {
+        parsedQueryOpts.name = { in: names }; // Ensure names are handled correctly
+      }
 
       const sortDirection = sortOrder === "desc" ? "-" : "+";
       const sortString = `${sortDirection}${sortBy}`;
 
-      const {
-  docs: items,
-  hasNextPage,
-  nextPage,
-} = await payload.find({
-  collection: "products",
-  where: {
-    approvedForSale: {
-      equals: "approved",
-    },
-    ...parsedQueryOpts,
-  },
-  sort: sortString,
-  depth: 1,
-  limit,
-  page,
-});
+      try {
+        const {
+          docs: items,
+          hasNextPage,
+          nextPage,
+        } = await payload.find({
+          collection: "products",
+          where: {
+            approvedForSale: {
+              equals: "approved",
+            },
+            ...parsedQueryOpts,
+          },
+          sort: sortString,
+          depth: 1,
+          limit,
+          page,
+        });
 
-console.log(`Page: ${page}, Next Page: ${nextPage}, Has Next Page: ${hasNextPage}`);
+        console.log(`Fetched items: ${items.length}`, items); // Log the fetched items
 
-return {
-  items,
-  nextPage: hasNextPage ? nextPage : null,
-  previousPage: page > 1 ? page - 1 : null,
-};
+        return {
+          items,
+          nextPage: hasNextPage ? nextPage : null,
+          previousPage: page > 1 ? page - 1 : null,
+        };
+      } catch (error) {
+        console.error("Error fetching products:", error); // Log any errors
+        throw new Error("Error fetching products");
+      }
     }),
 });
 

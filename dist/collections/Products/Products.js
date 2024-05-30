@@ -356,8 +356,8 @@ exports.Products = {
             required: true,
         },
         {
-            name: "teaser",
-            label: "Teaser",
+            name: "finalSale",
+            label: "Final Sale",
             type: "checkbox",
             defaultValue: false,
         },

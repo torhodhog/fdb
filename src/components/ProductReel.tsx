@@ -9,7 +9,7 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string }; // Include size in query type
+  query: TQueryValidator & { size?: string; names?: string[] }; // Include size and names in query type
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
@@ -17,6 +17,7 @@ interface ProductReelProps {
   page?: number;
   setPage?: (page: number) => void; // Set setPage as optional
   itemsPerPage?: number;
+  finalSale?: boolean;
 }
 
 interface QueryResults {
@@ -47,8 +48,8 @@ const ProductReel = (props: ProductReelProps) => {
     isError,
     error,
   } = trpc.getInfiniteProducts.useQuery({
-    limit: itemsPerPage, // Setter limit til itemsPerPage
-    cursor: page, // Inkluderer current page som cursor
+    limit: itemsPerPage,
+    cursor: page,
     query: {
       ...query,
       sortBy,
@@ -63,22 +64,31 @@ const ProductReel = (props: ProductReelProps) => {
   }
 
   if (isError) {
+    console.error("Error fetching products:", error);
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
-  // If totalItems is not returned, calculate it from the length of the items array
-  const products = queryResults?.items || [];
-  const totalItems = queryResults?.totalItems ?? products.length;
+  if (!queryResults) {
+    console.warn("No query results returned");
+    return <div>Ingen produkter funnet</div>;
+  }
+
+  const products = queryResults.items || [];
+  const totalItems = queryResults.totalItems ?? products.length;
   console.log("totalItems:", totalItems);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const filteredProducts = products.filter(
-    (product) =>
-      (!query.size || product.size === query.size) &&
-      (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
-      (!product.isSold || !hideSoldItems) &&
-      (!props.showSaleItems || product.onSale)
-  );
+  (product) =>
+    (!query.size || product.size === query.size) &&
+    (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
+    (!product.isSold || !hideSoldItems) &&
+    (!props.showSaleItems || product.onSale) &&
+    (!query.names || query.names.includes(product.name)) &&
+    (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
+);
+
+  console.log("filteredProducts:", filteredProducts);
 
   let map = filteredProducts.length
     ? filteredProducts
@@ -152,3 +162,5 @@ const ProductReel = (props: ProductReelProps) => {
 };
 
 export default ProductReel;
+
+

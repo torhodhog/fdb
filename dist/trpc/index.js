@@ -75,17 +75,18 @@ exports.appRouter = (0, trpc_1.router)({
         query: query_validator_1.QueryValidator.extend({
             sortBy: zod_1.z.string().optional(),
             sortOrder: zod_1.z.enum(["asc", "desc"]).optional(),
+            names: zod_1.z.array(zod_1.z.string()).optional(), // Add names to query schema
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, hasNextPage, nextPage;
+        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, hasNextPage, nextPage, error_1;
         var input = _b.input;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
-                    console.log(input); // log the input
+                    console.log("Input received:", input); // Log the input
                     cursor = input.cursor, query = input.query;
-                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, queryOpts = __rest(query, ["sortBy", "sortOrder", "limit", "searchTerm", "liga_system"]);
+                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, names = query.names, queryOpts = __rest(query, ["sortBy", "sortOrder", "limit", "searchTerm", "liga_system", "names"]);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _f.sent();
@@ -106,8 +107,14 @@ exports.appRouter = (0, trpc_1.router)({
                     if (liga_system) {
                         parsedQueryOpts.liga_system = { equals: liga_system };
                     }
+                    if (names) {
+                        parsedQueryOpts.name = { in: names }; // Ensure names are handled correctly
+                    }
                     sortDirection = sortOrder === "desc" ? "-" : "+";
                     sortString = "".concat(sortDirection).concat(sortBy);
+                    _f.label = 2;
+                case 2:
+                    _f.trys.push([2, 4, , 5]);
                     return [4 /*yield*/, payload.find({
                             collection: "products",
                             where: __assign({ approvedForSale: {
@@ -118,14 +125,19 @@ exports.appRouter = (0, trpc_1.router)({
                             limit: limit,
                             page: page,
                         })];
-                case 2:
+                case 3:
                     _e = _f.sent(), items = _e.docs, hasNextPage = _e.hasNextPage, nextPage = _e.nextPage;
-                    console.log("Page: ".concat(page, ", Next Page: ").concat(nextPage, ", Has Next Page: ").concat(hasNextPage));
+                    console.log("Fetched items: ".concat(items.length), items); // Log the fetched items
                     return [2 /*return*/, {
                             items: items,
                             nextPage: hasNextPage ? nextPage : null,
                             previousPage: page > 1 ? page - 1 : null,
                         }];
+                case 4:
+                    error_1 = _f.sent();
+                    console.error("Error fetching products:", error_1); // Log any errors
+                    throw new Error("Error fetching products");
+                case 5: return [2 /*return*/];
             }
         });
     }); }),

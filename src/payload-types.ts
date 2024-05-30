@@ -72,7 +72,7 @@ export interface Product {
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
   category: 'ui_kits' | 'Kontakt';
-  teaser?: boolean | null;
+  finalSale?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -91,6 +91,8 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
   sizes?: {
     thumbnail?: {
       url?: string | null;
@@ -137,6 +139,8 @@ export interface ProductFile {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
