@@ -13,7 +13,7 @@ const ResponsiveImage: FC<ResponsiveImageProps> = ({ src, alt }) => (
       src={src}
       alt={alt}
       layout="fill"
-      objectFit="cover"
+      objectFit="contain"
       className="absolute top-0 left-0 w-full h-full"
     />
   </div>

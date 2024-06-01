@@ -1,3 +1,4 @@
+import FinalSale from "@/components/FinalSale";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import ResponsiveImage from "@/components/ResponsiveImage";
@@ -9,8 +10,6 @@ import React from "react";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
-import FinalSale from "@/components/FinalSale";
-
 
 const perks = [
   {
@@ -54,22 +53,23 @@ export default function Home() {
           }}
         />
       </MaxWidthWrapper>
-      <MaxWidthWrapper>
-      <div className="relative w-full h-96 md:h-128 lg:h-192 mt-24 mb-40">
-  <FinalSale src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/cl.jpg" alt="Final Sale" />
+
+<MaxWidthWrapper className="flex flex-wrap justify-between">
+  <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
+    <FinalSale
+      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/cl.jpg"
+      alt="Final Sale"
+    />
   </div>
-</MaxWidthWrapper>
-      <MaxWidthWrapper>
-  <Link href="/Sale">
-    <div className="relative w-full h-96 md:h-128 lg:h-192 mt-24 mb-40">
+  <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
+    <Link href="/Sale">
       <ResponsiveImage
         src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/REDIGERTSALG.png"
         alt="Salg"
       />
-    </div>
-  </Link>
+    </Link>
+  </div>
 </MaxWidthWrapper>
-
 
       <section className="border-t border-gray-200  z-0">
         <MaxWidthWrapper className="py-20">
