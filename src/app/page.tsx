@@ -57,7 +57,7 @@ export default function Home() {
 <MaxWidthWrapper className="flex flex-wrap justify-between">
   <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
     <FinalSale
-      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/cl.jpg"
+      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Em-teaser.jpeg"
       alt="Final Sale"
     />
   </div>
