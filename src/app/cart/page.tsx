@@ -41,7 +41,7 @@ const Page = () => {
     0
   );
 
-  const deliveryFee = cartTotal >= 1500 ? 0 : 73;
+  const deliveryFee = 0;
   // const deliveryFee = 87;
 
   const handleCheckout = () => {
