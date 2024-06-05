@@ -103,7 +103,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                         },
                         quantity: 1,
                     }); });
-                    deliveryFee = 73;
+                    deliveryFee = 0;
                     line_items.push({
                         price_data: {
                             currency: "nok",

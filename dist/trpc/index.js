@@ -65,10 +65,13 @@ var query_validator_1 = require("../lib/validators/query-validator");
 var auth_router_1 = require("./auth-router");
 var payment_router_1 = require("./payment-router");
 var trpc_1 = require("./trpc");
+var trpc_2 = require("./trpc");
+var product_router_1 = require("./routers/product-router");
 exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
-    getInfiniteProducts: trpc_1.publicProcedure
+    product: product_router_1.productRouter,
+    getInfiniteProducts: trpc_2.publicProcedure
         .input(zod_1.z.object({
         limit: zod_1.z.number().min(1).max(100).default(20),
         cursor: zod_1.z.number().nullish(), // Cursor for pagination

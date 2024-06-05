@@ -1,6 +1,7 @@
 "use client";
-import { trpc } from "@/trpc/client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { trpc } from "@/trpc/client";
 import ProductListing from "./ProductListing";
 import { TQueryValidator } from "@/lib/validators/query-validator";
 import { Product } from "@/payload-types";
@@ -9,25 +10,16 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[] }; // Include size and names in query type
+  query: TQueryValidator & { size?: string; names?: string[] };
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
   showSaleItems?: boolean;
   page?: number;
-  setPage?: (page: number) => void; // Set setPage as optional
+  setPage?: (page: number) => void;
   itemsPerPage?: number;
   finalSale?: boolean;
 }
-
-interface QueryResults {
-  items: Product[];
-  totalItems: number;
-  previousPage?: number;
-  nextPage?: number;
-}
-
-const itemsPerPage = 20; // Show 20 products per page
 
 const ProductReel = (props: ProductReelProps) => {
   const {
@@ -40,24 +32,26 @@ const ProductReel = (props: ProductReelProps) => {
     hideSoldItems = false,
     page = 1,
     setPage,
+    itemsPerPage = 20,
   } = props;
 
-  const {
-    data: queryResults,
-    isLoading,
-    isError,
-    error,
-  } = trpc.getInfiniteProducts.useQuery({
+  const { data, isLoading, isError, error } = trpc.product.searchProducts.useQuery({
+    searchTerm: query.searchTerm,
+    category: query.category,
+    size: query.size,
+    sort: sortOrder,
+    page,
     limit: itemsPerPage,
-    cursor: page,
-    query: {
-      ...query,
-      sortBy,
-      sortOrder,
-    },
-  }) as { data: QueryResults; isLoading: boolean; isError: boolean; error: any };
+  });
 
-  console.log("queryResults:", queryResults);
+  console.log("Query sent to server:", {
+    searchTerm: query.searchTerm,
+    category: query.category,
+    size: query.size,
+    sort: sortOrder,
+    page,
+    limit: itemsPerPage,
+  });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -68,31 +62,13 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
-  if (!queryResults) {
-    console.warn("No query results returned");
+  if (!data) {
     return <div>Ingen produkter funnet</div>;
   }
 
-  const products = queryResults.items || [];
-  const totalItems = queryResults.totalItems ?? products.length;
-  console.log("totalItems:", totalItems);
+  const products: Product[] = data.products;
+  const totalItems = data.totalItems ?? products.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const filteredProducts = products.filter(
-  (product) =>
-    (!query.size || product.size === query.size) &&
-    (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
-    (!product.isSold || !hideSoldItems) &&
-    (!props.showSaleItems || product.onSale) &&
-    (!query.names || query.names.includes(product.name)) &&
-    (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
-);
-
-  console.log("filteredProducts:", filteredProducts);
-
-  let map = filteredProducts.length
-    ? filteredProducts
-    : new Array<null>(itemsPerPage).fill(null);
 
   return (
     <section className="py-12">
@@ -124,12 +100,12 @@ const ProductReel = (props: ProductReelProps) => {
       <div className="relative">
         <div className="mt-6 flex items-center w-full">
           <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
-            {map.map((product, i) => (
+            {products.map((product: Product, i: number) => (
               <ProductListing
                 key={`product-${i}`}
                 product={product}
                 index={i}
-                currentPage={page}  // Pass currentPage prop to ProductListing
+                currentPage={page}
               />
             ))}
           </div>
@@ -138,21 +114,19 @@ const ProductReel = (props: ProductReelProps) => {
       {setPage && (
         <div className="flex justify-between mt-4 items-center">
           <button
-            onClick={() => setPage(queryResults?.previousPage || 1)}
-            disabled={!queryResults?.previousPage}
+            onClick={() => setPage(page > 1 ? page - 1 : 1)}
+            disabled={page === 1}
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Forrige
           </button>
           <span className="text-gray-700 dark:text-gray-300">
-            Side: {page} 
+            Side: {page} av {totalPages}
           </span>
           <button
-            onClick={() => {
-              setPage(queryResults?.nextPage || page + 1);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={() => setPage(page < totalPages ? page + 1 : page)}
+            disabled={page === totalPages}
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             Neste
           </button>

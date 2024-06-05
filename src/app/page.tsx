@@ -37,6 +37,7 @@ export default function Home() {
       <Head>
         <title>Home - Fotballdraktbutikken</title>
         <meta name="description" content="Welcome to Fotballdraktbutikken" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">

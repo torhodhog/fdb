@@ -1,9 +1,8 @@
 "use client";
-
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
 import { PRODUCT_CATEGORIES } from "@/config";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Select from "@/components/ui/select";
@@ -29,12 +28,18 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    return parseInt(localStorage.getItem("currentPage") || "1");
+  });
   const itemsPerPage = 16;
 
   const handleSearch = () => {
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", currentPage.toString());
+  }, [currentPage]);
 
   return (
     <>
@@ -44,7 +49,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             <Input
               className="flex-grow"
               type="search"
-              placeholder="Under utvikling..."
+              placeholder="Søk etter produkter..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -75,8 +80,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             sort: sort === "desc" || sort === "asc" ? sort : undefined,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
-            size: size, // Include size in the query object
-            limit: itemsPerPage,
+            size: size,
           }}
           page={currentPage}
           setPage={setCurrentPage}

@@ -1,13 +1,17 @@
-import { z } from "zod";
-import { getPayloadClient } from "../get-payload";
-import { QueryValidator } from "../lib/validators/query-validator";
-import { authRouter } from "./auth-router";
-import { paymentRouter } from "./payment-router";
-import { publicProcedure, router } from "./trpc";
+import { z } from 'zod';
+
+import { getPayloadClient } from '../get-payload';
+import { QueryValidator } from '../lib/validators/query-validator';
+import { authRouter } from './auth-router';
+import { paymentRouter } from './payment-router';
+import { router } from './trpc';
+import { publicProcedure } from './trpc';
+import { productRouter } from './routers/product-router';
 
 export const appRouter = router({
   auth: authRouter,
   payment: paymentRouter,
+  product: productRouter,
 
   getInfiniteProducts: publicProcedure
     .input(
