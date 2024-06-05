@@ -10,6 +10,7 @@ import React from "react";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
+import Info from "@/components/Info";
 
 const perks = [
   {
@@ -98,7 +99,7 @@ export default function Home() {
         </MaxWidthWrapper>
         <MaxWidthWrapper>
           <div className="lg:block hidden">
-            <PlayVideo />
+            <Info />
           </div>
         </MaxWidthWrapper>
       </section>
