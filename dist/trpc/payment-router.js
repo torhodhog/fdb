@@ -138,6 +138,9 @@ exports.paymentRouter = (0, trpc_1.router)({
                             line_items: line_items,
                             metadata: { userId: user.id, orderId: order.id },
                             customer: customer.id, // Refer to the customer by ID
+                            phone_number_collection: {
+                                enabled: true,
+                            },
                         })];
                 case 6:
                     stripeSession = _c.sent();
