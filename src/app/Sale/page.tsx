@@ -16,7 +16,6 @@ const SalePage = () => {
     <>
       <MaxWidthWrapper className="relative">
         <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
-          {/* Gruppering for søkefelt og knapp */}
           <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
             <Input
               className="flex-grow"
@@ -51,7 +50,7 @@ const SalePage = () => {
             limit: 80,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
-            size: size, // Include size in the query object
+            size: size,
             onSale: true,
           }}
         />
@@ -61,3 +60,4 @@ const SalePage = () => {
 };
 
 export default SalePage;
+

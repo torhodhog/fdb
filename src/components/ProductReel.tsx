@@ -62,7 +62,7 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
-  if (!data) {
+  if (!data || data.products.length === 0) {
     return <div>Ingen produkter funnet</div>;
   }
 
