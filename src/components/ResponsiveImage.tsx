@@ -1,22 +1,22 @@
-// ResponsiveImage.tsx
-import Image from 'next/image';
+// ResponsiveVideo.tsx
 import { FC } from 'react';
 
-interface ResponsiveImageProps {
+interface ResponsiveVideoProps {
   src: string;
   alt: string;
 }
 
-const ResponsiveImage: FC<ResponsiveImageProps> = ({ src, alt }) => (
-  <div className="relative w-full h-[32vh]">
-    <Image
+const ResponsiveVideo: FC<ResponsiveVideoProps> = ({ src, alt }) => (
+  <div className=" w-full h-auto z-[1]">
+    <video
       src={src}
-      alt={alt}
-      layout="fill"
-      objectFit="contain"
-      className="absolute top-0 left-0 w-full h-full"
+      loop
+      autoPlay
+      muted
+      playsInline // For å forhindre autoplay-restrictions på noen mobile nettlesere
+      className="w-full h-full object-cover" // Endret fra object-contain til object-cover for å fylle skjermen
     />
   </div>
 );
 
-export default ResponsiveImage;
+export default ResponsiveVideo;

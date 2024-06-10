@@ -37,7 +37,7 @@ const ProductListing = ({ product, index, currentPage }: ProductListingProps) =>
     .filter(Boolean) as string[];
 
   const handleClick = () => {
-    localStorage.setItem("currentPage", String(currentPage));
+    sessionStorage.setItem("currentPage", String(currentPage));
   };
 
   return (

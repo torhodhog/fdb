@@ -10,7 +10,7 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[]; onSale?: boolean }; // Include onSale in query type
+  query: TQueryValidator & { size?: string; names?: string[] }; // Include size and names in query type
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
@@ -20,7 +20,6 @@ interface ProductReelProps {
   itemsPerPage?: number;
   finalSale?: boolean;
   loadMore?: boolean; // Add this prop to control "Load More" button visibility
-  isHomePage?: boolean; // Add this prop to differentiate between Home and Products page
 }
 
 interface QueryResults {
@@ -30,7 +29,7 @@ interface QueryResults {
   nextPage?: number;
 }
 
-const itemsPerPage = 20; // Show 20 products per page
+const itemsPerPage = 8; // Show 20 products per page
 
 const ProductReel = (props: ProductReelProps) => {
   const {
@@ -44,21 +43,35 @@ const ProductReel = (props: ProductReelProps) => {
     page = 1,
     setPage,
     loadMore = false, // Default to false
-    isHomePage = false, // Default to false
   } = props;
 
-  const [loadedProducts, setLoadedProducts] = useState<Product[]>(() => {
-    if (isHomePage) return []; // Don't use localStorage for home page
-    const storedProducts = localStorage.getItem("loadedProducts");
-    return storedProducts ? JSON.parse(storedProducts) : [];
-  });
-  const [currentPage, setCurrentPage] = useState(() => {
-    if (isHomePage) return 1; // Always start at page 1 for home page
-    return parseInt(localStorage.getItem("currentPage") || "1");
-  });
+  const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(page);
+
+  // Load products from session storage on component mount
+  useEffect(() => {
+    const storedProducts = sessionStorage.getItem("loadedProducts");
+    const storedPage = sessionStorage.getItem("currentPage");
+    if (storedProducts) {
+      const parsedProducts = JSON.parse(storedProducts);
+      // Validate parsed products
+      if (Array.isArray(parsedProducts)) {
+        setLoadedProducts(parsedProducts);
+      }
+    }
+    if (storedPage) {
+      setCurrentPage(parseInt(storedPage, 10));
+    }
+  }, []);
+
+  // Save products to session storage on state change
+  useEffect(() => {
+    sessionStorage.setItem("loadedProducts", JSON.stringify(loadedProducts));
+    sessionStorage.setItem("currentPage", currentPage.toString());
+  }, [loadedProducts, currentPage]);
 
   const { data: queryResults, isLoading, isError, error } = trpc.getInfiniteProducts.useQuery({
-    limit: query.limit || itemsPerPage, // Use limit from query or default to itemsPerPage
+    limit: itemsPerPage,
     cursor: currentPage,
     query: {
       ...query,
@@ -67,33 +80,30 @@ const ProductReel = (props: ProductReelProps) => {
     },
   }) as { data: QueryResults; isLoading: boolean; isError: boolean; error: any };
 
-  useEffect(() => {
-    if (queryResults) {
-      console.log("queryResults received:", queryResults);
-      setLoadedProducts((prev) => {
-        const newProducts = currentPage === 1 ? queryResults.items : [...prev, ...queryResults.items];
-        if (!isHomePage) {
-          localStorage.setItem("loadedProducts", JSON.stringify(newProducts));
-        }
-        return newProducts;
-      });
-    }
-  }, [queryResults, currentPage, isHomePage]);
-
-  console.log("loadedProducts:", loadedProducts);
-  console.log("currentPage:", currentPage);
-
   const loadMoreProducts = () => {
     if (queryResults && queryResults.items) {
-      setCurrentPage((prev) => {
-        const nextPage = prev + 1;
-        if (!isHomePage) {
-          localStorage.setItem("currentPage", nextPage.toString());
-        }
-        return nextPage;
+      setLoadedProducts((prev) => {
+        const uniqueProducts = [...prev, ...queryResults.items].filter(
+          (product, index, self) =>
+            index === self.findIndex((p) => p.id === product.id)
+        );
+        return uniqueProducts;
       });
+      setCurrentPage(currentPage + 1);
     }
   };
+
+  useEffect(() => {
+    if (queryResults && queryResults.items) {
+      setLoadedProducts((prev) => {
+        const uniqueProducts = [...prev, ...queryResults.items].filter(
+          (product, index, self) =>
+            index === self.findIndex((p) => p.id === product.id)
+        );
+        return uniqueProducts;
+      });
+    }
+  }, [queryResults]);
 
   if (isLoading && currentPage === 1) {
     return <div>Loading...</div>;
@@ -109,20 +119,19 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Ingen produkter funnet</div>;
   }
 
-  const totalItems = queryResults?.totalItems ?? loadedProducts.length;
+  const products = loadedProducts;
+  const totalItems = queryResults?.totalItems ?? products.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const filteredProducts = loadedProducts.filter(
+  const filteredProducts = products.filter(
     (product) =>
       (!query.size || product.size === query.size) &&
       (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
       (!product.isSold || !hideSoldItems) &&
-      (!query.onSale || product.onSale) && // Filter by onSale prop
+      (!props.showSaleItems || product.onSale) &&
       (!query.names || query.names.includes(product.name)) &&
       (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
   );
-
-  console.log("filteredProducts:", filteredProducts);
 
   return (
     <section className="py-12">
@@ -180,3 +189,4 @@ const ProductReel = (props: ProductReelProps) => {
 };
 
 export default ProductReel;
+

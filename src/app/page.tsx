@@ -11,6 +11,7 @@ import React from "react";
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 import Info from "@/components/Info";
+import ResponsiveVideo from "@/components/ResponsiveImage";
 
 const perks = [
   {
@@ -49,11 +50,11 @@ export default function Home() {
           href="/products"
           hideSoldItems
           query={{
-            limit: 8, // Ensure limit is set to 8
+            limit: 12,
             sortBy: "createdAt",
             sortOrder: "desc",
           }}
-          isHomePage={true} // Pass isHomePage as true
+          // isHomePage={true} // Pass isHomePage as true
         />
       </MaxWidthWrapper>
       <div className="lg:hidden block text-center">
@@ -64,20 +65,20 @@ export default function Home() {
         </Link>
       </div>
       <MaxWidthWrapper className="flex flex-wrap justify-between">
-        <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
+        {/* <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
           <FinalSale
             src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Em-teaser.jpeg"
             alt="Final Sale"
           />
-        </div>
-        <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
-          <Link href="/Sale">
-            <ResponsiveImage
-              src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/REDIGERTSALG.png"
-              alt="Salg"
-            />
-          </Link>
-        </div>
+        </div> */}
+       <div className="relative w-full h-auto">
+  <Link href="/Sale">
+    <ResponsiveVideo
+      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALGSVIDEO.mp4"
+      alt="Salg"
+    />
+  </Link>
+</div>
       </MaxWidthWrapper>
 
       <section className="border-t border-gray-200  z-0">

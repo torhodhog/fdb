@@ -28,17 +28,13 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
-  const [currentPage, setCurrentPage] = useState(() => {
-    return parseInt(localStorage.getItem("currentPage") || "1");
-  });
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [loadedProducts, setLoadedProducts] = useState([]);
 
   const handleSearch = () => {
-    setCurrentPage(1);
+    setLoadedCount(0); // Reset the loaded count when searching
+    setLoadedProducts([]); // Clear loaded products when searching
   };
-
-  useEffect(() => {
-    localStorage.setItem("currentPage", currentPage.toString());
-  }, [currentPage]);
 
   return (
     <>
@@ -83,8 +79,6 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             liga_system: ligaSystem,
             size: size,
           }}
-          page={currentPage}
-          setPage={setCurrentPage}
           loadMore={true} // Enable load more button
         />
       </MaxWidthWrapper>
@@ -93,3 +87,4 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
 };
 
 export default ProductsPage;
+
