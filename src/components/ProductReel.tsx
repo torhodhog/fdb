@@ -10,16 +10,27 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[] };
+  query: TQueryValidator & { size?: string; names?: string[]; onSale?: boolean }; // Include onSale in query type
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
   showSaleItems?: boolean;
   page?: number;
-  setPage?: (page: number) => void;
+  setPage?: (page: number) => void; // Set setPage as optional
   itemsPerPage?: number;
   finalSale?: boolean;
+  loadMore?: boolean; // Add this prop to control "Load More" button visibility
+  isHomePage?: boolean; // Add this prop to differentiate between Home and Products page
 }
+
+interface QueryResults {
+  items: Product[];
+  totalItems: number;
+  previousPage?: number;
+  nextPage?: number;
+}
+
+const itemsPerPage = 20; // Show 20 products per page
 
 const ProductReel = (props: ProductReelProps) => {
   const {
@@ -32,28 +43,59 @@ const ProductReel = (props: ProductReelProps) => {
     hideSoldItems = false,
     page = 1,
     setPage,
-    itemsPerPage = 20,
+    loadMore = false, // Default to false
+    isHomePage = false, // Default to false
   } = props;
 
-  const { data, isLoading, isError, error } = trpc.product.searchProducts.useQuery({
-    searchTerm: query.searchTerm,
-    category: query.category,
-    size: query.size,
-    sort: sortOrder,
-    page,
-    limit: itemsPerPage,
+  const [loadedProducts, setLoadedProducts] = useState<Product[]>(() => {
+    if (isHomePage) return []; // Don't use localStorage for home page
+    const storedProducts = localStorage.getItem("loadedProducts");
+    return storedProducts ? JSON.parse(storedProducts) : [];
+  });
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (isHomePage) return 1; // Always start at page 1 for home page
+    return parseInt(localStorage.getItem("currentPage") || "1");
   });
 
-  console.log("Query sent to server:", {
-    searchTerm: query.searchTerm,
-    category: query.category,
-    size: query.size,
-    sort: sortOrder,
-    page,
-    limit: itemsPerPage,
-  });
+  const { data: queryResults, isLoading, isError, error } = trpc.getInfiniteProducts.useQuery({
+    limit: query.limit || itemsPerPage, // Use limit from query or default to itemsPerPage
+    cursor: currentPage,
+    query: {
+      ...query,
+      sortBy,
+      sortOrder,
+    },
+  }) as { data: QueryResults; isLoading: boolean; isError: boolean; error: any };
 
-  if (isLoading) {
+  useEffect(() => {
+    if (queryResults) {
+      console.log("queryResults received:", queryResults);
+      setLoadedProducts((prev) => {
+        const newProducts = currentPage === 1 ? queryResults.items : [...prev, ...queryResults.items];
+        if (!isHomePage) {
+          localStorage.setItem("loadedProducts", JSON.stringify(newProducts));
+        }
+        return newProducts;
+      });
+    }
+  }, [queryResults, currentPage, isHomePage]);
+
+  console.log("loadedProducts:", loadedProducts);
+  console.log("currentPage:", currentPage);
+
+  const loadMoreProducts = () => {
+    if (queryResults && queryResults.items) {
+      setCurrentPage((prev) => {
+        const nextPage = prev + 1;
+        if (!isHomePage) {
+          localStorage.setItem("currentPage", nextPage.toString());
+        }
+        return nextPage;
+      });
+    }
+  };
+
+  if (isLoading && currentPage === 1) {
     return <div>Loading...</div>;
   }
 
@@ -62,13 +104,25 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
-  if (!data || data.products.length === 0) {
+  if (!queryResults && currentPage === 1) {
+    console.warn("No query results returned");
     return <div>Ingen produkter funnet</div>;
   }
 
-  const products: Product[] = data.products;
-  const totalItems = data.totalItems ?? products.length;
+  const totalItems = queryResults?.totalItems ?? loadedProducts.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const filteredProducts = loadedProducts.filter(
+    (product) =>
+      (!query.size || product.size === query.size) &&
+      (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
+      (!product.isSold || !hideSoldItems) &&
+      (!query.onSale || product.onSale) && // Filter by onSale prop
+      (!query.names || query.names.includes(product.name)) &&
+      (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
+  );
+
+  console.log("filteredProducts:", filteredProducts);
 
   return (
     <section className="py-12">
@@ -100,35 +154,24 @@ const ProductReel = (props: ProductReelProps) => {
       <div className="relative">
         <div className="mt-6 flex items-center w-full">
           <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
-            {products.map((product: Product, i: number) => (
+            {filteredProducts.map((product, i) => (
               <ProductListing
                 key={`product-${i}`}
                 product={product}
                 index={i}
-                currentPage={page}
+                currentPage={currentPage}  // Pass currentPage prop to ProductListing
               />
             ))}
           </div>
         </div>
       </div>
-      {setPage && (
-        <div className="flex justify-between mt-4 items-center">
+      {loadMore && queryResults?.nextPage && (
+        <div className="flex justify-center mt-4">
           <button
-            onClick={() => setPage(page > 1 ? page - 1 : 1)}
-            disabled={page === 1}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+            onClick={loadMoreProducts}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Forrige
-          </button>
-          <span className="text-gray-700 dark:text-gray-300">
-            Side: {page} av {totalPages}
-          </span>
-          <button
-            onClick={() => setPage(page < totalPages ? page + 1 : page)}
-            disabled={page === totalPages}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Neste
+            Last inn flere
           </button>
         </div>
       )}

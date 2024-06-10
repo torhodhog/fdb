@@ -12,9 +12,10 @@ export const productRouter = router({
       sort: z.enum(['asc', 'desc']).optional(),
       page: z.number().default(1),
       limit: z.number().default(20),
+      onSale: z.boolean().optional(),
     }))
     .query(async ({ input }) => {
-      const { searchTerm, category, size, sort = 'desc', page, limit } = input;
+      const { searchTerm, category, size, sort = 'desc', page, limit, onSale } = input;
 
       console.log("Input received by server:", input);
 
@@ -32,6 +33,10 @@ export const productRouter = router({
 
       if (size) {
         query.size = size;
+      }
+
+      if (onSale !== undefined) {
+        query.onSale = onSale;
       }
 
       console.log("Query constructed by server:", query);
@@ -66,3 +71,4 @@ export const productRouter = router({
       }
     }),
 });
+

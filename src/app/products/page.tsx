@@ -31,7 +31,6 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [currentPage, setCurrentPage] = useState(() => {
     return parseInt(localStorage.getItem("currentPage") || "1");
   });
-  const itemsPerPage = 16;
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -53,7 +52,9 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button onClick={handleSearch} type="submit">Søk</Button>
+            <Button onClick={handleSearch} type="submit">
+              Søk
+            </Button>
           </div>
           <div>
             <Select
@@ -84,6 +85,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           }}
           page={currentPage}
           setPage={setCurrentPage}
+          loadMore={true} // Enable load more button
         />
       </MaxWidthWrapper>
     </>

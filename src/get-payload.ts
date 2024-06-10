@@ -36,6 +36,7 @@ export const getPayloadClient = async ({
   initOptions,
 }: Args = {}): Promise<Payload> => {
   if (!process.env.PAYLOAD_SECRET) {
+    console.error("PAYLOAD_SECRET is missing");
     throw new Error("PAYLOAD_SECRET is missing");
   }
 

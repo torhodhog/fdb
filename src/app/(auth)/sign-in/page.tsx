@@ -21,12 +21,10 @@ import { ZodError } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams() || new URLSearchParams();
   const router = useRouter();
   const isSeller = searchParams.get("as") === "seller";
   const origin = searchParams.get("origin");
-
- 
 
   const continueAsBuyer = () => {
     router.replace("/sign-in", undefined);
@@ -51,8 +49,6 @@ const Page = () => {
         return;
       }
 
-  
-
       router.push("/");
     },
     onError: (err) => {
@@ -62,9 +58,9 @@ const Page = () => {
     },
   });
 
-const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
-  signIn({ email, password, phone });
-};
+  const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
+    signIn({ email, password, phone });
+  };
 
   return (
     <>

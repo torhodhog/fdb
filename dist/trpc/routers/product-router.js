@@ -60,14 +60,15 @@ exports.productRouter = (0, trpc_1.router)({
         sort: zod_1.z.enum(['asc', 'desc']).optional(),
         page: zod_1.z.number().default(1),
         limit: zod_1.z.number().default(20),
+        onSale: zod_1.z.boolean().optional(),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var searchTerm, category, size, _c, sort, page, limit, payload, query, sortOrder, _d, products, totalItems, error_1;
+        var searchTerm, category, size, _c, sort, page, limit, onSale, payload, query, sortOrder, _d, products, totalItems, error_1;
         var input = _b.input;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
-                    searchTerm = input.searchTerm, category = input.category, size = input.size, _c = input.sort, sort = _c === void 0 ? 'desc' : _c, page = input.page, limit = input.limit;
+                    searchTerm = input.searchTerm, category = input.category, size = input.size, _c = input.sort, sort = _c === void 0 ? 'desc' : _c, page = input.page, limit = input.limit, onSale = input.onSale;
                     console.log("Input received by server:", input);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
@@ -81,6 +82,9 @@ exports.productRouter = (0, trpc_1.router)({
                     }
                     if (size) {
                         query.size = size;
+                    }
+                    if (onSale !== undefined) {
+                        query.onSale = onSale;
                     }
                     console.log("Query constructed by server:", query);
                     sortOrder = sort === 'asc' ? '+' : '-';

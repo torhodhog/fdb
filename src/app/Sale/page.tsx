@@ -51,8 +51,9 @@ const SalePage = () => {
             searchTerm: searchTerm,
             liga_system: ligaSystem,
             size: size,
-            onSale: true,
+            onSale: true, // Add onSale prop to filter sale items
           }}
+          loadMore={true} // Enable load more button
         />
       </MaxWidthWrapper>
     </>
@@ -60,4 +61,3 @@ const SalePage = () => {
 };
 
 export default SalePage;
-

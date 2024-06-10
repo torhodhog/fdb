@@ -95,6 +95,7 @@ var getPayloadClient = function () {
             switch (_d.label) {
                 case 0:
                     if (!process.env.PAYLOAD_SECRET) {
+                        console.error("PAYLOAD_SECRET is missing");
                         throw new Error("PAYLOAD_SECRET is missing");
                     }
                     if (cached.client) {
