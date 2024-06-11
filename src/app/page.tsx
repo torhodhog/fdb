@@ -71,7 +71,7 @@ export default function Home() {
             alt="Final Sale"
           />
         </div> */}
-       <div className="relative w-full h-auto">
+       <div className="relative w-full h-auto mt-10">
   <Link href="/Sale">
     <ResponsiveVideo
       src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALGSVIDEO.mp4"

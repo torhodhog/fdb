@@ -20,6 +20,7 @@ interface ProductReelProps {
   itemsPerPage?: number;
   finalSale?: boolean;
   loadMore?: boolean; // Add this prop to control "Load More" button visibility
+  onSale?: string;
 }
 
 interface QueryResults {
