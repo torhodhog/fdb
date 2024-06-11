@@ -1,11 +1,9 @@
 import { z } from 'zod';
-
 import { getPayloadClient } from '../get-payload';
 import { QueryValidator } from '../lib/validators/query-validator';
 import { authRouter } from './auth-router';
 import { paymentRouter } from './payment-router';
-import { router } from './trpc';
-import { publicProcedure } from './trpc';
+import { router, publicProcedure } from './trpc';
 import { productRouter } from './routers/product-router';
 
 export const appRouter = router({
@@ -16,7 +14,7 @@ export const appRouter = router({
   getInfiniteProducts: publicProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(20),
+        limit: z.number().min(1).max(1000).default(20),
         cursor: z.number().nullish(), // Cursor for pagination
         query: QueryValidator.extend({
           sortBy: z.string().optional(),
@@ -65,12 +63,11 @@ export const appRouter = router({
       const sortDirection = sortOrder === "desc" ? "-" : "+";
       const sortString = `${sortDirection}${sortBy}`;
 
+      console.log("Parsed query options:", parsedQueryOpts); // Log parsed query options
+      console.log("Sort string:", sortString); // Log sort string
+
       try {
-        const {
-          docs: items,
-          hasNextPage,
-          nextPage,
-        } = await payload.find({
+        const { docs: items, totalDocs } = await payload.find({
           collection: "products",
           where: {
             approvedForSale: {
@@ -85,11 +82,11 @@ export const appRouter = router({
         });
 
         console.log(`Fetched items: ${items.length}`, items); // Log the fetched items
+        console.log("Total documents:", totalDocs); // Log the total documents
 
         return {
           items,
-          nextPage: hasNextPage ? nextPage : null,
-          previousPage: page > 1 ? page - 1 : null,
+          totalDocs,
         };
       } catch (error) {
         console.error("Error fetching products:", error); // Log any errors

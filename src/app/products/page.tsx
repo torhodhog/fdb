@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Select from "@/components/ui/select";
+import LottieAnimation from "@/components/LottieAnimation"; // Import LottieAnimation
 
 type Param = string | string[] | undefined;
 
@@ -28,13 +29,19 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
-  const [loadedCount, setLoadedCount] = useState(0);
-  const [loadedProducts, setLoadedProducts] = useState([]);
+  const [team, setTeam] = useState(""); // New state for team selection
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = () => {
-    setLoadedCount(0); // Reset the loaded count when searching
-    setLoadedProducts([]); // Clear loaded products when searching
+    setIsLoading(true); // Set loading state to true when searching
   };
+
+  // const teams = ["Manchester United", "Liverpool", "Chelsea"]; // Example teams
+
+  // Simulate loading by setting a delay
+  useEffect(() => {
+    setIsLoading(false); // Set loading state to false after initial load
+  }, []);
 
   return (
     <>
@@ -66,21 +73,39 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               <option value="XXL">XXL</option>
             </Select>
           </div>
+          {/* <div>
+            <Select
+              className="sm:absolute sm:right-0"
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+            >
+              <option value="">Alle lag</option>
+              {teams.map((team) => (
+                <option key={team} value={team}>
+                  {team}
+                </option>
+              ))}
+            </Select>
+          </div> */}
         </div>
       </MaxWidthWrapper>
 
       <MaxWidthWrapper>
-        <ProductReel
-          title={label ?? "Alle produkter"}
-          query={{
-            category,
-            sort: sort === "desc" || sort === "asc" ? sort : undefined,
-            searchTerm: searchTerm,
-            liga_system: ligaSystem,
-            size: size,
-          }}
-          loadMore={true} // Enable load more button
-        />
+        {isLoading ? (
+          <LottieAnimation /> // Display the Lottie animation while loading
+        ) : (
+          <ProductReel
+            title={label ?? "Alle produkter"}
+            query={{
+              category,
+              sort: sort === "desc" || sort === "asc" ? sort : undefined,
+              searchTerm: searchTerm,
+              liga_system: ligaSystem,
+              size: size,
+              // team: team, // Pass the selected team to the query
+            }}
+          />
+        )}
       </MaxWidthWrapper>
     </>
   );

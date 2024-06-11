@@ -65,15 +65,14 @@ var query_validator_1 = require("../lib/validators/query-validator");
 var auth_router_1 = require("./auth-router");
 var payment_router_1 = require("./payment-router");
 var trpc_1 = require("./trpc");
-var trpc_2 = require("./trpc");
 var product_router_1 = require("./routers/product-router");
 exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
     product: product_router_1.productRouter,
-    getInfiniteProducts: trpc_2.publicProcedure
+    getInfiniteProducts: trpc_1.publicProcedure
         .input(zod_1.z.object({
-        limit: zod_1.z.number().min(1).max(100).default(20),
+        limit: zod_1.z.number().min(1).max(1000).default(20),
         cursor: zod_1.z.number().nullish(), // Cursor for pagination
         query: query_validator_1.QueryValidator.extend({
             sortBy: zod_1.z.string().optional(),
@@ -82,7 +81,7 @@ exports.appRouter = (0, trpc_1.router)({
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, hasNextPage, nextPage, error_1;
+        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, totalDocs, error_1;
         var input = _b.input;
         return __generator(this, function (_f) {
             switch (_f.label) {
@@ -115,6 +114,8 @@ exports.appRouter = (0, trpc_1.router)({
                     }
                     sortDirection = sortOrder === "desc" ? "-" : "+";
                     sortString = "".concat(sortDirection).concat(sortBy);
+                    console.log("Parsed query options:", parsedQueryOpts); // Log parsed query options
+                    console.log("Sort string:", sortString); // Log sort string
                     _f.label = 2;
                 case 2:
                     _f.trys.push([2, 4, , 5]);
@@ -129,12 +130,12 @@ exports.appRouter = (0, trpc_1.router)({
                             page: page,
                         })];
                 case 3:
-                    _e = _f.sent(), items = _e.docs, hasNextPage = _e.hasNextPage, nextPage = _e.nextPage;
+                    _e = _f.sent(), items = _e.docs, totalDocs = _e.totalDocs;
                     console.log("Fetched items: ".concat(items.length), items); // Log the fetched items
+                    console.log("Total documents:", totalDocs); // Log the total documents
                     return [2 /*return*/, {
                             items: items,
-                            nextPage: hasNextPage ? nextPage : null,
-                            previousPage: page > 1 ? page - 1 : null,
+                            totalDocs: totalDocs,
                         }];
                 case 4:
                     error_1 = _f.sent();

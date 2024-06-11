@@ -52,8 +52,8 @@ const FinalSalePage = ({ searchParams }: FinalSalePageProps) => {
     finalSale: true, // Only show products marked as final sale
     limit: itemsPerPage,
   }}
-  page={currentPage}
-  setPage={setCurrentPage}
+  // page={currentPage}
+  // setPage={setCurrentPage}
 />
       </MaxWidthWrapper>
     </>

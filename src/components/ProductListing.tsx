@@ -9,10 +9,9 @@ import ImageSlider from "./ImageSlider";
 interface ProductListingProps {
   product: Product | null;
   index: number;
-  currentPage: number;  // Legg til denne linjen for å motta currentPage prop
 }
 
-const ProductListing = ({ product, index, currentPage }: ProductListingProps) => {
+const ProductListing = ({ product, index }: ProductListingProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,17 +35,12 @@ const ProductListing = ({ product, index, currentPage }: ProductListingProps) =>
     })
     .filter(Boolean) as string[];
 
-  const handleClick = () => {
-    sessionStorage.setItem("currentPage", String(currentPage));
-  };
-
   return (
     <Link
       className={cn("invisible h-full w-full cursor-pointer group/main", {
         "visible animate-in fade-in-5": isVisible,
       })}
-      href={`/product/${product.id}?page=${currentPage}`}  // Oppdatert lenke med page parameter
-      onClick={handleClick}  // Lagre currentPage ved klikk
+      href={`/product/${product.id}`}
     >
       <div className="flex flex-col w-full">
         <ImageSlider urls={validUrls} />

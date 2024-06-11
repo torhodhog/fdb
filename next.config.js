@@ -1,3 +1,5 @@
+const path = require('path');
+
 const nextConfig = {
   images: {
     domains: [
@@ -13,6 +15,10 @@ const nextConfig = {
   },
   reactStrictMode: true, // Legg til dette for å aktivere strict mode
   swcMinify: true, // Legg til dette for å aktivere SWC minifier
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.resolve(__dirname);
+    return config;
+  },
 };
 
 module.exports = nextConfig;

@@ -79,9 +79,9 @@ const Page = async ({ params, searchParams }: PageProps) => {
               ))}
             </ol>
 
-            <Link href={`/products?page=${page}`} className="text-blue-500 hover:underline">
+            {/* <Link href={`/products?page=${page}`} className="text-blue-500 hover:underline">
               Tilbake til produktsiden
-            </Link>
+            </Link> */}
 
             <div className="mt-4">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -168,7 +168,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
         query={{ liga_system: product.liga_system || undefined, limit: 4 }}
         title={`Lignende produkter`}
         subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
-        page={parseInt(page, 10)} // Pass page parameter to ProductReel
+        // page={parseInt(page, 10)} // Pass page parameter to ProductReel
       />
     </MaxWidthWrapper>
   );

@@ -59,7 +59,7 @@ exports.productRouter = (0, trpc_1.router)({
         size: zod_1.z.string().optional(),
         sort: zod_1.z.enum(['asc', 'desc']).optional(),
         page: zod_1.z.number().default(1),
-        limit: zod_1.z.number().default(20),
+        limit: zod_1.z.number().default(1000), // Set the default limit to a large number
         onSale: zod_1.z.boolean().optional(),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
