@@ -102,6 +102,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               searchTerm: searchTerm,
               liga_system: ligaSystem,
               size: size,
+              limit: 1000,
               // team: team, // Pass the selected team to the query
             }}
           />
