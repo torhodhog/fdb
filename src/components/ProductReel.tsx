@@ -11,7 +11,7 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[], team?: string }; // Include size and team in query type
+  query: TQueryValidator & { size?: string; names?: string[], team?: string, hasPrint?: boolean | null }; // Include size, team, and hasPrint in query type
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
@@ -32,6 +32,7 @@ const ProductReel = (props: ProductReelProps) => {
     sortOrder = "desc",
     hideSoldItems = false,
     loadMore = false, // Default to false
+    
   } = props;
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
@@ -68,7 +69,7 @@ const ProductReel = (props: ProductReelProps) => {
 
   if (!queryResults) {
     console.warn("No query results returned");
-    return <div>Ingen produkter funnet</div>;
+    return <div>Vent litt, drakter lastes...</div>;
   }
 
   const filteredProducts = (loadedProducts || []).filter(
@@ -79,7 +80,9 @@ const ProductReel = (props: ProductReelProps) => {
       (!props.showSaleItems || product.onSale) &&
       (!query.names || query.names.includes(product.name)) &&
       (!query.team || product.name === query.team) && // Filter by team
+      (query.hasPrint === null || product.trykk === (query.hasPrint ? "Ja" : "Nei")) && // Filter by print
       (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
+   
   );
 
   return (

@@ -5,8 +5,28 @@ import { PRODUCT_CATEGORIES } from "@/config";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Select from "@/components/ui/select";
 import LottieAnimation from "@/components/LottieAnimation"; // Import LottieAnimation
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Filter,
+  Shirt,
+  Bold,
+  XCircle,
+  Users,
+} from "lucide-react";
 
 type Param = string | string[] | undefined;
 
@@ -30,13 +50,21 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
   const [team, setTeam] = useState(""); // New state for team selection
+  const [hasPrint, setHasPrint] = useState<boolean | null>(null); // New state for hasPrint selection
   const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = () => {
     setIsLoading(true); // Set loading state to true when searching
   };
 
-  // const teams = ["Manchester United", "Liverpool", "Chelsea"]; // Example teams
+  const resetFilters = () => {
+    setSearchTerm("");
+    setLigaSystem("");
+    setSize("");
+    setTeam("");
+    setHasPrint(null); // Reset hasPrint filter
+    setIsLoading(true); // Set loading state to true
+  };
 
   // Simulate loading by setting a delay
   useEffect(() => {
@@ -59,34 +87,76 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               Søk
             </Button>
           </div>
-          <div>
-            <Select
-              className="sm:absolute sm:right-0"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-            >
-              <option value="">Alle størrelser</option>
-              <option value="S">Small</option>
-              <option value="M">Medium</option>
-              <option value="L">Large</option>
-              <option value="XL">Extra Large</option>
-              <option value="XXL">XXL</option>
-            </Select>
-          </div>
-          {/* <div>
-            <Select
-              className="sm:absolute sm:right-0"
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
-            >
-              <option value="">Alle lag</option>
-              {teams.map((team) => (
-                <option key={team} value={team}>
-                  {team}
-                </option>
-              ))}
-            </Select>
-          </div> */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-10">
+                <Filter className="mr-2 h-4 w-4" /> Filtrer
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Filtrer Produkter</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Shirt className="mr-2 h-4 w-4" />
+                    <span>Størrelse</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setSize("XS")}>XS</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("S")}>S</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("M")}>M</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("L")}>L</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("XL")}>XL</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("XXL")}>XXL</DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>Lag</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setTeam("Manchester United")}>
+                        Manchester United
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Arsenal")}>Arsenal</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Barcelona")}>Barcelona</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Real Madrid")}>Real Madrid</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Juventus")}>Juventus</DropdownMenuItem>
+                      {/* Add more teams as needed */}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Bold className="mr-2 h-4 w-4" />
+                    <span>Trykk</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setHasPrint(true)}>
+                        Med Trykk
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setHasPrint(false)}>
+                        Uten Trykk
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={resetFilters}>
+                <XCircle className="mr-2 h-4 w-4" />
+                <span>Nullstill Filter</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </MaxWidthWrapper>
 
@@ -99,11 +169,11 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             query={{
               category,
               sort: sort === "desc" || sort === "asc" ? sort : undefined,
-              searchTerm: searchTerm,
+              searchTerm: team ? team : searchTerm,
               liga_system: ligaSystem,
               size: size,
               limit: 1000,
-              // team: team, // Pass the selected team to the query
+              hasPrint: hasPrint, // Pass the selected print option to the query
             }}
           />
         )}
@@ -113,4 +183,3 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
 };
 
 export default ProductsPage;
-
