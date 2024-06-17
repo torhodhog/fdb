@@ -32,7 +32,7 @@ const ProductReel = (props: ProductReelProps) => {
     sortOrder = "desc",
     hideSoldItems = false,
     loadMore = false, // Default to false
-    
+    showSaleItems = false, // Default to false
   } = props;
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
@@ -72,18 +72,32 @@ const ProductReel = (props: ProductReelProps) => {
     return <div>Vent litt, drakter lastes...</div>;
   }
 
+  // Log the products before filtering
+  console.log("All loaded products before filtering:", loadedProducts);
+
   const filteredProducts = (loadedProducts || []).filter(
-    (product) =>
-      (!query.size || product.size === query.size) &&
-      (!query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase())) &&
-      (!product.isSold || !hideSoldItems) &&
-      (!props.showSaleItems || product.onSale) &&
-      (!query.names || query.names.includes(product.name)) &&
-      (!query.team || product.name === query.team) && // Filter by team
-      (query.hasPrint === null || product.trykk === (query.hasPrint ? "Ja" : "Nei")) && // Filter by print
-      (!props.finalSale || product.finalSale) // Use this line for filtering by final sale
-   
+    (product) => {
+      const sizeMatch = !query.size || product.size === query.size;
+      const searchTermMatch = !query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase());
+      const soldMatch = !product.isSold || !hideSoldItems;
+      const saleMatch = !props.showSaleItems || product.onSale;
+      const namesMatch = !query.names || query.names.includes(product.name);
+      const teamMatch = !query.team || product.name === query.team;
+      const printMatch = query.hasPrint === null || query.hasPrint === undefined || product.trykk === (query.hasPrint ? "Ja" : "Nei");
+      const finalSaleMatch = !props.finalSale || product.finalSale;
+
+      const matches = sizeMatch && searchTermMatch && soldMatch && saleMatch && namesMatch && teamMatch && printMatch && finalSaleMatch;
+
+      if (!matches) {
+        console.log(`Product excluded: ${product.name} - Size match: ${sizeMatch}, Search term match: ${searchTermMatch}, Sold match: ${soldMatch}, Sale match: ${saleMatch}, Names match: ${namesMatch}, Team match: ${teamMatch}, Print match: ${printMatch}, Final sale match: ${finalSaleMatch}`);
+      }
+
+      return matches;
+    }
   );
+
+  // Log the filtered products
+  console.log("Filtered products:", filteredProducts);
 
   return (
     <section className="py-12">
@@ -130,3 +144,4 @@ const ProductReel = (props: ProductReelProps) => {
 };
 
 export default ProductReel;
+

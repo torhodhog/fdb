@@ -89,11 +89,11 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-10">
+              <Button variant="outline" className="ml-10 sm:ml-0 w-full sm:w-auto">
                 <Filter className="mr-2 h-4 w-4" /> Filtrer
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
+            <DropdownMenuContent className="w-full sm:w-56 left-0 sm:left-auto">
               <DropdownMenuLabel>Filtrer Produkter</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
@@ -103,7 +103,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                     <span>Størrelse</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent className="w-full sm:w-auto">
                       <DropdownMenuItem onClick={() => setSize("XS")}>XS</DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setSize("S")}>S</DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setSize("M")}>M</DropdownMenuItem>
@@ -120,7 +120,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                     <span>Lag</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent className="w-full sm:w-auto">
                       <DropdownMenuItem onClick={() => setTeam("Manchester United")}>
                         Manchester United
                       </DropdownMenuItem>
@@ -139,7 +139,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                     <span>Trykk</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent className="w-full sm:w-auto">
                       <DropdownMenuItem onClick={() => setHasPrint(true)}>
                         Med Trykk
                       </DropdownMenuItem>

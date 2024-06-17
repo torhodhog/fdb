@@ -14,7 +14,7 @@ const SalePage = () => {
 
   return (
     <>
-      <MaxWidthWrapper className="relative">
+      {/* <MaxWidthWrapper className="relative">
         <div className="flex flex-col sm:flex-row justify-between w-full max-w-sm items-center mt-14">
           <div className="flex space-x-2 flex-grow mb-4 sm:mb-0">
             <Input
@@ -41,19 +41,20 @@ const SalePage = () => {
             </Select>
           </div>
         </div>
-      </MaxWidthWrapper>
+      </MaxWidthWrapper> */}
 
       <MaxWidthWrapper>
         <ProductReel
           title="Salg"
           query={{
-            limit: 80,
+            limit: 1000,
             searchTerm: searchTerm,
             liga_system: ligaSystem,
             size: size,
             onSale: true, // Add onSale prop to filter sale items
           }}
           loadMore={true} // Enable load more button
+          showSaleItems={true} // Ensure showSaleItems is set to true
         />
       </MaxWidthWrapper>
     </>
