@@ -5,9 +5,6 @@ import { getPayloadClient } from "../get-payload";
 import { stripe } from "../lib/stripe";
 import { privateProcedure, router } from "./trpc";
 
-import type Stripe from "stripe";
-import { Product } from "../payload-types";
-
 export const paymentRouter = router({
   createSession: privateProcedure
     .input(
@@ -32,7 +29,7 @@ export const paymentRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      let { productIds, leveringsinfo } = input;
+      const { productIds, leveringsinfo } = input;
       if (productIds.length === 0) {
         console.error("No products provided");
         throw new TRPCError({ code: "BAD_REQUEST" });
@@ -110,17 +107,14 @@ export const paymentRouter = router({
           shipping_address_collection: { allowed_countries: ["NO"] },
           line_items,
           metadata: { userId: user.id, orderId: order.id },
-          customer: customer.id, // Refer to the customer by ID
-          phone_number_collection: {
-            enabled: true,
-          },
+          customer: customer.id,
           allow_promotion_codes: true, // Enable promotion codes
         });
 
         console.log("Stripe Session created:", stripeSession.id);
         return { url: stripeSession.url };
       } catch (err) {
-        console.error("Failed to create Stripe session:", (err as Error).message); // Improved error logging
+        console.error("Failed to create Stripe session:", (err as Error).message);
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: (err as Error).message });
       }
     }),

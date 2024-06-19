@@ -137,10 +137,8 @@ exports.paymentRouter = (0, trpc_1.router)({
                             shipping_address_collection: { allowed_countries: ["NO"] },
                             line_items: line_items,
                             metadata: { userId: user.id, orderId: order.id },
-                            customer: customer.id, // Refer to the customer by ID
-                            phone_number_collection: {
-                                enabled: true,
-                            },
+                            customer: customer.id,
+                            allow_promotion_codes: true, // Enable promotion codes
                         })];
                 case 6:
                     stripeSession = _c.sent();
@@ -148,7 +146,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                     return [2 /*return*/, { url: stripeSession.url }];
                 case 7:
                     err_1 = _c.sent();
-                    console.error("Failed to create Stripe session:", err_1.message); // Improved error logging
+                    console.error("Failed to create Stripe session:", err_1.message);
                     throw new server_1.TRPCError({ code: "INTERNAL_SERVER_ERROR", message: err_1.message });
                 case 8: return [2 /*return*/];
             }
