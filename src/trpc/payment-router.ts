@@ -114,6 +114,7 @@ export const paymentRouter = router({
           phone_number_collection: {
             enabled: true,
           },
+          allow_promotion_codes: true, // Enable promotion codes
         });
 
         console.log("Stripe Session created:", stripeSession.id);
