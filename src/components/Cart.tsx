@@ -34,7 +34,7 @@ const Cart = () => {
     0
   );
 
-  const deliveryFee = 0;
+  const deliveryFee = 74;
 
   const fee = 0;
   return (

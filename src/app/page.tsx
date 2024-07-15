@@ -1,7 +1,10 @@
 import FinalSale from "@/components/FinalSale";
+import HeroVideo from "@/components/HeroVideo";
+import Info from "@/components/Info";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import PlayVideo from "@/components/PlayVideo";
 import ResponsiveImage from "@/components/ResponsiveImage";
+import ResponsiveVideo from "@/components/ResponsiveImage";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import Head from "next/head";
 import Image from "next/image";
@@ -10,8 +13,6 @@ import React from "react";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
-import Info from "@/components/Info";
-import ResponsiveVideo from "@/components/ResponsiveImage";
 
 const perks = [
   {
@@ -43,7 +44,7 @@ export default function Home() {
       </Head>
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">
-          <Hero />
+          <HeroVideo />
         </div>
         <ProductReel
           title="Nye produkter"
@@ -64,22 +65,7 @@ export default function Home() {
           </button>
         </Link>
       </div>
-      <MaxWidthWrapper className="flex flex-wrap justify-between">
-        {/* <div className="relative w-full md:w-1/2 h-full md:h-128 lg:h-192 mt-6 md:mt-24 mb-6 md:mb-40">
-          <FinalSale
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Em-teaser.jpeg"
-            alt="Final Sale"
-          />
-        </div> */}
-       <div className="relative w-full h-auto mt-10">
-  <Link href="/Sale">
-    <ResponsiveVideo
-      src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/SALGSVIDEO.mp4"
-      alt="Salg"
-    />
-  </Link>
-</div>
-      </MaxWidthWrapper>
+     
 
       <section className="border-t border-gray-200  z-0">
         <MaxWidthWrapper className="py-20">

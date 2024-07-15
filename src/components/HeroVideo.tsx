@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useRef, useState } from "react";
 
 const HeroVideo: FC = () => {

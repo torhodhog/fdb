@@ -7,7 +7,7 @@ export const Icons = {
   logo: (props: LucideProps) => (
     
     <Image
-  src="/fdblogo.png"
+  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/Full+logo.PNG"
   alt="Logo"
   width={100}
   height={30}
