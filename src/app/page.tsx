@@ -1,4 +1,5 @@
 import FinalSale from "@/components/FinalSale";
+import HeroImage from "@/components/HeroImage";
 import HeroVideo from "@/components/HeroVideo";
 import Info from "@/components/Info";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
@@ -44,7 +45,7 @@ export default function Home() {
       </Head>
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">
-          <HeroVideo />
+          <HeroImage />
         </div>
         <ProductReel
           title="Nye produkter"
