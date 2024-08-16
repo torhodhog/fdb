@@ -90,3 +90,84 @@
   scale: 1 !important ;
 }
 
+/* components/StripeComponent.css */
+
+/* components/StripeComponent.css */
+
+.stripe-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  z-index: 1000;
+  pointer-events: none;
+  margin-left: 20rem;
+}
+
+.stripe-con {
+  position: fixed;
+  top: 0;
+  left: 100px; /* Juster etter behov */
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.stripe {
+  width: 20px; /* Juster bredde etter behov */
+  height: 100%; /* Fordel høyden jevnt mellom stripene */
+  margin-top: 4rem;
+}
+
+
+
+.green {
+  background-color: #47693a;
+  width: 20px;
+}
+
+.green1 {
+  background-color: #47693a;
+  width: 20px;
+  border-top-left-radius: 10px;
+}
+
+.yellow {
+  background-color: #e8d044;
+  width: 15px;
+}
+
+/* Plasserer stripe 1 i øvre venstre hjørne */
+.green2 {
+  position: fixed; /* eller absolute, avhengig av behov */
+  top: 4rem;
+  left: 21.23rem;
+  width: 100px; /* Juster etter behov */
+  height: 20px; /* Juster etter behov */
+  background-color: #47693a; /* eller annen farge */
+}
+
+.green3 {
+  position: fixed; /* eller absolute, avhengig av behov */
+  top: 6.23rem;
+  left: 22.23rem;
+  width: 84.5px; /* Juster etter behov */
+  height: 20px; /* Juster etter behov */
+  background-color: #47693a; /* eller annen farge */
+}
+
+/* Plasserer stripe 2 i nedre høyre hjørne */
+.yellow2 {
+  position: fixed; /* eller absolute, avhengig av behov */
+  top: 5rem;
+  left: 21.23rem;
+  width: 100px; /* Juster etter behov */
+  height: 20px; /* Juster etter behov */
+  background-color: #e8d044; /* eller annen farge */
+}

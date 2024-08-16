@@ -42,7 +42,22 @@ export default function Home() {
         <title>Home - Fotballdraktbutikken</title>
         <meta name="description" content="Welcome to Fotballdraktbutikken" />
         <link rel="icon" href="/favicon.ico" />
+        <Head>
+        <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
+        <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
+        <script async type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              Weglot.initialize({
+                api_key: 'wg_637608e12b26daef9cf89edc1fc07fa27'
+              });
+            `,
+          }}
+        />
       </Head>
+      </Head>
+      
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">
           <HeroImage />
@@ -68,7 +83,7 @@ export default function Home() {
       </div>
      
 
-      <section className="border-t border-gray-200  z-0">
+      <section>
         <MaxWidthWrapper className="py-20">
           <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0 z-30">
             {perks.map((perk) => (
