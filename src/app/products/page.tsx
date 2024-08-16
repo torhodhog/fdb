@@ -89,7 +89,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-10 sm:ml-0 w-full sm:w-auto">
+              <Button variant="outline" className="ml-4  w-full sm:w-auto ">
                 <Filter className="mr-2 h-4 w-4" /> Filtrer
               </Button>
             </DropdownMenuTrigger>

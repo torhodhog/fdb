@@ -109,7 +109,7 @@ export default function Home() {
         </MaxWidthWrapper>
         
         <MaxWidthWrapper>
-          <div className="lg:block hidden">
+          <div className="lg:block hidden m-8">
             <Info />
           </div>
         </MaxWidthWrapper>
