@@ -74,6 +74,7 @@ export interface Product {
   trykk?: ('Ja' | 'Nei') | null;
   category: 'ui_kits' | 'Kontakt';
   finalSale?: boolean | null;
+  productCode: string;
   updatedAt: string;
   createdAt: string;
 }

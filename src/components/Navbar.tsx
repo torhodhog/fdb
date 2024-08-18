@@ -1,23 +1,26 @@
 import { getServerSideUser } from "@/lib/payload-utils";
+import { User as UserType } from "@/payload-types";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 
+// Importer next/image for å vise flagg
 import Cart from "./Cart";
 import { Icons } from "./Icons";
 import MaxWidthWrapper from "./MaxWidthWrapper";
-import MobileNav from "./MobildeNav"; // Sørg for at importen er korrekt her
+import MobileNav from "./MobildeNav";
+// Sørg for at importen er korrekt her
 import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
-import { User as UserType } from "@/payload-types";
 
 const Navbar = async () => {
   const nextCookies = cookies();
   const { user }: { user: UserType | null } = await getServerSideUser(nextCookies);
 
   return (
-    <div className=" top-0 inset-x-0 z-50 sticky bg-white">
+    <div className="top-0 inset-x-0 z-50 sticky bg-white">
       <header className="relative bg-transparent lg:bg-background">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
@@ -26,7 +29,7 @@ const Navbar = async () => {
 
               <div className="ml-4 hidden lg:flex lg:ml-0">
                 <Link href="/">
-                  <Icons.logo className=" h-8 w-10" />
+                  <Icons.logo className="h-8 w-10" />
                 </Link>
               </div>
 
@@ -35,7 +38,7 @@ const Navbar = async () => {
               </div>
 
               <div className="ml-auto flex items-center">
-                <div className=" lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? (
                     <UserAccountNav user={user} /> // Desktop view user account navigation
                   ) : (
@@ -73,6 +76,23 @@ const Navbar = async () => {
                   <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex">
                     <Cart />
                     <ModeToggle />
+                    {/* Legg til flagglenker her */}
+                    <Link href="/no" locale="no">
+                      <Image
+                        src="/norway-flag.png" // Plassér flaggikoner i public-mappen
+                        alt="Norsk"
+                        width={24}
+                        height={16}
+                      />
+                    </Link>
+                    <Link href="/en" locale="en">
+                      <Image
+                        src="/uk-flag.png" // Plassér flaggikoner i public-mappen
+                        alt="English"
+                        width={24}
+                        height={16}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>

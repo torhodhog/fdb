@@ -361,5 +361,11 @@ exports.Products = {
             type: "checkbox",
             defaultValue: false,
         },
+        {
+            name: "productCode",
+            label: "Product Code",
+            type: "text",
+            required: true,
+        },
     ],
 };

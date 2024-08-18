@@ -20,6 +20,7 @@ interface ProductReelProps {
   loadMore?: boolean; // Add this prop to control "Load More" button visibility
   isHomePage?: boolean; // Flag to differentiate between home page and product page
   finalSale?: boolean;
+  productCode?: string;
 }
 
 const ProductReel = (props: ProductReelProps) => {
@@ -51,7 +52,7 @@ const ProductReel = (props: ProductReelProps) => {
   useEffect(() => {
     if (queryResults && queryResults.items) {
       console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); // Log the fetched items
-      setLoadedProducts(queryResults.items);
+      // setLoadedProducts(queryResults.items);
       setIsLoading(false); // Set loading to false after products are loaded
     } else {
       console.log("No items fetched");

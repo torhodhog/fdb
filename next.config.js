@@ -13,8 +13,8 @@ const nextConfig = {
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://fotballdb.no',
     // Legg til andre miljøvariabler hvis nødvendig
   },
-  reactStrictMode: true, // Legg til dette for å aktivere strict mode
-  swcMinify: true, // Legg til dette for å aktivere SWC minifier
+  reactStrictMode: true, // Aktiverer strict mode for å fange opp potensielle problemer
+  swcMinify: true, // Aktiverer SWC minifier for raskere builds
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname);
     return config;
