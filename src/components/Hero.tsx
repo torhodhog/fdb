@@ -14,7 +14,7 @@ const Hero: FC = () => {
 
       {/* Mobile View with Image */}
       <div className="relative w-full  flex-col items-center justify-center lg:hidden block">
-        <CellHeroImage />
+        <HeroImage />
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ const MobileNav = ({ user }: { user: UserType | null }) => {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 w-full bg-gray-600 bg-opacity-95 rounded-t-lg shadow-md transition-opacity duration-500">
+      <div className="fixed inset-x-0 bottom-0 w-full bg-gray-600  rounded-t-lg shadow-md transition-opacity duration-500">
         <div className="flex justify-around items-center py-5 text-white">
           <Link href="/">
             <Home className="h-6 w-6" />
@@ -29,7 +29,7 @@ const MobileNav = ({ user }: { user: UserType | null }) => {
           <Link href="/products">
             <Box className="h-6 w-6" />
           </Link>
-          <Link href="/sale">
+          <Link href="/Sale">
             <Percent className="h-6 w-6" />
           </Link>
           <Link href="/cart">
