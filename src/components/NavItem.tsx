@@ -4,7 +4,6 @@ import { PRODUCT_CATEGORIES } from "@/config";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 
 type Category = (typeof PRODUCT_CATEGORIES)[number];
@@ -58,30 +57,20 @@ const NavItem = ({
 
           <div className="relative bg-white">
             <div className="mx-auto max-w-7xl px-8">
-              <div className="grid grid-cols-4 gap-x-8 gap-y-10 py-16">
-                <div className="col-span-4 col-start-1 grid grid-cols-3 gap-x-8">
-                  {category.featured.map((item) => (
-                    <div
-                      onClick={() => close()}
-                      key={item.name}
-                      className="group relative text-base sm:text-sm"
-                    >
-                      <Link href={item.href} className="block">
-                        <div className="relative aspect-video overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                          <Image
-                            src={item.imageSrc}
-                            alt={item.name}
-                            fill
-                            className="object-cover object-center"
-                          />
-                        </div>
-                        <span className="mt-6 block font-medium text-gray-900">
-                          {item.name}
-                        </span>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 gap-y-4 py-16">
+                {category.featured.map((item) => (
+                  <div
+                    onClick={() => close()}
+                    key={item.name}
+                    className="group relative text-base sm:text-sm"
+                  >
+                    <Link href={item.href} className="block">
+                      <span className="block font-medium text-gray-900">
+                        {item.name}
+                      </span>
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,16 +1,19 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import ImageSlider from "@/components/ImageSlider";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import ProductListing from "@/components/ProductListing";
 import ProductReel from "@/components/ProductReel";
 import { PRODUCT_CATEGORIES } from "@/config";
+import { fetchProduct } from "@/lib/getProducts";
 import { formatPrice } from "@/lib/utils";
 import { Check, Shield } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchProduct } from "@/lib/getProducts";
+
 interface PageProps {
   params: {
     productId: string;
+    
   };
   searchParams: {
     [key: string]: string;
@@ -34,7 +37,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
     ({ value }) => value === product.category
   )?.label;
 
-  const validUrls = product.images
+  const validUrls = (product.images as { image: string | { url: string } }[])
     .map(({ image }) => (typeof image === "string" ? image : image?.url))
     .filter(Boolean) as string[];
 
@@ -115,7 +118,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
               </div>
               
                 <div className="p-4 border border-gray-200  mt-4 rounded-md bg-gray-100">
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <h2 className="text-lg font-bold">Trykk:</h2>
                 {product.trykk === "Ja" ? (
                   <span className="text-green-500">
@@ -126,15 +129,20 @@ const Page = async ({ params, searchParams }: PageProps) => {
                     Nei
                   </span>
                 )}
-              </div>
+              </div> */}
               
 
               <div className="mt-4">
                 <h2 className="text-lg font-bold">Tilstand</h2>
-                <StarRating rating={parseInt(product.tilstand || "0")} />             
+                <StarRating rating={parseInt(product.tilstand || "0")} />
+                <div className="mt-4">
+                <h2 className="text-lg font-bold">Størrelse: {product.size}</h2>
+              </div>             
               </div></div>
               </section>
               </div>
+
+              
 
           <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
             <div className="aspect-square rounded-lg">

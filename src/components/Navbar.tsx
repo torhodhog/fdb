@@ -77,7 +77,7 @@ const Navbar = async () => {
                     <Cart />
                     <ModeToggle />
                     {/* Legg til flagglenker her */}
-                    <Link href="/no" locale="no">
+                    {/* <Link href="/no" locale="no"> //BRUKE DENNE NÅR OVERSETTELSE ER KLAR
                       <Image
                         src="/norway-flag.png" // Plassér flaggikoner i public-mappen
                         alt="Norsk"
@@ -92,7 +92,7 @@ const Navbar = async () => {
                         width={24}
                         height={16}
                       />
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>
