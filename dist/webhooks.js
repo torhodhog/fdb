@@ -144,7 +144,7 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                     return [4 /*yield*/, resend.emails.send({
                             from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
                             to: [user.email],
-                            subject: "Takk for din bestilling. Her er din kvittering..",
+                            subject: "Takk for din bestilling. Her er din kvittering.",
                             html: (0, ReceiptEmail_1.ReceiptEmailHtml)({
                                 date: new Date(),
                                 email: user.email,
@@ -155,15 +155,13 @@ function handleCheckoutSessionCompleted(event, res, req, payload) {
                         })];
                 case 9:
                     data = _d.sent();
-                    res.status(200).json({ data: data });
-                    return [3 /*break*/, 11];
+                    console.log("Receipt email sent successfully:", data);
+                    return [2 /*return*/, res.status(200).json({ data: data })];
                 case 10:
                     error_1 = _d.sent();
-                    res.status(500).json({ error: error_1 });
-                    return [3 /*break*/, 11];
-                case 11: return [2 /*return*/, res
-                        .status(200)
-                        .send("Checkout session completed successfully processed.")];
+                    console.error("Error sending receipt email:", error_1);
+                    return [2 /*return*/, res.status(500).json({ error: "Failed to send receipt email" })];
+                case 11: return [3 /*break*/, 13];
                 case 12:
                     console.error("Missing userId in session metadata", session.id);
                     return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];

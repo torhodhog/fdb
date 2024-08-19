@@ -107,7 +107,13 @@ export default function Home() {
             ))}
           </div>
         </MaxWidthWrapper>
-        
+
+        <MaxWidthWrapper className="py-20">
+          <div>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1689.5323233399326!2d5.31726373790017!3d60.39484747942451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463cfd003f0fc121%3A0xcd4c7597e10f3c7c!2sfdb.343!5e1!3m2!1sno!2sno!4v1724075790058!5m2!1sno!2sno" width="600" height="450" style={{ border: "0" }} allowFullScreen={true} loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          </MaxWidthWrapper>
+
         <MaxWidthWrapper>
           <div className="lg:block hidden m-8">
             <Info />

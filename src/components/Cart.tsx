@@ -33,8 +33,8 @@ const Cart = () => {
     (total, { product }) => total + (product.salePrice || product.price),
     0
   );
-
-  const deliveryFee = 74;
+  
+  const deliveryFee = cartTotal >= 1500 ? 0 : 74; // Legger til levering kun hvis total er under 1500 NOK
 
   const fee = 0;
   return (

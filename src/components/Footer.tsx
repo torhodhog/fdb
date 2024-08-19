@@ -43,11 +43,16 @@ const Footer = () => {
                     via sosiale medier.{" "}
                   </p>
                   <div className="space-x-8 mt-8 ">
+                    <a href="https://www.tiktok.com/@fdb343"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >
                     <FontAwesomeIcon
                       className="text-black hover:text-rose-600 dark:text-rose-600 dark:hover:text-black"
                       icon={faTiktok}
                       size="2x"
                     />
+                    </a>
                     <a
                       href="https://www.facebook.com/fotballdraktbutikken"
                       target="_blank"
@@ -60,7 +65,7 @@ const Footer = () => {
                       />
                     </a>
                     <a
-                      href="https://www.instagram.com/fotballdraktbutikken/"
+                      href="https://www.instagram.com/fdb.343/"
                       target="_blank"
                       rel="noopener noreferrer"
                     >

@@ -11,7 +11,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-
 const Page = () => {
   const { items, removeItem } = useCart();
 
@@ -32,6 +31,7 @@ const Page = () => {
   const productIds = items.map(({ product }) => product.id);
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -41,10 +41,9 @@ const Page = () => {
     0
   );
 
-  const deliveryFee = 74;
-  // const deliveryFee = 87;
+  const deliveryFee = cartTotal >= 1500 ? 0 : 74; // Dynamisk beregning av leveringskostnader
 
-  const handleCheckout = () => {
+  const handleCheckout = (deliveryMethod: string) => {
     const leveringsinfo = {
       navn: "Brukerens navn",
       adresse: "Brukerens adresse",
@@ -53,11 +52,20 @@ const Page = () => {
       telefonnummer: "Brukerens telefonnummer".substring(0, 20), // Truncate phone number
       land: "Brukerens land",
     };
-
+  
     createCheckoutSession({
       productIds,
       leveringsinfo,
+      deliveryMethod,
     });
+  };
+  
+  const handlePickup = () => {
+    handleCheckout("pickup");
+  };
+  
+  const handleDelivery = () => {
+    handleCheckout("delivery");
   };
 
   return (
@@ -219,10 +227,10 @@ const Page = () => {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex space-x-4">
               <Button
                 disabled={items.length === 0 || isLoading}
-                onClick={handleCheckout}
+                onClick={(event) => handleCheckout("delivery")}
                 className="w-full"
                 size="lg"
               >
@@ -230,6 +238,17 @@ const Page = () => {
                   <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
                 ) : null}
                 Kjøp
+              </Button>
+              <Button
+                disabled={items.length === 0 || isLoading}
+                onClick={handlePickup}
+                className="w-full"
+                size="lg"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-1.5" />
+                ) : null}
+                Kjøp og hent
               </Button>
             </div>
           </section>

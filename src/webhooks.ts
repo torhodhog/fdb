@@ -80,7 +80,7 @@ async function handleCheckoutSessionCompleted(
         data: { _isPaid: true, user: session.metadata.userId },
       });
 
-      for (const product of order.products) {
+      for (const product of (order as any).products) {
         const productId = typeof product === "string" ? product : product.id;
         await payload.update({
           collection: "products",
@@ -105,24 +105,22 @@ async function handleCheckoutSessionCompleted(
 
         const data = await resend.emails.send({
           from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
-          to: [user.email],
-          subject: "Takk for din bestilling. Her er din kvittering..",
+          to: [user.email as string],
+          subject: "Takk for din bestilling. Her er din kvittering.",
           html: ReceiptEmailHtml({
             date: new Date(),
-            email: user.email,
+            email: user.email as string,
             orderId: session.metadata.orderId,
             products: order.products as Product[],
             deliveryFee: (order as any).deliveryFee,
           }),
         });
-        res.status(200).json({ data });
+        console.log("Receipt email sent successfully:", data);
+        return res.status(200).json({ data });
       } catch (error) {
-        res.status(500).json({ error });
+        console.error("Error sending receipt email:", error);
+        return res.status(500).json({ error: "Failed to send receipt email" });
       }
-
-      return res
-        .status(200)
-        .send("Checkout session completed successfully processed.");
     } else {
       console.error("Missing userId in session metadata", session.id);
       return res.status(400).send("Webhook Error: Missing userId in metadata");

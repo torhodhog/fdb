@@ -5,6 +5,14 @@ import { getPayloadClient } from "../get-payload";
 import { stripe } from "../lib/stripe";
 import { privateProcedure, router } from "./trpc";
 
+interface Product {
+  id: string;
+  name: string;
+  priceId?: string;
+  price?: number;
+  salePrice?: number;
+}
+
 export const paymentRouter = router({
   createSession: privateProcedure
     .input(
@@ -15,9 +23,10 @@ export const paymentRouter = router({
           adresse: z.string(),
           postnummer: z.string(),
           by: z.string(),
-          telefonnummer: z.string().max(20), // Ensure maximum length
+          telefonnummer: z.string().max(20),
           land: z.string(),
         }),
+        deliveryMethod: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -29,7 +38,7 @@ export const paymentRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const { productIds, leveringsinfo } = input;
+      const { productIds, leveringsinfo, deliveryMethod } = input;
       if (productIds.length === 0) {
         console.error("No products provided");
         throw new TRPCError({ code: "BAD_REQUEST" });
@@ -38,10 +47,12 @@ export const paymentRouter = router({
       const payload = await getPayloadClient();
       console.log("Payload client instantiated");
 
-      const { docs: products } = await payload.find({
+      const result = await payload.find({
         collection: "products",
         where: { id: { in: productIds } },
       });
+
+      const products = (result as unknown as { docs: Product[] }).docs; // Convert to unknown first, then to Product[]
 
       console.log(
         "Products fetched:",
@@ -57,7 +68,7 @@ export const paymentRouter = router({
       const order = await payload.create({
         collection: "orders",
         data: {
-          products: filteredProducts.map((prod) => prod.id),
+          products: filteredProducts.map((prod) => prod.id.toString()), // Explicitly cast prod.id to string
           user: user.id,
         },
       });
@@ -67,23 +78,38 @@ export const paymentRouter = router({
       const line_items = filteredProducts.map((product) => ({
         price_data: {
           currency: "nok",
-          product_data: { name: product.name },
-          unit_amount: (product.salePrice || product.price) * 100,
+          product_data: { name: product.name as string }, // Type assertion to string
+          unit_amount: ((product.salePrice as number) || (product.price as number)) * 100, // Type assertion to number
         },
         quantity: 1,
       }));
 
-      const deliveryFee = 74;
-      line_items.push({
-        price_data: {
-          currency: "nok",
-          product_data: { name: "Delivery Fee" },
-          unit_amount: deliveryFee * 100,
-        },
-        quantity: 1,
-      });
+      // Calculate total price of products
+      const totalPrice = filteredProducts.reduce((sum, product) => {
+        return sum + ((product.salePrice as number) || (product.price as number)); // Type assertion to number
+      }, 0);
 
-      console.log("Line items prepared for Stripe Checkout");
+      console.log("Total price of products:", totalPrice);
+      console.log("Delivery method:", deliveryMethod);
+
+      // Check if deliveryMethod is "delivery" and total price is less than 1500 NOK
+      let deliveryFee = 0;
+      if (deliveryMethod === "delivery" && totalPrice < 1500) {
+        deliveryFee = 74 * 100; // Multiply by 100 to convert to øre
+        line_items.push({
+          price_data: {
+            currency: "nok",
+            product_data: { name: "Delivery Fee" },
+            unit_amount: deliveryFee,
+          },
+          quantity: 1,
+        });
+        console.log("Delivery fee added:", deliveryFee);
+      } else {
+        console.log("No delivery fee added. Delivery method:", deliveryMethod, "Total price:", totalPrice);
+      }
+
+      console.log("Final line items prepared for Stripe Checkout:", line_items);
 
       try {
         const customer = await stripe.customers.create({

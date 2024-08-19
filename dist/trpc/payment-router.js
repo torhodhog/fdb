@@ -51,12 +51,13 @@ exports.paymentRouter = (0, trpc_1.router)({
             adresse: zod_1.z.string(),
             postnummer: zod_1.z.string(),
             by: zod_1.z.string(),
-            telefonnummer: zod_1.z.string().max(20), // Ensure maximum length
+            telefonnummer: zod_1.z.string().max(20),
             land: zod_1.z.string(),
         }),
+        deliveryMethod: zod_1.z.string(),
     }))
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var user, productIds, leveringsinfo, payload, products, filteredProducts, order, line_items, deliveryFee, customer, stripeSession, err_1;
+        var user, productIds, leveringsinfo, deliveryMethod, payload, result, products, filteredProducts, order, line_items, totalPrice, deliveryFee, customer, stripeSession, err_1;
         var ctx = _b.ctx, input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -67,7 +68,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                         console.error("User context is missing");
                         throw new server_1.TRPCError({ code: "UNAUTHORIZED" });
                     }
-                    productIds = input.productIds, leveringsinfo = input.leveringsinfo;
+                    productIds = input.productIds, leveringsinfo = input.leveringsinfo, deliveryMethod = input.deliveryMethod;
                     if (productIds.length === 0) {
                         console.error("No products provided");
                         throw new server_1.TRPCError({ code: "BAD_REQUEST" });
@@ -81,14 +82,15 @@ exports.paymentRouter = (0, trpc_1.router)({
                             where: { id: { in: productIds } },
                         })];
                 case 2:
-                    products = (_c.sent()).docs;
+                    result = _c.sent();
+                    products = result.docs;
                     console.log("Products fetched:", products.map(function (p) { return p.name; }));
                     filteredProducts = products.filter(function (prod) { return Boolean(prod.priceId); });
                     console.log("Filtered products (with priceId):", filteredProducts.map(function (p) { return p.name; }));
                     return [4 /*yield*/, payload.create({
                             collection: "orders",
                             data: {
-                                products: filteredProducts.map(function (prod) { return prod.id; }),
+                                products: filteredProducts.map(function (prod) { return prod.id.toString(); }), // Explicitly cast prod.id to string
                                 user: user.id,
                             },
                         })];
@@ -98,21 +100,33 @@ exports.paymentRouter = (0, trpc_1.router)({
                     line_items = filteredProducts.map(function (product) { return ({
                         price_data: {
                             currency: "nok",
-                            product_data: { name: product.name },
-                            unit_amount: (product.salePrice || product.price) * 100,
+                            product_data: { name: product.name }, // Type assertion to string
+                            unit_amount: (product.salePrice || product.price) * 100, // Type assertion to number
                         },
                         quantity: 1,
                     }); });
-                    deliveryFee = 74;
-                    line_items.push({
-                        price_data: {
-                            currency: "nok",
-                            product_data: { name: "Delivery Fee" },
-                            unit_amount: deliveryFee * 100,
-                        },
-                        quantity: 1,
-                    });
-                    console.log("Line items prepared for Stripe Checkout");
+                    totalPrice = filteredProducts.reduce(function (sum, product) {
+                        return sum + (product.salePrice || product.price); // Type assertion to number
+                    }, 0);
+                    console.log("Total price of products:", totalPrice);
+                    console.log("Delivery method:", deliveryMethod);
+                    deliveryFee = 0;
+                    if (deliveryMethod === "delivery" && totalPrice < 1500) {
+                        deliveryFee = 74 * 100; // Multiply by 100 to convert to øre
+                        line_items.push({
+                            price_data: {
+                                currency: "nok",
+                                product_data: { name: "Delivery Fee" },
+                                unit_amount: deliveryFee,
+                            },
+                            quantity: 1,
+                        });
+                        console.log("Delivery fee added:", deliveryFee);
+                    }
+                    else {
+                        console.log("No delivery fee added. Delivery method:", deliveryMethod, "Total price:", totalPrice);
+                    }
+                    console.log("Final line items prepared for Stripe Checkout:", line_items);
                     _c.label = 4;
                 case 4:
                     _c.trys.push([4, 7, , 8]);

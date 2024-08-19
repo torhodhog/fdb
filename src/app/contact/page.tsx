@@ -54,7 +54,7 @@ export default function Contact() {
         onSubmit={handleSubmit}
         className="flex flex-col mb-28 mt-28 items-center justify-center w-full max-w-lg mx-auto p-12 bg-gray-800 shadow-xl rounded-lg space-y-4"
       >
-        <h1 className="text-3xl font-bold text-white">Kom i kontakt med oss</h1>
+        <h1 className="text-3xl font-bold text-white">Vi ønsker å høre fra deg</h1>
 
         <div className="flex flex-col w-full">
           <label htmlFor="frm-email" className="text-gray-300">
@@ -103,16 +103,16 @@ export default function Contact() {
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-600 transition duration-300"
         >
-          Send inn
+          Send 
         </button>
       </form>
 
       <div className="flex justify-center items-center flex-col gap-y-3 mb-8">
         <p>
-          <FontAwesomeIcon icon={faMapMarkerAlt} color="green" /> Brunestykket 2, 5039 Bergen
+          <FontAwesomeIcon icon={faMapMarkerAlt} color="green" /> Strandgaten 74, 5004 Bergen
         </p>
         <p>
-          <FontAwesomeIcon icon={faEnvelope} color="green" /> Mail: fdb@fotballdraktbutikken.com
+          <FontAwesomeIcon icon={faEnvelope} color="green" /> Mail: fdb@fotballdraktbutikken.no
         </p>
         <p>
           <FontAwesomeIcon icon={faPhone} color="green" /> Telefon: +47 979 39 973
