@@ -1,7 +1,7 @@
 export const PRODUCT_CATEGORIES = [
   {
     label: "Meny",
-    value: "menu",
+    value: "products",
     featured: [
       {
         name: "Alle produkter",
