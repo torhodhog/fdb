@@ -253,7 +253,10 @@ const Page = () => {
               
             </div>
             <div className="mt-6">
-                <p className="font-extralight">** Ved å trykke <span className="font-semibold">&ldquo;Kjøp og hent&rdquo;</span>, legger vi av produktet for deg. Du henter det i butikken når det passer deg.</p>
+                <p className="font-extralight">* Ved å trykke <span className="font-semibold">&ldquo;Kjøp og hent&rdquo;</span>, legger vi av produktet for deg. Du henter det i butikken når det passer deg.</p><br></br>
+                                <p className="font-extralight">
+                  **Les om butikken og hvor du finner oss <span><a href="/FdbStore" className="text-blue-500 hover:underline">her</a></span>
+                </p>
               </div>
           </section>
         </div>
