@@ -250,7 +250,11 @@ const Page = () => {
                 ) : null}
                 Kjøp og hent
               </Button>
+              
             </div>
+            <div className="mt-6">
+                <p className="font-extralight">** Ved å trykke <span className="font-semibold">"Kjøp og hent"</span>, legger vi av produktet for deg. Du henter det i butikken når det passer deg.</p>
+              </div>
           </section>
         </div>
       </div>
