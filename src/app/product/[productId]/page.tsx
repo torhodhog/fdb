@@ -172,7 +172,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
       </div>
 
       <ProductReel
-        href="/product"
+        href="/products"
         query={{ liga_system: product.liga_system || undefined, limit: 4 }}
         title={`Lignende produkter`}
         subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}

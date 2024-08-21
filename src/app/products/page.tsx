@@ -55,6 +55,10 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
 
   const handleSearch = () => {
     setIsLoading(true); // Set loading state to true when searching
+    // Simulate search delay
+    setTimeout(() => {
+      setIsLoading(false); // Set loading state to false after search
+    }, 500);
   };
 
   const resetFilters = () => {
@@ -64,6 +68,10 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
     setTeam("");
     setHasPrint(null); // Reset hasPrint filter
     setIsLoading(true); // Set loading state to true
+    // Simulate reset delay
+    setTimeout(() => {
+      setIsLoading(false); // Set loading state to false after reset
+    }, 500);
   };
 
   // Simulate loading by setting a delay

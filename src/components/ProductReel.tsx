@@ -52,6 +52,7 @@ const ProductReel = (props: ProductReelProps) => {
   useEffect(() => {
     if (queryResults && queryResults.items) {
       console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); // Log the fetched items
+            // @ts-ignore
       setLoadedProducts(queryResults.items);
       setIsLoading(false); // Set loading to false after products are loaded
     } else {
@@ -70,7 +71,7 @@ const ProductReel = (props: ProductReelProps) => {
 
   if (!queryResults) {
     console.warn("No query results returned");
-    return <div>Vent litt, drakter lastes...</div>;
+    return <div className="mt-8">Vent litt, drakter lastes...</div>;
   }
 
   // Log the products before filtering
