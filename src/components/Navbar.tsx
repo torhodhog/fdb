@@ -37,10 +37,11 @@ const Navbar = async () => {
                 <NavItems />
               </div>
 
+
               <div className="ml-auto flex items-center">
                 <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? (
-                    <UserAccountNav user={user} /> // Desktop view user account navigation
+                    <UserAccountNav user={user} /> 
                   ) : (
                     <>
                       <div className="hidden lg:flex">
@@ -52,6 +53,7 @@ const Navbar = async () => {
                         >
                           Logg inn
                         </Link>
+            
                       </div>
 
                       <span className="h-6 w-px bg-gray-200" aria-hidden="true" />

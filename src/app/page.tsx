@@ -1,3 +1,5 @@
+"use client"
+import React, { useEffect, useState } from "react";
 import FinalSale from "@/components/FinalSale";
 import HeroImage from "@/components/HeroImage";
 import HeroVideo from "@/components/HeroVideo";
@@ -10,7 +12,7 @@ import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
@@ -36,26 +38,44 @@ const perks = [
 ];
 
 export default function Home() {
+  const [weglotLoaded, setWeglotLoaded] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.weglot.com/weglot.min.js";
+    script.async = true;
+    script.onload = () => {
+      if (window.Weglot) {
+        window.Weglot.initialize({
+          api_key: 'wg_637608e12b26daef9cf89edc1fc07fa27'
+        });
+        console.log("Weglot initialized");
+        setWeglotLoaded(true);
+      } else {
+        console.error("Weglot is not available on window");
+      }
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  const switchLanguage = (lang: string) => {
+    console.log(`Attempting to switch language to ${lang}`);
+    if (weglotLoaded && window.Weglot) {
+      window.Weglot.switchTo(lang);
+      console.log(`Switched language to ${lang}`);
+    } else {
+      console.error("Weglot is not available on window");
+    }
+  };
+
   return (
     <>
       <Head>
         <title>Home - Fotballdraktbutikken</title>
         <meta name="description" content="Welcome to Fotballdraktbutikken" />
         <link rel="icon" href="/favicon.ico" />
-        <Head>
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
-        <script async type="text/javascript" src="https://cdn.weglot.com/weglot.min.js"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              Weglot.initialize({
-                api_key: 'wg_637608e12b26daef9cf89edc1fc07fa27'
-              });
-            `,
-          }}
-        />
-      </Head>
       </Head>
       
       <MaxWidthWrapper className="overflow-visable">
@@ -71,7 +91,6 @@ export default function Home() {
             sortBy: "createdAt",
             sortOrder: "desc",
           }}
-          // isHomePage={true} // Pass isHomePage as true
         />
       </MaxWidthWrapper>
       <div className="lg:hidden block text-center">
@@ -81,7 +100,6 @@ export default function Home() {
           </button>
         </Link>
       </div>
-     
 
       <section>
         <MaxWidthWrapper className="py-20">
@@ -108,13 +126,41 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
 
-       
         <MaxWidthWrapper>
           <div className="lg:block hidden m-8">
             <Info />
           </div>
         </MaxWidthWrapper>
       </section>
+      
+      <div className="language-switcher">
+        <button
+          className="mr-4 ml-4"
+          onClick={() => switchLanguage('no')}
+        >
+          <img className="w-8" src="norway-flag.png" alt="Norwegian Flag" />
+        </button>
+        <button onClick={() => switchLanguage('en')}>
+          <img className="w-8" src="uk-flag.png" alt="UK Flag" />
+        </button>
+      </div>
+
+      <style jsx>{`
+        .language-switcher {
+          position: fixed;
+          top: 16px;
+          left: 16px;
+          z-index: 50;
+          display: flex;
+          gap: 8px;
+        }
+        @media (max-width: 768px) {
+          .language-switcher {
+            top: 8px;
+            left: 8px;
+          }
+        }
+      `}</style>
     </>
   );
 }
