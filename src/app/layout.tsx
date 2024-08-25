@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import StripeComponent from "@/components/StripeComponent"; // Importer stripe komponenten
+import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher-komponenten
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,10 +33,11 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
-          {/* <StripeComponent  /> Legg til stripe komponenten */}
           <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
+              <WeglotSwitcher /> {/* Legg til WeglotSwitcher-komponenten her */}
+              <StripeComponent /> {/* Legg til stripe komponenten her */}
               <div className="flex-grow flex-1">{children}</div>
               <Footer />
             </Providers>

@@ -101,6 +101,7 @@ const Navbar = async () => {
             </div>
           </div>
         </MaxWidthWrapper>
+        
       </header>
     </div>
   );

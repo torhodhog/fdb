@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React from "react";
 import FinalSale from "@/components/FinalSale";
 import HeroImage from "@/components/HeroImage";
 import HeroVideo from "@/components/HeroVideo";
@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
+import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher
 
 const perks = [
   {
@@ -38,36 +39,6 @@ const perks = [
 ];
 
 export default function Home() {
-  const [weglotLoaded, setWeglotLoaded] = useState(false);
-
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.weglot.com/weglot.min.js";
-    script.async = true;
-    script.onload = () => {
-      if (window.Weglot) {
-        window.Weglot.initialize({
-          api_key: 'wg_637608e12b26daef9cf89edc1fc07fa27'
-        });
-        console.log("Weglot initialized");
-        setWeglotLoaded(true);
-      } else {
-        console.error("Weglot is not available on window");
-      }
-    };
-    document.head.appendChild(script);
-  }, []);
-
-  const switchLanguage = (lang: string) => {
-    console.log(`Attempting to switch language to ${lang}`);
-    if (weglotLoaded && window.Weglot) {
-      window.Weglot.switchTo(lang);
-      console.log(`Switched language to ${lang}`);
-    } else {
-      console.error("Weglot is not available on window");
-    }
-  };
-
   return (
     <>
       <Head>
@@ -133,34 +104,6 @@ export default function Home() {
         </MaxWidthWrapper>
       </section>
       
-      <div className="language-switcher">
-        <button
-          className="mr-4 ml-4"
-          onClick={() => switchLanguage('no')}
-        >
-          <img className="w-8" src="norway-flag.png" alt="Norwegian Flag" />
-        </button>
-        <button onClick={() => switchLanguage('en')}>
-          <img className="w-8" src="uk-flag.png" alt="UK Flag" />
-        </button>
-      </div>
-
-      <style jsx>{`
-        .language-switcher {
-          position: fixed;
-          top: 16px;
-          left: 16px;
-          z-index: 50;
-          display: flex;
-          gap: 8px;
-        }
-        @media (max-width: 768px) {
-          .language-switcher {
-            top: 8px;
-            left: 8px;
-          }
-        }
-      `}</style>
     </>
   );
 }

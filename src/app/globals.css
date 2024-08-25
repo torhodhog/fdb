@@ -171,3 +171,8 @@
   height: 20px; /* Juster etter behov */
   background-color: #e8d044; /* eller annen farge */
 }
+
+/* Skjule Weglot-velgeren */
+aside.weglot_switcher {
+  display: none !important;
+}
