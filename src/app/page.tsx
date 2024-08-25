@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 import FinalSale from "@/components/FinalSale";
 import HeroImage from "@/components/HeroImage";
 import HeroVideo from "@/components/HeroVideo";
@@ -39,6 +39,30 @@ const perks = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    // Legg til Google Tag Manager script
+    const script1 = document.createElement('script');
+    script1.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16606503757';
+    script1.async = true;
+    document.body.appendChild(script1);
+
+    // Legg til Google Ads script
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-16606503757');
+    `;
+    document.body.appendChild(script2);
+
+    // Rydd opp ved avmontering
+    return () => {
+      document.body.removeChild(script1);
+      document.body.removeChild(script2);
+    };
+  }, []);
+
   return (
     <>
       <Head>
@@ -102,6 +126,7 @@ export default function Home() {
             <Info />
           </div>
         </MaxWidthWrapper>
+        
       </section>
       
     </>
