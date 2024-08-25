@@ -56,10 +56,18 @@ export default function Home() {
     `;
     document.body.appendChild(script2);
 
+    // Legg til Elfsight script
+    const script3 = document.createElement('script');
+    script3.src = 'https://static.elfsight.com/platform/platform.js';
+    script3.setAttribute('data-use-service-core', '');
+    script3.defer = true;
+    document.body.appendChild(script3);
+
     // Rydd opp ved avmontering
     return () => {
       document.body.removeChild(script1);
       document.body.removeChild(script2);
+      document.body.removeChild(script3);
     };
   }, []);
 
@@ -128,6 +136,9 @@ export default function Home() {
         </MaxWidthWrapper>
         
       </section>
+
+      {/* Elfsight widget */}
+      <div className="elfsight-app-4c885309-1808-4b50-9750-b094d27e1d82" data-elfsight-app-lazy></div>
       
     </>
   );

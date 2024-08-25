@@ -91,10 +91,10 @@ const Page = () => {
                   className="relative mb-4 h-40 w-40 text-muted-foreground"
                 >
                   <Image
-                    src="/hippo-empty-cart.png"
+                    src="/empty-cart.jpeg"
                     fill
                     loading="eager"
-                    alt="empty shopping cart hippo"
+                    alt="empty shopping cart"
                   />
                 </div>
                 <h3 className="font-semibold text-2xl">
