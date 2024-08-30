@@ -137,8 +137,7 @@ export default function Home() {
         
       </section>
 
-      {/* Elfsight widget */}
-      <div className="elfsight-app-4c885309-1808-4b50-9750-b094d27e1d82" data-elfsight-app-lazy></div>
+      
       
     </>
   );
