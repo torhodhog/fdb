@@ -42,6 +42,15 @@ var zod_1 = require("zod");
 var get_payload_1 = require("../get-payload");
 var stripe_1 = require("../lib/stripe");
 var trpc_1 = require("./trpc");
+// Kartlegging av land til valuta
+var countryToCurrencyMap = {
+    NO: "nok",
+    SE: "sek",
+    DK: "dkk",
+    US: "usd",
+    EU: "eur",
+    // Legg til flere land og deres valutaer her
+};
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
         .input(zod_1.z.object({
@@ -57,7 +66,7 @@ exports.paymentRouter = (0, trpc_1.router)({
         deliveryMethod: zod_1.z.string(),
     }))
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var user, productIds, leveringsinfo, deliveryMethod, payload, result, products, filteredProducts, order, line_items, totalPrice, deliveryFee, customer, stripeSession, err_1;
+        var user, productIds, leveringsinfo, deliveryMethod, payload, result, products, filteredProducts, order, currency, line_items, totalPrice, deliveryFee, customer, stripeSession, err_1;
         var ctx = _b.ctx, input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -90,32 +99,33 @@ exports.paymentRouter = (0, trpc_1.router)({
                     return [4 /*yield*/, payload.create({
                             collection: "orders",
                             data: {
-                                products: filteredProducts.map(function (prod) { return prod.id.toString(); }), // Explicitly cast prod.id to string
+                                products: filteredProducts.map(function (prod) { return prod.id.toString(); }),
                                 user: user.id,
                             },
                         })];
                 case 3:
                     order = _c.sent();
                     console.log("Order created with ID:", order.id);
+                    currency = countryToCurrencyMap[leveringsinfo.land.toUpperCase()] || "nok";
                     line_items = filteredProducts.map(function (product) { return ({
                         price_data: {
-                            currency: "nok",
-                            product_data: { name: product.name }, // Type assertion to string
-                            unit_amount: (product.salePrice || product.price) * 100, // Type assertion to number
+                            currency: currency,
+                            product_data: { name: product.name },
+                            unit_amount: (product.salePrice || product.price) * 100, // Husk at du kanskje må konvertere til riktig valuta
                         },
                         quantity: 1,
                     }); });
                     totalPrice = filteredProducts.reduce(function (sum, product) {
-                        return sum + (product.salePrice || product.price); // Type assertion to number
+                        return sum + (product.salePrice || product.price);
                     }, 0);
                     console.log("Total price of products:", totalPrice);
                     console.log("Delivery method:", deliveryMethod);
                     deliveryFee = 0;
                     if (deliveryMethod === "delivery" && totalPrice < 1500) {
-                        deliveryFee = 74 * 100; // Multiply by 100 to convert to øre
+                        deliveryFee = 74 * 100; // Øre
                         line_items.push({
                             price_data: {
-                                currency: "nok",
+                                currency: currency,
                                 product_data: { name: "Delivery Fee" },
                                 unit_amount: deliveryFee,
                             },
@@ -132,7 +142,7 @@ exports.paymentRouter = (0, trpc_1.router)({
                     _c.trys.push([4, 7, , 8]);
                     return [4 /*yield*/, stripe_1.stripe.customers.create({
                             name: leveringsinfo.navn,
-                            phone: leveringsinfo.telefonnummer.substring(0, 20), // Truncate phone number
+                            phone: leveringsinfo.telefonnummer.substring(0, 20),
                             address: {
                                 line1: leveringsinfo.adresse,
                                 city: leveringsinfo.by,
@@ -148,11 +158,28 @@ exports.paymentRouter = (0, trpc_1.router)({
                             cancel_url: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/cart"),
                             payment_method_types: ["card", "klarna"],
                             mode: "payment",
-                            shipping_address_collection: { allowed_countries: ["NO"] },
+                            shipping_address_collection: {
+                                allowed_countries: [
+                                    "US", // USA
+                                    "CA", // Canada
+                                    "GB", // Storbritannia
+                                    "DE", // Tyskland
+                                    "FR", // Frankrike
+                                    "IT", // Italia
+                                    "ES", // Spania
+                                    "NL", // Nederland
+                                    "FI", // Finland
+                                    "IS", // Island
+                                    "CH", // Sveits
+                                    "NO", // Norge
+                                    "SE", // Sverige
+                                    "DK", // Danmark
+                                ],
+                            },
                             line_items: line_items,
                             metadata: { userId: user.id, orderId: order.id },
                             customer: customer.id,
-                            allow_promotion_codes: true, // Enable promotion codes
+                            allow_promotion_codes: true,
                         })];
                 case 6:
                     stripeSession = _c.sent();

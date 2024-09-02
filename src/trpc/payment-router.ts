@@ -143,12 +143,30 @@ export const paymentRouter = router({
           cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
           payment_method_types: ["card", "klarna"],
           mode: "payment",
-          shipping_address_collection: { allowed_countries: ["NO", "SE", "DK", "US"] }, // Legg til land her
+          shipping_address_collection: {
+            allowed_countries: [
+              "US", // USA
+              "CA", // Canada
+              "GB", // Storbritannia
+              "DE", // Tyskland
+              "FR", // Frankrike
+              "IT", // Italia
+              "ES", // Spania
+              "NL", // Nederland
+              "FI", // Finland
+              "IS", // Island
+              "CH", // Sveits
+              "NO", // Norge
+              "SE", // Sverige
+              "DK", // Danmark
+            ],
+          },
           line_items,
           metadata: { userId: user.id, orderId: order.id },
           customer: customer.id,
           allow_promotion_codes: true,
         });
+        
 
         console.log("Stripe Session created:", stripeSession.id);
         return { url: stripeSession.url };
