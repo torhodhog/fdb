@@ -5,6 +5,16 @@ import { getPayloadClient } from "../get-payload";
 import { stripe } from "../lib/stripe";
 import { privateProcedure, router } from "./trpc";
 
+// Kartlegging av land til valuta
+const countryToCurrencyMap: Record<string, string> = {
+  NO: "nok",
+  SE: "sek",
+  DK: "dkk",
+  US: "usd",
+  EU: "eur",
+  // Legg til flere land og deres valutaer her
+};
+
 interface Product {
   id: string;
   name: string;
@@ -52,7 +62,7 @@ export const paymentRouter = router({
         where: { id: { in: productIds } },
       });
 
-      const products = (result as unknown as { docs: Product[] }).docs; // Convert to unknown first, then to Product[]
+      const products = (result as unknown as { docs: Product[] }).docs;
 
       console.log(
         "Products fetched:",
@@ -68,37 +78,40 @@ export const paymentRouter = router({
       const order = await payload.create({
         collection: "orders",
         data: {
-          products: filteredProducts.map((prod) => prod.id.toString()), // Explicitly cast prod.id to string
+          products: filteredProducts.map((prod) => prod.id.toString()),
           user: user.id,
         },
       });
 
       console.log("Order created with ID:", order.id);
 
+      // Bestem valuta basert på kundens land
+      const currency = countryToCurrencyMap[leveringsinfo.land.toUpperCase()] || "nok"; // Standard til NOK hvis landet ikke er i kartet
+
       const line_items = filteredProducts.map((product) => ({
         price_data: {
-          currency: "nok",
-          product_data: { name: product.name as string }, // Type assertion to string
-          unit_amount: ((product.salePrice as number) || (product.price as number)) * 100, // Type assertion to number
+          currency: currency,
+          product_data: { name: product.name as string },
+          unit_amount: ((product.salePrice as number) || (product.price as number)) * 100, // Husk at du kanskje må konvertere til riktig valuta
         },
         quantity: 1,
       }));
 
-      // Calculate total price of products
+      // Beregn totalpris
       const totalPrice = filteredProducts.reduce((sum, product) => {
-        return sum + ((product.salePrice as number) || (product.price as number)); // Type assertion to number
+        return sum + ((product.salePrice as number) || (product.price as number));
       }, 0);
 
       console.log("Total price of products:", totalPrice);
       console.log("Delivery method:", deliveryMethod);
 
-      // Check if deliveryMethod is "delivery" and total price is less than 1500 NOK
+      // Legg til leveringsavgift hvis aktuelt
       let deliveryFee = 0;
       if (deliveryMethod === "delivery" && totalPrice < 1500) {
-        deliveryFee = 74 * 100; // Multiply by 100 to convert to øre
+        deliveryFee = 74 * 100; // Øre
         line_items.push({
           price_data: {
-            currency: "nok",
+            currency: currency,
             product_data: { name: "Delivery Fee" },
             unit_amount: deliveryFee,
           },
@@ -114,7 +127,7 @@ export const paymentRouter = router({
       try {
         const customer = await stripe.customers.create({
           name: leveringsinfo.navn,
-          phone: leveringsinfo.telefonnummer.substring(0, 20), // Truncate phone number
+          phone: leveringsinfo.telefonnummer.substring(0, 20),
           address: {
             line1: leveringsinfo.adresse,
             city: leveringsinfo.by,
@@ -130,11 +143,11 @@ export const paymentRouter = router({
           cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
           payment_method_types: ["card", "klarna"],
           mode: "payment",
-          shipping_address_collection: { allowed_countries: ["NO"] },
+          shipping_address_collection: { allowed_countries: ["NO", "SE", "DK", "US"] }, // Legg til land her
           line_items,
           metadata: { userId: user.id, orderId: order.id },
           customer: customer.id,
-          allow_promotion_codes: true, // Enable promotion codes
+          allow_promotion_codes: true,
         });
 
         console.log("Stripe Session created:", stripeSession.id);

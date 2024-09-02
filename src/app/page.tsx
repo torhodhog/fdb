@@ -13,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
+import { TextEffect } from "@/components/TextEffectProp";
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher
@@ -84,7 +84,11 @@ export default function Home() {
       <MaxWidthWrapper className="overflow-visable">
         <div className="z-0">
           <HeroImage />
+           {/* <TextEffect className="absolute top-50 left-50" per='word' as='h1' preset='blur'>
+          Animate your ideas with motion-primitives
+        </TextEffect> */}
         </div>
+       
         <ProductReel
           title="Nye produkter"
           href="/products"
@@ -136,9 +140,6 @@ export default function Home() {
         </MaxWidthWrapper>
         
       </section>
-
-      
-      
     </>
   );
 }
