@@ -75,7 +75,7 @@ const ProductReel = (props: ProductReelProps) => {
   }
 
   // Log the products before filtering
-  console.log("All loaded products before filtering:", loadedProducts);
+  // console.log("All loaded products before filtering:", loadedProducts);
 
   const filteredProducts = (loadedProducts || []).filter(
     (product) => {
@@ -99,7 +99,7 @@ const ProductReel = (props: ProductReelProps) => {
   );
 
   // Log the filtered products
-  console.log("Filtered products:", filteredProducts);
+  // console.log("Filtered products:", filteredProducts);
 
   return (
     <section className="py-12">

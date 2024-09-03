@@ -91,13 +91,13 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button onClick={handleSearch} type="submit">
+            <Button onClick={handleSearch} type="submit" className="bg-green-900">
               Søk
             </Button>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-4  w-full sm:w-auto ">
+              <Button variant="outline" className="ml-4  w-full sm:w-auto bg-yellow-400">
                 <Filter className="mr-2 h-4 w-4" /> Filtrer
               </Button>
             </DropdownMenuTrigger>
