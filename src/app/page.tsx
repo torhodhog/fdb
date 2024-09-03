@@ -103,13 +103,20 @@ export default function Home() {
       </MaxWidthWrapper>
       <div className="lg:hidden block text-center">
         <Link href="/products">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
+          <button className="bg-green-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
             Se alle drakter
           </button>
         </Link>
       </div>
     
         <SalePage />
+        <div className="lg:hidden block text-center">
+        <Link href="/products">
+          <button className="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
+            SALG
+          </button>
+        </Link>
+      </div>
       
 
       <section>

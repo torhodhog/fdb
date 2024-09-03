@@ -231,7 +231,7 @@ const Page = () => {
               <Button
                 disabled={items.length === 0 || isLoading}
                 onClick={(event) => handleCheckout("delivery")}
-                className="w-full"
+                className="w-full bg-yellow-500"
                 size="lg"
               >
                 {isLoading ? (
@@ -242,7 +242,7 @@ const Page = () => {
               <Button
                 disabled={items.length === 0 || isLoading}
                 onClick={handlePickup}
-                className="w-full"
+                className="w-full bg-green-900"
                 size="lg"
               >
                 {isLoading ? (
