@@ -46,6 +46,7 @@ const SalePage = () => {
       <MaxWidthWrapper>
         <ProductReel
           title="Salg"
+          href="/Sale"
           query={{
             limit: 1000,
             searchTerm: searchTerm,

@@ -17,6 +17,7 @@ import { TextEffect } from "@/components/TextEffectProp";
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher
+import SalePage from "./Sale/page";
 
 const perks = [
   {
@@ -107,6 +108,9 @@ export default function Home() {
           </button>
         </Link>
       </div>
+    
+        <SalePage />
+      
 
       <section>
         <MaxWidthWrapper className="py-20">

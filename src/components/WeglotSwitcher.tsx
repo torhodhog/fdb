@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function WeglotSwitcher() {
   const [weglotLoaded, setWeglotLoaded] = useState(false);
@@ -48,24 +49,36 @@ export default function WeglotSwitcher() {
         className="mr-4 ml-4"
         onClick={() => switchLanguage('no')}
       >
-        <img className="w-8" src="norway-flag.png" alt="Norwegian Flag" />
+        <Image
+          className="w-8 h-8"
+          src="/norway-flag.png"
+          alt="Norwegian Flag"
+          width={32}  // Bruk en større bredde
+          height={32} // Bruk en større høyde
+        />
       </button>
       <button onClick={() => switchLanguage('en')}>
-        <img className="w-8" src="uk-flag.png" alt="UK Flag" />
+        <Image
+          className="w-8 h-8"
+          src="/uk-flag.png"
+          alt="UK Flag"
+          width={32}  // Bruk en større bredde
+          height={32} // Bruk en større høyde
+        />
       </button>
       <style jsx>{`
         .language-switcher {
           position: fixed;
-          top: 16px;
-          left: 16px;
+          bottom: 16px; /* Flytter til nedre høyre hjørne */
+          right: 16px;
           z-index: 50;
           display: flex;
           gap: 8px;
         }
         @media (max-width: 768px) {
           .language-switcher {
-            top: 8px;
-            left: 8px;
+            bottom: 8px; /* Juster for mindre skjermer */
+            right: 8px;
           }
         }
       `}</style>
