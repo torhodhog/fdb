@@ -105,7 +105,7 @@ const Cart = () => {
               aria-hidden="true"
               className="relative mb-40 h-60 w-60  text-muted-foreground"
             >
-              <Image
+                         <Image
                 src="/empty-cart.jpeg"
                 className="rounded-md height-full"
                 fill

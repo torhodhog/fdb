@@ -313,5 +313,11 @@ export const Products: CollectionConfig = {
   type: "text",
   required: true,
 },
+{
+  name: "exclusive",
+  label: "Exclusive",
+  type: "checkbox",
+  required: false,
+},
   ],
 };

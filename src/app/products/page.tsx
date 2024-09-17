@@ -26,6 +26,7 @@ import {
   Bold,
   XCircle,
   Users,
+  Globe,
 } from "lucide-react";
 
 type Param = string | string[] | undefined;
@@ -41,6 +42,7 @@ const parse = (param: Param) => {
 const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const sort = parse(searchParams.sort);
   const category = parse(searchParams.category);
+  const nation = parse(searchParams.nation); // Parse the nation parameter
 
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === category
@@ -51,6 +53,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [size, setSize] = useState("");
   const [team, setTeam] = useState(""); // New state for team selection
   const [hasPrint, setHasPrint] = useState<boolean | null>(null); // New state for hasPrint selection
+  const [selectedNation, setSelectedNation] = useState(""); // New state for nation selection
   const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = () => {
@@ -67,6 +70,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
     setSize("");
     setTeam("");
     setHasPrint(null); // Reset hasPrint filter
+    setSelectedNation(""); // Reset nation filter
     setIsLoading(true); // Set loading state to true
     // Simulate reset delay
     setTimeout(() => {
@@ -157,6 +161,26 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
+
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Globe className="mr-2 h-4 w-4" />
+                    <span>Nasjon</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="w-full sm:w-auto">
+                      <DropdownMenuItem onClick={() => setSelectedNation("Norge")}>Norge</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Sverige")}>Sverige</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Danmark")}>Danmark</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Tyskland")}>Tyskland</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Spania")}>Spania</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Italia")}>Italia</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("Frankrike")}>Frankrike</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSelectedNation("England")}>England</DropdownMenuItem>
+                      {/* Add more nations as needed */}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={resetFilters}>
@@ -182,6 +206,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               size: size,
               limit: 1000,
               hasPrint: hasPrint, // Pass the selected print option to the query
+              nation: selectedNation || nation, // Pass the nation parameter to the query
             }}
           />
         )}

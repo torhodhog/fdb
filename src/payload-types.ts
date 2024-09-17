@@ -72,9 +72,10 @@ export interface Product {
   nasjon?: string | null;
   tilstand?: ('10' | '9' | '8' | '7' | '6' | '5') | null;
   trykk?: ('Ja' | 'Nei') | null;
-  category: 'ui_kits' | 'Kontakt';
+  category: 'products';
   finalSale?: boolean | null;
   productCode: string;
+  exclusive?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }

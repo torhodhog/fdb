@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import FinalSale from "@/components/FinalSale";
 import HeroImage from "@/components/HeroImage";
@@ -42,13 +42,13 @@ const perks = [
 export default function Home() {
   useEffect(() => {
     // Legg til Google Tag Manager script
-    const script1 = document.createElement('script');
-    script1.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16606503757';
+    const script1 = document.createElement("script");
+    script1.src = "https://www.googletagmanager.com/gtag/js?id=AW-16606503757";
     script1.async = true;
     document.body.appendChild(script1);
 
     // Legg til Google Ads script
-    const script2 = document.createElement('script');
+    const script2 = document.createElement("script");
     script2.innerHTML = `
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -58,9 +58,9 @@ export default function Home() {
     document.body.appendChild(script2);
 
     // Legg til Elfsight script
-    const script3 = document.createElement('script');
-    script3.src = 'https://static.elfsight.com/platform/platform.js';
-    script3.setAttribute('data-use-service-core', '');
+    const script3 = document.createElement("script");
+    script3.src = "https://static.elfsight.com/platform/platform.js";
+    script3.setAttribute("data-use-service-core", "");
     script3.defer = true;
     document.body.appendChild(script3);
 
@@ -81,15 +81,73 @@ export default function Home() {
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
       </Head>
-      
-      <MaxWidthWrapper className="overflow-visable">
+
+      <MaxWidthWrapper className="overflow-visible">
         <div className="z-0">
-          <HeroImage />
-           {/* <TextEffect className="absolute top-50 left-50" per='word' as='h1' preset='blur'>
-          Animate your ideas with motion-primitives
-        </TextEffect> */}
+          <div className="bg-transparent py-4 ">
+            <div className="flex justify-center space-x-8">
+              <Link
+                href={{ pathname: "/products", query: { nation: "England" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                🇬🇧
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Spania" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                🇪🇸
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Norge" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                🇳🇴
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Italia" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                🇮🇹
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Frankrike" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                🇫🇷
+              </Link>
+              
+            </div>
+          </div>
+          <div className="z-0">
+            <div className="bg-transparent  rounded-br-[10px] rounded-bl-[10px]">
+              <div className="flex justify-center space-x-8">
+                <a
+                  className="text-black text-lg font-semibold hover:underline"
+                  href="/"
+                >
+                  Hjem
+                </a>
+                <a
+                  className="text-black text-lg font-semibold hover:underline"
+                  href="/products"
+                >
+                  Produkter
+                </a>
+                <a
+                  className="text-black text-lg font-semibold hover:underline"
+                  href="/Sale"
+                >
+                  SALG
+                </a>
+              </div>
+            </div>
+          </div>
+          <div>
+            <HeroImage />
+          </div>
         </div>
-       
+
         <ProductReel
           title="Nye produkter"
           href="/products"
@@ -108,16 +166,15 @@ export default function Home() {
           </button>
         </Link>
       </div>
-    
-        <SalePage />
-        <div className="lg:hidden block text-center">
+
+      <SalePage />
+      <div className="lg:hidden block text-center">
         <Link href="/products">
           <button className="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
             SALG
           </button>
         </Link>
       </div>
-      
 
       <section>
         <MaxWidthWrapper className="py-20">
@@ -149,7 +206,6 @@ export default function Home() {
             <Info />
           </div>
         </MaxWidthWrapper>
-        
       </section>
     </>
   );

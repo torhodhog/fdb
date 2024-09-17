@@ -11,7 +11,7 @@ interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[], team?: string, hasPrint?: boolean | null }; // Include size, team, and hasPrint in query type
+  query: TQueryValidator & { size?: string; names?: string[], team?: string, hasPrint?: boolean | null, nation?: string };
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
@@ -21,6 +21,7 @@ interface ProductReelProps {
   isHomePage?: boolean; // Flag to differentiate between home page and product page
   finalSale?: boolean;
   productCode?: string;
+  nasjon?: string;
 }
 
 const ProductReel = (props: ProductReelProps) => {
@@ -52,13 +53,16 @@ const ProductReel = (props: ProductReelProps) => {
   useEffect(() => {
     if (queryResults && queryResults.items) {
       console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); // Log the fetched items
-            // @ts-ignore
       setLoadedProducts(queryResults.items);
       setIsLoading(false); // Set loading to false after products are loaded
     } else {
       console.log("No items fetched");
     }
   }, [queryResults]);
+
+  useEffect(() => {
+    console.log("Query parameters:", query);
+  }, [query]);
 
   if (isQueryLoading && isLoading) {
     return <LottieAnimation />;
@@ -74,9 +78,6 @@ const ProductReel = (props: ProductReelProps) => {
     return <div className="mt-8">Vent litt, drakter lastes...</div>;
   }
 
-  // Log the products before filtering
-  // console.log("All loaded products before filtering:", loadedProducts);
-
   const filteredProducts = (loadedProducts || []).filter(
     (product) => {
       const sizeMatch = !query.size || product.size === query.size;
@@ -87,64 +88,60 @@ const ProductReel = (props: ProductReelProps) => {
       const teamMatch = !query.team || product.name === query.team;
       const printMatch = query.hasPrint === null || query.hasPrint === undefined || product.trykk === (query.hasPrint ? "Ja" : "Nei");
       const finalSaleMatch = !props.finalSale || product.finalSale;
+      const nationMatch = !query.nation || product.nasjon === query.nation;
 
-      const matches = sizeMatch && searchTermMatch && soldMatch && saleMatch && namesMatch && teamMatch && printMatch && finalSaleMatch;
+      const matches = sizeMatch && searchTermMatch && soldMatch && saleMatch && namesMatch && teamMatch && printMatch && finalSaleMatch && nationMatch;
 
       if (!matches) {
-        console.log(`Product excluded: ${product.name} - Size match: ${sizeMatch}, Search term match: ${searchTermMatch}, Sold match: ${soldMatch}, Sale match: ${saleMatch}, Names match: ${namesMatch}, Team match: ${teamMatch}, Print match: ${printMatch}, Final sale match: ${finalSaleMatch}`);
+        console.log(`Product excluded: ${product.name} - Size match: ${sizeMatch}, Search term match: ${searchTermMatch}, Sold match: ${soldMatch}, Sale match: ${saleMatch}, Names match: ${namesMatch}, Team match: ${teamMatch}, Print match: ${printMatch}, Final sale match: ${finalSaleMatch}, Nation match: ${nationMatch}`);
       }
 
       return matches;
     }
   );
 
-  // Log the filtered products
-  // console.log("Filtered products:", filteredProducts);
-
   return (
     <section id="product-reel-section" className="py-12">
-    <div className="md:flex md:items-center md:justify-between mb-4">
-      <div className="max-w-2xl px-4 lg:max-w-4xl lg:px-0">
-        {title ? (
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl">
-            {title}
-          </h1>
-        ) : null}
-        {subtitle ? (
-          <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+      <div className="md:flex md:items-center md:justify-between mb-4">
+        <div className="max-w-2xl px-4 lg:max-w-4xl lg:px-0">
+          {title ? (
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl">
+              {title}
+            </h1>
+          ) : null}
+          {subtitle ? (
+            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+          ) : null}
+        </div>
+
+        {href ? (
+          <Link
+            href={href}
+            className="hidden text-sm font-extrabold text-gray-600 hover:text-blue-500 md:block"
+          >
+            {props.showSaleItems
+              ? "Se alle salgsvarer"
+              : "Se hele kolleksjonen"}{" "}
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
         ) : null}
       </div>
-  
-      {href ? (
-        <Link
-          href={href}
-          className="hidden text-sm font-extrabold text-gray-600 hover:text-blue-500 md:block"
-        >
-          {props.showSaleItems
-            ? "Se alle salgsvarer"
-            : "Se hele kolleksjonen"}{" "}
-          <span aria-hidden="true">&rarr;</span>
-        </Link>
-      ) : null}
-    </div>
-  
-    <div className="relative">
-      <div className="mt-6 flex items-center w-full">
-        <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
-          {filteredProducts.map((product, i) => (
-            <ProductListing
-              key={`product-${i}`}
-              product={product}
-              index={i}
-            />
-          ))}
+
+      <div className="relative">
+        <div className="mt-6 flex items-center w-full">
+          <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
+            {filteredProducts.map((product, i) => (
+              <ProductListing
+                key={`product-${i}`}
+                product={product}
+                index={i}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  
+    </section>
   );
 };
 
 export default ProductReel;
-

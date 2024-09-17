@@ -37,12 +37,12 @@ const CartItem = ({ product }: { product: Product }) => {
         <div className='flex items-center space-x-4'>
           <div className='relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded'>
             {typeof image !== 'string' && image.url ? (
-              <Image
+                       <Image
                 className='-z-10 object-center'
                 src={image.url}
                 alt='Product image'
-                layout='fill'
-                objectFit='cover'
+                fill
+                style={{ objectFit: 'cover' }}
               />
             ) : (
               <div className='flex h-full items-center justify-center bg-secondary'>

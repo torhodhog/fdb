@@ -118,7 +118,7 @@ export function TextEffect({
   preset,
 }: TextEffectProps) {
   const words = children.split(/(\S+)/);
-  const MotionTag = motion[as as keyof typeof motion];
+  const MotionTag = motion[as as keyof typeof motion] as React.ElementType;
   const selectedVariants = preset
     ? presetVariants[preset]
     : { container: defaultContainerVariants, item: defaultItemVariants };

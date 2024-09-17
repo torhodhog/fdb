@@ -7,13 +7,15 @@ import { PRODUCT_CATEGORIES } from "@/config";
 import { fetchProduct } from "@/lib/getProducts";
 import { formatPrice } from "@/lib/utils";
 import { Check, Shield } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+// Importer Image-komponenten
 
 interface PageProps {
   params: {
     productId: string;
-    
   };
   searchParams: {
     [key: string]: string;
@@ -51,6 +53,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
 
   const price = product.salePrice || product.price;
   const isOnSale = Boolean(product.salePrice);
+  const isExclusive = product.exclusive; // Anta at dette er en boolean som indikerer om produktet er eksklusivt
 
   return (
     <MaxWidthWrapper className="bg-white">
@@ -82,19 +85,15 @@ const Page = async ({ params, searchParams }: PageProps) => {
               ))}
             </ol>
 
-            {/* <Link href={`/products?page=${page}`} className="text-blue-500 hover:underline">
-              Tilbake til produktsiden
-            </Link> */}
-
             <div className="mt-4">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                {product.name}
+                {product.name as string}
               </h1>
             </div>
             <section className="mt-4">
               <div className="flex items-center">
                 <p className={`font-medium ${isOnSale ? 'text-red-500' : 'text-gray-900'}`}>
-                  {formatPrice(price)}
+                  {formatPrice(price as number)}
                 </p>
                 <div className="ml-4 border-1 text-muted-foreground border-gray-300 pl-4">
                   {label}
@@ -103,7 +102,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
 
               <div className="mt-4 space-y-6">
                 <p className="text-base text-muted-foreground">
-                  {product.description}
+                  {product.description as string}
                 </p>
               </div>
 
@@ -117,39 +116,33 @@ const Page = async ({ params, searchParams }: PageProps) => {
                 </p>
               </div>
               
-                <div className="p-4 border border-gray-200  mt-4 rounded-md bg-gray-100">
-              {/* <div className="mt-4">
-                <h2 className="text-lg font-bold">Trykk:</h2>
-                {product.trykk === "Ja" ? (
-                  <span className="text-green-500">
-                    ✔
-                  </span>
-                ) : (
-                  <span className="text-red-500" style={{ fontSize: '0.75rem' }}>
-                    Nei
-                  </span>
-                )}
-              </div> */}
-              
-
-              <div className="mt-4">
-                <h2 className="text-lg font-bold">Tilstand</h2>
-                <StarRating rating={parseInt(product.tilstand || "0")} />
+              <div className="p-4 border border-gray-200 mt-4 rounded-md bg-gray-100">
                 <div className="mt-4">
-                <h2 className="text-lg font-bold">Størrelse: {product.size}</h2>
-              </div>             
-              </div></div>
-              </section>
+                  <h2 className="text-lg font-bold">Tilstand</h2>
+                  <StarRating rating={parseInt(product.tilstand || "0")} />
+                  <div className="mt-4">
+                    <h2 className="text-lg font-bold">Størrelse: {product.size as string}</h2>
+                  </div>
+                </div>
               </div>
-
-              
-
-          <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
-            <div className="aspect-square rounded-lg">
-              <ImageSlider urls={validUrls} />
-            </div>
+            </section>
           </div>
-          {/* Add to cart */}
+
+          {/* <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
+            <div className="aspect-square rounded-lg">
+              {isExclusive ? (
+                <Image
+                  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/KunNettEn.png"
+                  alt="Exclusive product"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              ) : (
+                <ImageSlider urls={validUrls} />
+              )}
+            </div>
+          </div> */}
+
           <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
             <div>
               <div className="mt-10">
@@ -176,7 +169,6 @@ const Page = async ({ params, searchParams }: PageProps) => {
         query={{ liga_system: product.liga_system || undefined, limit: 4 }}
         title={`Lignende produkter`}
         subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
-        // page={parseInt(page, 10)} // Pass page parameter to ProductReel
       />
     </MaxWidthWrapper>
   );

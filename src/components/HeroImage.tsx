@@ -5,10 +5,10 @@ import Image from 'next/image';
 
 const HeroImage: FC = () => {
   return (
-    <div className="flex justify-center items-center w-full h-auto mt-8 bg-transparent"> 
+    <div className="flex justify-center items-center w-full h-auto  bg-transparent z-1"> 
       <Image
-        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/logo-5.png"
-        className="max-w-lg md:max-w-2xl lg:max-w-xl"
+        src="/heroimage.jpg"
+        className="w-full h-auto"
         layout="responsive"
         alt="Hero"
         width={1920}

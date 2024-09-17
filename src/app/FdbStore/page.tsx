@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 const FdbStore: React.FC = () => {
@@ -12,7 +13,7 @@ const FdbStore: React.FC = () => {
       </div>
       
       <div className="flex justify-center space-x-4 mb-10">
-        <img className="w-full max-w-2xl" src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fradisk.jpeg" alt="Fra disk" /> {/* Økt størrelsen på bildet */}
+        <Image className="w-full max-w-2xl" src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fradisk.jpeg" alt="Fra disk" /> {/* Økt størrelsen på bildet */}
         {/* <img className="w-full max-w-2xl rounded-lg" src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fravindu.jpeg" alt="Fra vindu" /> */}
       </div>
 

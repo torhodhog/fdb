@@ -13,6 +13,8 @@ const FinalSale = ({ src, alt }: { src: string, alt: string }) => (
                layout="fill"
                objectFit="contain"
                className="absolute top-0 left-0 w-full h-full"
+               width={1920}
+               height={1080}
             />
        
       {/* </Link> */}
