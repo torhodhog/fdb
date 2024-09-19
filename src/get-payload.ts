@@ -1,13 +1,16 @@
 import dotenv from "dotenv";
 import path from "path";
+
 import type { InitOptions } from "payload/config";
-import payload from 'payload';
+import payload from "payload";
 import nodemailer from "nodemailer";
 
+// Konfigurerer miljøvariabler fra .env-filen
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
 });
 
+// Setter opp nodemailer for e-postkonfigurasjon
 const transporter = nodemailer.createTransport({
   host: "smtp.resend.com",
   secure: true,
@@ -18,50 +21,59 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Definer en generisk type for cached objektet
-let cached: { client: any | null, promise: Promise<any> | null } = (global as any).payload;
+// Oppretter en global cache for Payload-instansen
+let cached: { client: any | null; promise: Promise<any> | null } = (global as any).payload;
 
 if (!cached) {
+  // Initialiserer cache hvis den ikke finnes
   cached = (global as any).payload = {
     client: null,
     promise: null,
   };
 }
 
+// Definerer typer for initieringsargumenter
 interface Args {
   initOptions?: Partial<InitOptions>;
+  seed?: boolean; // Valgfri parameter for seeding (hvis aktuelt)
 }
 
+// Funksjonen som initialiserer eller returnerer en eksisterende Payload-klient
 export const getPayloadClient = async ({ initOptions }: Args = {}): Promise<any> => {
   if (!process.env.PAYLOAD_SECRET) {
     console.error("PAYLOAD_SECRET is missing");
     throw new Error("PAYLOAD_SECRET is missing");
   }
 
+  // Hvis Payload allerede er initialisert, returnerer den cachede klienten
   if (cached.client) {
     console.log("Returning cached Payload client");
     return cached.client;
   }
 
-  // Initialiserer Payload med de gitte opsjonene og konfigurasjoner
-  cached.promise = payload.init({
-    email: {
-      transport: transporter,
-      fromAddress: "fdb@fotballdraktbutikken.com",
-      fromName: "Fotballdraktbutikken AS",
-    },
-    secret: process.env.PAYLOAD_SECRET,
-    ...(initOptions || {}),
-  });
+ // Hvis Payload ikke er initialisert, konfigurerer og initialiserer Payload
+// @ts-ignore - Ignorerer typen feil på init
+cached.promise = payload.init({
+  email: {
+    transport: transporter,
+    fromAddress: "fdb@fotballdraktbutikken.com",
+    fromName: "Fotballdraktbutikken AS",
+  },
+  secret: process.env.PAYLOAD_SECRET,
+  ...(initOptions || {}),
+});
 
-  try {
-    cached.client = await cached.promise; // Bruker any type midlertidig
-    console.log("Payload client initialized successfully");
-  } catch (e: unknown) {
-    cached.promise = null;
-    console.error("Failed to initialize Payload client", e);
-    throw e;
-  }
+try {
+  // Fullfør initialiseringen av Payload og lagre instansen i cache
+  cached.client = await cached.promise;
+  console.log("Payload client initialized successfully, men via get-Payload");
+} catch (e: unknown) {
+  // Nullstiller promise hvis initialisering feiler, og logger feilen
+  cached.promise = null;
+  console.error("Failed to initialize Payload client", e);
+  throw e;
+}
+
 
   return cached.client;
 };

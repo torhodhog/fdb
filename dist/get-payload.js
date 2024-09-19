@@ -64,9 +64,11 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
 var payload_1 = __importDefault(require("payload"));
 var nodemailer_1 = __importDefault(require("nodemailer"));
+// Konfigurerer miljøvariabler fra .env-filen
 dotenv_1.default.config({
     path: path_1.default.resolve(__dirname, "../.env"),
 });
+// Setter opp nodemailer for e-postkonfigurasjon
 var transporter = nodemailer_1.default.createTransport({
     host: "smtp.resend.com",
     secure: true,
@@ -76,14 +78,16 @@ var transporter = nodemailer_1.default.createTransport({
         pass: process.env.RESEND_API_KEY,
     },
 });
-// Definer en generisk type for cached objektet
+// Oppretter en global cache for Payload-instansen
 var cached = global.payload;
 if (!cached) {
+    // Initialiserer cache hvis den ikke finnes
     cached = global.payload = {
         client: null,
         promise: null,
     };
 }
+// Funksjonen som initialiserer eller returnerer en eksisterende Payload-klient
 var getPayloadClient = function () {
     var args_1 = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -99,11 +103,13 @@ var getPayloadClient = function () {
                         console.error("PAYLOAD_SECRET is missing");
                         throw new Error("PAYLOAD_SECRET is missing");
                     }
+                    // Hvis Payload allerede er initialisert, returnerer den cachede klienten
                     if (cached.client) {
                         console.log("Returning cached Payload client");
                         return [2 /*return*/, cached.client];
                     }
-                    // Initialiserer Payload med de gitte opsjonene og konfigurasjoner
+                    // Hvis Payload ikke er initialisert, konfigurerer og initialiserer Payload
+                    // @ts-ignore - Ignorerer typen feil på init
                     cached.promise = payload_1.default.init(__assign({ email: {
                             transport: transporter,
                             fromAddress: "fdb@fotballdraktbutikken.com",
@@ -112,14 +118,17 @@ var getPayloadClient = function () {
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 3, , 4]);
+                    // Fullfør initialiseringen av Payload og lagre instansen i cache
                     _b = cached;
                     return [4 /*yield*/, cached.promise];
                 case 2:
-                    _b.client = _d.sent(); // Bruker any type midlertidig
-                    console.log("Payload client initialized successfully");
+                    // Fullfør initialiseringen av Payload og lagre instansen i cache
+                    _b.client = _d.sent();
+                    console.log("Payload client initialized successfully, men via get-Payload");
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _d.sent();
+                    // Nullstiller promise hvis initialisering feiler, og logger feilen
                     cached.promise = null;
                     console.error("Failed to initialize Payload client", e_1);
                     throw e_1;

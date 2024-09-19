@@ -68,7 +68,7 @@ var express_1 = __importDefault(require("express"));
 var build_1 = __importDefault(require("next/dist/build"));
 var path_1 = __importDefault(require("path"));
 var url_1 = require("url");
-var get_payload_1 = require("./get-payload");
+var get_payload_1 = require("./get-payload"); // Sørg for at get-payload.ts er satt opp korrekt
 var next_utils_1 = require("./next-utils");
 var trpc_1 = require("./trpc");
 var webhooks_1 = require("./webhooks");
@@ -82,7 +82,7 @@ var createContext = function (_a) {
     });
 };
 var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookMiddleware, payload, cartRouter;
+    var webhookMiddleware, cms, cartRouter;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -106,22 +106,22 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)({
                         initOptions: {
                             express: app,
-                            onInit: function (cms) { return __awaiter(void 0, void 0, void 0, function () {
+                            onInit: function (cmsInstance) { return __awaiter(void 0, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
-                                    cms.logger.info("Admin URL: ".concat(cms.getAdminURL()));
+                                    cmsInstance.logger.info("Admin URL: ".concat(cmsInstance.getAdminURL()));
                                     return [2 /*return*/];
                                 });
                             }); },
                         },
                     })];
             case 1:
-                payload = _a.sent();
+                cms = _a.sent();
                 if (process.env.NEXT_BUILD) {
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    payload.logger.info("Next.js is building for production");
+                                    cms.logger.info("Next.js is building for production");
                                     // @ts-expect-error
                                     return [4 /*yield*/, (0, build_1.default)(path_1.default.join(__dirname, "../"))];
                                 case 1:
@@ -135,7 +135,8 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                     return [2 /*return*/];
                 }
                 cartRouter = express_1.default.Router();
-                cartRouter.use(payload.authenticate);
+                // Bruk Payload-instansen til å autentisere
+                cartRouter.use(cms.authenticate);
                 cartRouter.get("/", function (req, res) {
                     var request = req;
                     if (!request.user)
@@ -160,11 +161,6 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                                 onSale = myReq.query.onSale;
                                 page = parseInt(myReq.query.page) || 1;
                                 limit = parseInt(myReq.query.limit) || 20;
-                                console.log('searchTerm:', searchTerm);
-                                console.log('ligaSystem:', ligaSystem);
-                                console.log('onSale:', onSale);
-                                console.log('page:', page);
-                                console.log('limit:', limit);
                                 query = {};
                                 if (searchTerm) {
                                     query.name = { $regex: new RegExp(searchTerm, 'i') };
@@ -173,22 +169,19 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     query.liga_system = ligaSystem;
                                 }
                                 if (onSale) {
-                                    query.onSale = onSale === 'true'; // Convert the string 'true' or 'false' to a boolean
+                                    query.onSale = onSale === 'true';
                                 }
-                                console.log('query:', query);
                                 _a.label = 1;
                             case 1:
                                 _a.trys.push([1, 4, , 5]);
                                 return [4 /*yield*/, myReq.payload.find({
                                         collection: 'products',
                                         where: query,
-                                        limit: 0, // Ensures we only get the count
+                                        limit: 0,
                                     })];
                             case 2:
                                 totalItemsResult = _a.sent();
-                                console.log('totalItemsResult:', totalItemsResult);
                                 totalItems = totalItemsResult.totalDocs || 0;
-                                console.log('totalItems:', totalItems);
                                 return [4 /*yield*/, myReq.payload.find({
                                         collection: 'products',
                                         where: query,
@@ -197,7 +190,6 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     })];
                             case 3:
                                 products = (_a.sent()).docs;
-                                console.log('products:', products);
                                 res.json({ items: products, totalItems: totalItems });
                                 return [3 /*break*/, 5];
                             case 4:
@@ -211,10 +203,10 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 }); });
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
                 next_utils_1.nextApp.prepare().then(function () {
-                    payload.logger.info("Next.js started");
+                    cms.logger.info("Next.js started");
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
-                            payload.logger.info("Next.js App URL: ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
+                            cms.logger.info("Next.js App URL: ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
                             return [2 /*return*/];
                         });
                     }); });
