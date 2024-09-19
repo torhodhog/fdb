@@ -1,10 +1,11 @@
 import { z } from 'zod';
+
 import { getPayloadClient } from '../get-payload';
 import { QueryValidator } from '../lib/validators/query-validator';
 import { authRouter } from './auth-router';
 import { paymentRouter } from './payment-router';
-import { router, publicProcedure } from './trpc';
 import { productRouter } from './routers/product-router';
+import { publicProcedure, router } from './trpc';
 
 export const appRouter = router({
   auth: authRouter,
@@ -35,7 +36,15 @@ export const appRouter = router({
         liga_system,
         names, // Add names from input
         ...queryOpts
-      } = query;
+      } = query as {
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+        limit: number;
+        searchTerm?: string;
+        liga_system?: string;
+        names?: string[];
+        [key: string]: any;
+      };
 
       const payload = await getPayloadClient();
       const page = cursor ?? 1;

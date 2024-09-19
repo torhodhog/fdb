@@ -10,7 +10,8 @@ import path from "path";
 import { PayloadRequest } from 'payload/types';
 import { parse } from "url";
 
-import { getPayloadClient } from "./get-payload"; // Sørg for at get-payload.ts er satt opp korrekt
+import { getPayloadClient } from "./get-payload";
+// Sørg for at stien er korrekt
 import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
 import { stripeWebhookHandler } from './webhooks';
@@ -53,21 +54,21 @@ const start = async () => {
   );
 
   // Initialiserer Payload via getPayloadClient
-  const cms = await getPayloadClient({
+  const payload = await getPayloadClient({
     initOptions: {
       express: app,
-      onInit: async (cmsInstance) => {
-        cmsInstance.logger.info(`Admin URL: ${cmsInstance.getAdminURL()}`);
+      onInit: async (cmsInstance: any) => {
+        cmsInstance.logger.info(`Payload Admin URL: ${cmsInstance.getAdminURL()}`);
       },
     },
   });
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {
-      cms.logger.info("Next.js is building for production");
+      payload.logger.info("Next.js is building for production");
 
-      // @ts-expect-error
-      await nextBuild(path.join(__dirname, "../"));
+      // Pass på at alle nødvendige argumenter sendes til nextBuild
+      await nextBuild(path.join(__dirname, "../"), false, false, true, false, false, undefined, null, 'default');
 
       process.exit();
     });
@@ -78,7 +79,7 @@ const start = async () => {
   const cartRouter = express.Router();
 
   // Bruk Payload-instansen til å autentisere
-  cartRouter.use(cms.authenticate);
+  cartRouter.use(payload.authenticate);
 
   cartRouter.get("/", (req, res) => {
     const request = req as PayloadRequest;
@@ -147,12 +148,15 @@ const start = async () => {
   app.use((req, res) => nextHandler(req, res));
 
   nextApp.prepare().then(() => {
-    cms.logger.info("Next.js started");
+    payload.logger.info("Next.js started");
 
     app.listen(PORT, async () => {
-      cms.logger.info(`Next.js App URL: ${process.env.NEXT_PUBLIC_SERVER_URL}`);
+      payload.logger.info(`Next.js App URL: ${process.env.NEXT_PUBLIC_SERVER_URL}`);
     });
   });
 };
 
-start();
+start().catch((error) => {
+  console.error('Error starting server:', error);
+  process.exit(1);
+});

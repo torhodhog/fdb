@@ -1,3 +1,4 @@
+// get-payload.ts
 import dotenv from "dotenv";
 import path from "path";
 
@@ -51,29 +52,29 @@ export const getPayloadClient = async ({ initOptions }: Args = {}): Promise<any>
     return cached.client;
   }
 
- // Hvis Payload ikke er initialisert, konfigurerer og initialiserer Payload
-// @ts-ignore - Ignorerer typen feil på init
-cached.promise = payload.init({
-  email: {
-    transport: transporter,
-    fromAddress: "fdb@fotballdraktbutikken.com",
-    fromName: "Fotballdraktbutikken AS",
-  },
-  secret: process.env.PAYLOAD_SECRET,
-  ...(initOptions || {}),
-});
+  // Hvis Payload ikke er initialisert, konfigurerer og initialiserer Payload
+  if (!cached.promise) {
+    cached.promise = (payload as any).init({
+      email: {
+        transport: transporter,
+        fromAddress: "fdb@fotballdraktbutikken.com",
+        fromName: "Fotballdraktbutikken AS",
+      },
+      secret: process.env.PAYLOAD_SECRET,
+      ...(initOptions || {}),
+    });
+  }
 
-try {
-  // Fullfør initialiseringen av Payload og lagre instansen i cache
-  cached.client = await cached.promise;
-  console.log("Payload client initialized successfully, men via get-Payload");
-} catch (e: unknown) {
-  // Nullstiller promise hvis initialisering feiler, og logger feilen
-  cached.promise = null;
-  console.error("Failed to initialize Payload client", e);
-  throw e;
-}
-
+  try {
+    // Fullfør initialiseringen av Payload og lagre instansen i cache
+    cached.client = await cached.promise;
+    console.log("Payload client initialized successfully via get-payload.ts");
+  } catch (e: unknown) {
+    // Nullstiller promise hvis initialisering feiler, og logger feilen
+    cached.promise = null;
+    console.error("Failed to initialize Payload client", e);
+    throw e;
+  }
 
   return cached.client;
 };

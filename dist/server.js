@@ -68,7 +68,8 @@ var express_1 = __importDefault(require("express"));
 var build_1 = __importDefault(require("next/dist/build"));
 var path_1 = __importDefault(require("path"));
 var url_1 = require("url");
-var get_payload_1 = require("./get-payload"); // Sørg for at get-payload.ts er satt opp korrekt
+var get_payload_1 = require("./get-payload");
+// Sørg for at stien er korrekt
 var next_utils_1 = require("./next-utils");
 var trpc_1 = require("./trpc");
 var webhooks_1 = require("./webhooks");
@@ -82,7 +83,7 @@ var createContext = function (_a) {
     });
 };
 var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookMiddleware, cms, cartRouter;
+    var webhookMiddleware, payload, cartRouter;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -108,24 +109,24 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                             express: app,
                             onInit: function (cmsInstance) { return __awaiter(void 0, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
-                                    cmsInstance.logger.info("Admin URL: ".concat(cmsInstance.getAdminURL()));
+                                    cmsInstance.logger.info("Payload Admin URL: ".concat(cmsInstance.getAdminURL()));
                                     return [2 /*return*/];
                                 });
                             }); },
                         },
                     })];
             case 1:
-                cms = _a.sent();
+                payload = _a.sent();
                 if (process.env.NEXT_BUILD) {
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    cms.logger.info("Next.js is building for production");
-                                    // @ts-expect-error
-                                    return [4 /*yield*/, (0, build_1.default)(path_1.default.join(__dirname, "../"))];
+                                    payload.logger.info("Next.js is building for production");
+                                    // Pass på at alle nødvendige argumenter sendes til nextBuild
+                                    return [4 /*yield*/, (0, build_1.default)(path_1.default.join(__dirname, "../"), false, false, true, false, false, undefined, null, 'default')];
                                 case 1:
-                                    // @ts-expect-error
+                                    // Pass på at alle nødvendige argumenter sendes til nextBuild
                                     _a.sent();
                                     process.exit();
                                     return [2 /*return*/];
@@ -136,7 +137,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 }
                 cartRouter = express_1.default.Router();
                 // Bruk Payload-instansen til å autentisere
-                cartRouter.use(cms.authenticate);
+                cartRouter.use(payload.authenticate);
                 cartRouter.get("/", function (req, res) {
                     var request = req;
                     if (!request.user)
@@ -203,10 +204,10 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                 }); });
                 app.use(function (req, res) { return (0, next_utils_1.nextHandler)(req, res); });
                 next_utils_1.nextApp.prepare().then(function () {
-                    cms.logger.info("Next.js started");
+                    payload.logger.info("Next.js started");
                     app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
-                            cms.logger.info("Next.js App URL: ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
+                            payload.logger.info("Next.js App URL: ".concat(process.env.NEXT_PUBLIC_SERVER_URL));
                             return [2 /*return*/];
                         });
                     }); });
@@ -215,4 +216,7 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
         }
     });
 }); };
-start();
+start().catch(function (error) {
+    console.error('Error starting server:', error);
+    process.exit(1);
+});

@@ -60,6 +60,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPayloadClient = void 0;
+// get-payload.ts
 var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
 var payload_1 = __importDefault(require("payload"));
@@ -109,12 +110,13 @@ var getPayloadClient = function () {
                         return [2 /*return*/, cached.client];
                     }
                     // Hvis Payload ikke er initialisert, konfigurerer og initialiserer Payload
-                    // @ts-ignore - Ignorerer typen feil på init
-                    cached.promise = payload_1.default.init(__assign({ email: {
-                            transport: transporter,
-                            fromAddress: "fdb@fotballdraktbutikken.com",
-                            fromName: "Fotballdraktbutikken AS",
-                        }, secret: process.env.PAYLOAD_SECRET }, (initOptions || {})));
+                    if (!cached.promise) {
+                        cached.promise = payload_1.default.init(__assign({ email: {
+                                transport: transporter,
+                                fromAddress: "fdb@fotballdraktbutikken.com",
+                                fromName: "Fotballdraktbutikken AS",
+                            }, secret: process.env.PAYLOAD_SECRET }, (initOptions || {})));
+                    }
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 3, , 4]);
@@ -124,7 +126,7 @@ var getPayloadClient = function () {
                 case 2:
                     // Fullfør initialiseringen av Payload og lagre instansen i cache
                     _b.client = _d.sent();
-                    console.log("Payload client initialized successfully, men via get-Payload");
+                    console.log("Payload client initialized successfully via get-payload.ts");
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _d.sent();

@@ -64,8 +64,8 @@ var get_payload_1 = require("../get-payload");
 var query_validator_1 = require("../lib/validators/query-validator");
 var auth_router_1 = require("./auth-router");
 var payment_router_1 = require("./payment-router");
-var trpc_1 = require("./trpc");
 var product_router_1 = require("./routers/product-router");
+var trpc_1 = require("./trpc");
 exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
@@ -81,17 +81,17 @@ exports.appRouter = (0, trpc_1.router)({
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, sortBy, _d, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _e, items, totalDocs, error_1;
+        var cursor, query, _c, _d, sortBy, _e, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _f, items, totalDocs, error_1;
         var input = _b.input;
-        return __generator(this, function (_f) {
-            switch (_f.label) {
+        return __generator(this, function (_g) {
+            switch (_g.label) {
                 case 0:
                     console.log("Input received:", input); // Log the input
                     cursor = input.cursor, query = input.query;
-                    _c = query.sortBy, sortBy = _c === void 0 ? "createdAt" : _c, _d = query.sortOrder, sortOrder = _d === void 0 ? "desc" : _d, limit = query.limit, searchTerm = query.searchTerm, liga_system = query.liga_system, names = query.names, queryOpts = __rest(query, ["sortBy", "sortOrder", "limit", "searchTerm", "liga_system", "names"]);
+                    _c = query, _d = _c.sortBy, sortBy = _d === void 0 ? "createdAt" : _d, _e = _c.sortOrder, sortOrder = _e === void 0 ? "desc" : _e, limit = _c.limit, searchTerm = _c.searchTerm, liga_system = _c.liga_system, names = _c.names, queryOpts = __rest(_c, ["sortBy", "sortOrder", "limit", "searchTerm", "liga_system", "names"]);
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
-                    payload = _f.sent();
+                    payload = _g.sent();
                     page = cursor !== null && cursor !== void 0 ? cursor : 1;
                     parsedQueryOpts = {};
                     Object.entries(queryOpts).forEach(function (_a) {
@@ -116,9 +116,9 @@ exports.appRouter = (0, trpc_1.router)({
                     sortString = "".concat(sortDirection).concat(sortBy);
                     console.log("Parsed query options:", parsedQueryOpts); // Log parsed query options
                     console.log("Sort string:", sortString); // Log sort string
-                    _f.label = 2;
+                    _g.label = 2;
                 case 2:
-                    _f.trys.push([2, 4, , 5]);
+                    _g.trys.push([2, 4, , 5]);
                     return [4 /*yield*/, payload.find({
                             collection: "products",
                             where: __assign({ approvedForSale: {
@@ -130,7 +130,7 @@ exports.appRouter = (0, trpc_1.router)({
                             page: page,
                         })];
                 case 3:
-                    _e = _f.sent(), items = _e.docs, totalDocs = _e.totalDocs;
+                    _f = _g.sent(), items = _f.docs, totalDocs = _f.totalDocs;
                     console.log("Fetched items: ".concat(items.length), items); // Log the fetched items
                     console.log("Total documents:", totalDocs); // Log the total documents
                     return [2 /*return*/, {
@@ -138,7 +138,7 @@ exports.appRouter = (0, trpc_1.router)({
                             totalDocs: totalDocs,
                         }];
                 case 4:
-                    error_1 = _f.sent();
+                    error_1 = _g.sent();
                     console.error("Error fetching products:", error_1); // Log any errors
                     throw new Error("Error fetching products");
                 case 5: return [2 /*return*/];
