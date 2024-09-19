@@ -43,7 +43,7 @@ var stripe_1 = require("./lib/stripe");
 var get_payload_1 = require("./get-payload");
 var resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var webhookRequest, body, signature, event_1, payload, err_1;
+    var webhookRequest, body, signature, event_1, payload_1, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -57,12 +57,12 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
                 console.log("Stripe event constructed successfully:", event_1.id);
                 return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 2:
-                payload = _a.sent();
+                payload_1 = _a.sent();
                 if (!(event_1.type === "checkout.session.completed")) return [3 /*break*/, 4];
                 console.log("Handling checkout.session.completed event");
-                return [4 /*yield*/, handleCheckoutSessionCompleted(event_1, res, req, payload)];
+                return [4 /*yield*/, handleCheckoutSessionCompleted(event_1, res, req, payload_1)];
             case 3:
-                _a.sent(); // Correctly pass the initialized payload
+                _a.sent(); // Cast til CustomPayload
                 return [2 /*return*/];
             case 4:
                 console.log("Received non-handled event type:", event_1.type);
@@ -77,7 +77,8 @@ var stripeWebhookHandler = function (req, res) { return __awaiter(void 0, void 0
     });
 }); };
 exports.stripeWebhookHandler = stripeWebhookHandler;
-function handleCheckoutSessionCompleted(event, res, req, payload) {
+function handleCheckoutSessionCompleted(event, res, req, payload // Bruker den tilpassede typen
+) {
     return __awaiter(this, void 0, void 0, function () {
         var session, orders, order, _i, _a, product, productId, users, user, data, error_1, error_2;
         var _b, _c;

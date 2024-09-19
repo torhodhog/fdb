@@ -76,6 +76,7 @@ var transporter = nodemailer_1.default.createTransport({
         pass: process.env.RESEND_API_KEY,
     },
 });
+// Definer en generisk type for cached objektet
 var cached = global.payload;
 if (!cached) {
     cached = global.payload = {
@@ -102,21 +103,19 @@ var getPayloadClient = function () {
                         console.log("Returning cached Payload client");
                         return [2 /*return*/, cached.client];
                     }
-                    if (!cached.promise) {
-                        console.log("Initializing new Payload client");
-                        cached.promise = payload_1.default.init(__assign({ email: {
-                                transport: transporter,
-                                fromAddress: "fdb@fotballdraktbutikken.com",
-                                fromName: "Fotballdraktbutikken AS",
-                            }, secret: process.env.PAYLOAD_SECRET, local: (initOptions === null || initOptions === void 0 ? void 0 : initOptions.express) ? false : true }, (initOptions || {})));
-                    }
+                    // Initialiserer Payload med de gitte opsjonene og konfigurasjoner
+                    cached.promise = payload_1.default.init(__assign({ email: {
+                            transport: transporter,
+                            fromAddress: "fdb@fotballdraktbutikken.com",
+                            fromName: "Fotballdraktbutikken AS",
+                        }, secret: process.env.PAYLOAD_SECRET }, (initOptions || {})));
                     _d.label = 1;
                 case 1:
                     _d.trys.push([1, 3, , 4]);
                     _b = cached;
                     return [4 /*yield*/, cached.promise];
                 case 2:
-                    _b.client = _d.sent();
+                    _b.client = _d.sent(); // Bruker any type midlertidig
                     console.log("Payload client initialized successfully");
                     return [3 /*break*/, 4];
                 case 3:

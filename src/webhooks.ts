@@ -1,5 +1,6 @@
 import express from "express";
-import { Payload } from "payload";
+import { PayloadRequest } from "payload/types"; // Typen du ønsker å bruke
+import payload from "payload"; // Modulen som gir deg funksjonaliteten
 import { Resend } from "resend";
 
 import { ReceiptEmailHtml } from "./components/emails/ReceiptEmail";
@@ -10,6 +11,12 @@ import { paymentRouter } from "./trpc/payment-router";
 
 import type Stripe from "stripe";
 import { getPayloadClient } from "./get-payload";
+
+// Definerer en tilpasset payload type som dekker metodene du trenger
+interface CustomPayload {
+  find: (args: any) => Promise<{ docs: any[] }>;
+  update: (args: any) => Promise<any>;
+}
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,7 +40,7 @@ export const stripeWebhookHandler = async (
 
     if (event.type === "checkout.session.completed") {
       console.log("Handling checkout.session.completed event");
-      await handleCheckoutSessionCompleted(event, res, req, payload); // Correctly pass the initialized payload
+      await handleCheckoutSessionCompleted(event, res, req, payload as CustomPayload); // Cast til CustomPayload
       return;
     } else {
       console.log("Received non-handled event type:", event.type);
@@ -50,7 +57,7 @@ async function handleCheckoutSessionCompleted(
   event: Stripe.Event,
   res: express.Response,
   req: express.Request,
-  payload: Payload
+  payload: CustomPayload // Bruker den tilpassede typen
 ) {
   const session = event.data.object as Stripe.Checkout.Session;
 

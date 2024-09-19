@@ -1,10 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
-
 import type { InitOptions } from "payload/config";
 import payload from 'payload';
-import type { Payload } from 'payload';
-
 import nodemailer from "nodemailer";
 
 dotenv.config({
@@ -21,7 +18,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-let cached = (global as any).payload;
+// Definer en generisk type for cached objektet
+let cached: { client: any | null, promise: Promise<any> | null } = (global as any).payload;
 
 if (!cached) {
   cached = (global as any).payload = {
@@ -34,9 +32,7 @@ interface Args {
   initOptions?: Partial<InitOptions>;
 }
 
-export const getPayloadClient = async ({
-  initOptions,
-}: Args = {}): Promise<Payload> => {
+export const getPayloadClient = async ({ initOptions }: Args = {}): Promise<any> => {
   if (!process.env.PAYLOAD_SECRET) {
     console.error("PAYLOAD_SECRET is missing");
     throw new Error("PAYLOAD_SECRET is missing");
@@ -47,22 +43,19 @@ export const getPayloadClient = async ({
     return cached.client;
   }
 
-  if (!cached.promise) {
-    console.log("Initializing new Payload client");
-    cached.promise = payload.init({
-      email: {
-        transport: transporter,
-        fromAddress: "fdb@fotballdraktbutikken.com",
-        fromName: "Fotballdraktbutikken AS",
-      },
-      secret: process.env.PAYLOAD_SECRET,
-      local: initOptions?.express ? false : true,
-      ...(initOptions || {}),
-    });
-  }
+  // Initialiserer Payload med de gitte opsjonene og konfigurasjoner
+  cached.promise = payload.init({
+    email: {
+      transport: transporter,
+      fromAddress: "fdb@fotballdraktbutikken.com",
+      fromName: "Fotballdraktbutikken AS",
+    },
+    secret: process.env.PAYLOAD_SECRET,
+    ...(initOptions || {}),
+  });
 
   try {
-    cached.client = await cached.promise;
+    cached.client = await cached.promise; // Bruker any type midlertidig
     console.log("Payload client initialized successfully");
   } catch (e: unknown) {
     cached.promise = null;
