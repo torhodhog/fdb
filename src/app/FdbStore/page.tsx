@@ -8,7 +8,7 @@ const FdbStore: React.FC = () => {
         <h1 className="text-8xl font-bold">.343</h1> {/* Økt størrelsen på h1 */}
         <p className="mt-4 text-lg max-w-3xl mx-auto">
           I juni 2024 åpnet vi Fotballdraktbutikken vår aller første butikk. Den ligger i gågaten, i hjertet av Bergen. 
-          Omgitt av historiske hus og sjarmerende smau, finner du en butikk fylt opp med fotballdrakter fra de fire siste tiår. På vår første åpningsdag hadde vi 343 drakter til salgs i butikken og hver uke oppgraderer vi sortimentet. Vi har valgt at onsdager er dagen vi åpner for nye drakter til salgs i butikken. 
+          Omgitt av historiske hus og sjarmerende smau, finner du en butikk fylt opp med fotballdrakter fra de fire siste tiår. På vår første åpningsdag hadde vi 343 drakter til salgs i butikken og hver uke oppgraderer vi sortimentet. Vi slipper nye drakter hver uke. 
         </p>
       </div>
       
