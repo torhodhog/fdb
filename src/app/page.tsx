@@ -86,36 +86,36 @@ export default function Home() {
         <div className="z-0">
           <div className="bg-transparent py-4 ">
             <div className="flex justify-center space-x-8">
-              <Link
-                href={{ pathname: "/products", query: { nation: "England" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                🇬🇧
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Spania" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                🇪🇸
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Norge" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                🇳🇴
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Italia" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                🇮🇹
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Frankrike" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                🇫🇷
-              </Link>
+                        <Link
+              href={{ pathname: "/products", query: { nation: "England" } }}
+              className="text-black text-lg font-semibold hover:underline"
+            >
+              <span style={{ fontSize: "2rem" }}>🇬🇧</span>
+            </Link>
+            <Link
+              href={{ pathname: "/products", query: { nation: "Spania" } }}
+              className="text-black text-lg font-semibold hover:underline"
+            >
+              <span style={{ fontSize: "2rem" }}>🇪🇸</span>
+            </Link>
+            <Link
+              href={{ pathname: "/products", query: { nation: "Norge" } }}
+              className="text-black text-lg font-semibold hover:underline"
+            >
+              <span style={{ fontSize: "2rem" }}>🇳🇴</span>
+            </Link>
+            <Link
+              href={{ pathname: "/products", query: { nation: "Italia" } }}
+              className="text-black text-lg font-semibold hover:underline"
+            >
+              <span style={{ fontSize: "2rem" }}>🇮🇹</span>
+            </Link>
+            <Link
+              href={{ pathname: "/products", query: { nation: "Frankrike" } }}
+              className="text-black text-lg font-semibold hover:underline"
+            >
+              <span style={{ fontSize: "2rem" }}>🇫🇷</span>
+            </Link>
               
             </div>
           </div>

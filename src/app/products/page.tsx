@@ -20,14 +20,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Filter,
-  Shirt,
-  Bold,
-  XCircle,
-  Users,
-  Globe,
-} from "lucide-react";
+import { Filter, Shirt, Bold, XCircle, Users, Globe } from "lucide-react";
+import Link from "next/link";
 
 type Param = string | string[] | undefined;
 
@@ -95,13 +89,20 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button onClick={handleSearch} type="submit" className="bg-green-900">
+            <Button
+              onClick={handleSearch}
+              type="submit"
+              className="bg-green-900"
+            >
               Søk
             </Button>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-4  w-full sm:w-auto bg-yellow-400">
+              <Button
+                variant="outline"
+                className="ml-4  w-full sm:w-auto bg-yellow-400"
+              >
                 <Filter className="mr-2 h-4 w-4" /> Filtrer
               </Button>
             </DropdownMenuTrigger>
@@ -116,12 +117,24 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="w-full sm:w-auto">
-                      <DropdownMenuItem onClick={() => setSize("XS")}>XS</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSize("S")}>S</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSize("M")}>M</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSize("L")}>L</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSize("XL")}>XL</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSize("XXL")}>XXL</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("XS")}>
+                        XS
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("S")}>
+                        S
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("M")}>
+                        M
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("L")}>
+                        L
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("XL")}>
+                        XL
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSize("XXL")}>
+                        XXL
+                      </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
@@ -133,13 +146,23 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="w-full sm:w-auto">
-                      <DropdownMenuItem onClick={() => setTeam("Manchester United")}>
+                      <DropdownMenuItem
+                        onClick={() => setTeam("Manchester United")}
+                      >
                         Manchester United
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTeam("Arsenal")}>Arsenal</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTeam("Barcelona")}>Barcelona</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTeam("Real Madrid")}>Real Madrid</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTeam("Juventus")}>Juventus</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Arsenal")}>
+                        Arsenal
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Barcelona")}>
+                        Barcelona
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Real Madrid")}>
+                        Real Madrid
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTeam("Juventus")}>
+                        Juventus
+                      </DropdownMenuItem>
                       {/* Add more teams as needed */}
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
@@ -169,14 +192,46 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="w-full sm:w-auto">
-                      <DropdownMenuItem onClick={() => setSelectedNation("Norge")}>Norge</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Sverige")}>Sverige</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Danmark")}>Danmark</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Tyskland")}>Tyskland</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Spania")}>Spania</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Italia")}>Italia</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("Frankrike")}>Frankrike</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSelectedNation("England")}>England</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Norge")}
+                      >
+                        Norge
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Sverige")}
+                      >
+                        Sverige
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Danmark")}
+                      >
+                        Danmark
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Tyskland")}
+                      >
+                        Tyskland
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Spania")}
+                      >
+                        Spania
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Italia")}
+                      >
+                        Italia
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("Frankrike")}
+                      >
+                        Frankrike
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => setSelectedNation("England")}
+                      >
+                        England
+                      </DropdownMenuItem>
                       {/* Add more nations as needed */}
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
@@ -189,6 +244,44 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        <div className="flex justify-center space-x-8 mt-16">
+          <Link
+            href={{ pathname: "/products", query: { nation: "England" } }}
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <span style={{ fontSize: "2rem" }}>🇬🇧</span>
+          </Link>
+          <Link
+            href={{ pathname: "/products", query: { nation: "Spania" } }}
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <span style={{ fontSize: "2rem" }}>🇪🇸</span>
+          </Link>
+          <Link
+            href={{ pathname: "/products", query: { nation: "Norge" } }}
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <span style={{ fontSize: "2rem" }}>🇳🇴</span>
+          </Link>
+          <Link
+            href={{ pathname: "/products", query: { nation: "Italia" } }}
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <span style={{ fontSize: "2rem" }}>🇮🇹</span>
+          </Link>
+          <Link
+            href={{ pathname: "/products", query: { nation: "Frankrike" } }}
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <span style={{ fontSize: "2rem" }}>🇫🇷</span>
+          </Link>
+          <Link
+            href="/products"
+            className="text-black text-lg font-semibold hover:underline"
+          >
+            <XCircle style={{ fontSize: "2rem" }} />
+          </Link>
         </div>
       </MaxWidthWrapper>
 

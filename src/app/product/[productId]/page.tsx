@@ -1,7 +1,6 @@
 import AddToCartButton from "@/components/AddToCartButton";
 import ImageSlider from "@/components/ImageSlider";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ProductListing from "@/components/ProductListing";
 import ProductReel from "@/components/ProductReel";
 import { PRODUCT_CATEGORIES } from "@/config";
 import { fetchProduct } from "@/lib/getProducts";
@@ -10,8 +9,6 @@ import { Check, Shield } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-// Importer Image-komponenten
 
 interface PageProps {
   params: {
@@ -128,7 +125,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
             </section>
           </div>
 
-          {/* <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
+          <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
             <div className="aspect-square rounded-lg">
               {isExclusive ? (
                 <Image
@@ -141,7 +138,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
                 <ImageSlider urls={validUrls} />
               )}
             </div>
-          </div> */}
+          </div>
 
           <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
             <div>
