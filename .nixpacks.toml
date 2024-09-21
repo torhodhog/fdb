@@ -2,4 +2,16 @@
 setup = { nodejs = "20.9.0" }
 
 [phases.install]
-commands = ["npm ci --legacy-peer-deps"]
+commands = [
+  "npm install --legacy-peer-deps"
+]
+
+[phases.build]
+commands = [
+  "npm run build"
+]
+
+[phases.start]
+commands = [
+  "npm run start"
+]
