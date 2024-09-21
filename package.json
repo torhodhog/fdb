@@ -12,8 +12,7 @@
     "build": "cross-env NODE_ENV=production npm run build:payload && npm run build:server && npm run copyfiles && npm run build:next",
     "start": "cross-env PAYLOAD_CONFIG_PATH=dist/payload.config.js NODE_ENV=production node dist/server.js",
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
-    "lint": "next lint",
-    "postinstall": "npm install --legacy-peer-deps"
+    "lint": "next lint"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.537.0",
@@ -97,8 +96,8 @@
     "tailwindcss": "^3.3.0",
     "typescript": "^5.6.2"
   },
-  "volta": {
-    "node": "20.9.0",
-    "yarn": "1.22.19"
-  }
+ "volta": {
+  "node": "18.17.1",  
+  "yarn": "1.22.19"
+}
 }
