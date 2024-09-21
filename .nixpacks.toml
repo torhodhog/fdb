@@ -1,2 +1,5 @@
-[phases.setup]
-nodejs = "20.9.0"
+[phases]
+setup = { nodejs = "20.9.0" }
+
+[phases.install]
+commands = ["npm ci --legacy-peer-deps"]
