@@ -17,3 +17,5 @@ RUN yarn build
 
 # Start applikasjonen
 CMD ["yarn", "start"]
+
+RUN yarn cache clean
