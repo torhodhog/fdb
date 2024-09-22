@@ -2,11 +2,23 @@ const path = require('path');
 
 const nextConfig = {
   images: {
-    domains: [
-      'fotballdb.no',
-      'www.fotballdb.no',
-      'localhost',
-      'forsoker-ny-botte.s3.eu-north-1.amazonaws.com'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'fotballdb.no',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.fotballdb.no',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'forsoker-ny-botte.s3.eu-north-1.amazonaws.com',
+      },
     ],
   },
   env: {
