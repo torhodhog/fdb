@@ -51,6 +51,8 @@
     "@tsparticles/engine": "^3.3.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.3.0",
+    "@types/three": ">=0.134.0",
+    "ajv": "8.14.0",
     "body-parser": "^1.20.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -80,6 +82,7 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.164.1",
+    "webpack": "^5.20.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },
