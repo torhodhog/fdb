@@ -114,7 +114,7 @@ async function handleCheckoutSessionCompleted(
           from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
           to: [user.email as string],
           subject: "Takk for din bestilling. Her er din kvittering.",
-          html: ReceiptEmailHtml({
+          html: await ReceiptEmailHtml({
             date: new Date(),
             email: user.email as string,
             orderId: session.metadata.orderId,

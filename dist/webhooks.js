@@ -80,40 +80,41 @@ exports.stripeWebhookHandler = stripeWebhookHandler;
 function handleCheckoutSessionCompleted(event, res, req, payload // Bruker den tilpassede typen
 ) {
     return __awaiter(this, void 0, void 0, function () {
-        var session, orders, order, _i, _a, product, productId, users, user, data, error_1, error_2;
-        var _b, _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var session, orders, order, _i, _a, product, productId, users, user, data, _b, _c, error_1, error_2;
+        var _d;
+        var _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
                 case 0:
                     session = event.data.object;
-                    if (!((_b = session.metadata) === null || _b === void 0 ? void 0 : _b.orderId)) {
+                    if (!((_e = session.metadata) === null || _e === void 0 ? void 0 : _e.orderId)) {
                         console.error("Missing orderId in session metadata", session.id);
                         return [2 /*return*/, res.status(400).send("Webhook Error: Missing orderId in metadata")];
                     }
-                    _d.label = 1;
+                    _g.label = 1;
                 case 1:
-                    _d.trys.push([1, 14, , 15]);
+                    _g.trys.push([1, 15, , 16]);
                     return [4 /*yield*/, payload.find({
                             collection: "orders",
                             where: { id: { equals: session.metadata.orderId } },
                         })];
                 case 2:
-                    orders = (_d.sent()).docs;
+                    orders = (_g.sent()).docs;
                     if (!orders || orders.length === 0) {
                         console.error("No order found with ID:", session.metadata.orderId);
                         return [2 /*return*/, res.status(404).send("Order not found")];
                     }
                     order = orders[0];
-                    if (!((_c = session.metadata) === null || _c === void 0 ? void 0 : _c.userId)) return [3 /*break*/, 12];
+                    if (!((_f = session.metadata) === null || _f === void 0 ? void 0 : _f.userId)) return [3 /*break*/, 13];
                     return [4 /*yield*/, payload.update({
                             collection: "orders",
                             id: order.id,
                             data: { _isPaid: true, user: session.metadata.userId },
                         })];
                 case 3:
-                    _d.sent();
+                    _g.sent();
                     _i = 0, _a = order.products;
-                    _d.label = 4;
+                    _g.label = 4;
                 case 4:
                     if (!(_i < _a.length)) return [3 /*break*/, 7];
                     product = _a[_i];
@@ -124,56 +125,59 @@ function handleCheckoutSessionCompleted(event, res, req, payload // Bruker den t
                             data: { isSold: true },
                         })];
                 case 5:
-                    _d.sent();
-                    _d.label = 6;
+                    _g.sent();
+                    _g.label = 6;
                 case 6:
                     _i++;
                     return [3 /*break*/, 4];
                 case 7:
-                    _d.trys.push([7, 10, , 11]);
+                    _g.trys.push([7, 11, , 12]);
                     return [4 /*yield*/, payload.find({
                             collection: "users",
                             where: { id: { equals: session.metadata.userId } },
                         })];
                 case 8:
-                    users = (_d.sent()).docs;
+                    users = (_g.sent()).docs;
                     if (!users || users.length === 0) {
                         console.error("No user found with ID:", session.metadata.userId);
                         return [2 /*return*/, res.status(404).send("User not found")];
                     }
                     user = users[0];
-                    return [4 /*yield*/, resend.emails.send({
-                            from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
-                            to: [user.email],
-                            subject: "Takk for din bestilling. Her er din kvittering.",
-                            html: (0, ReceiptEmail_1.ReceiptEmailHtml)({
-                                date: new Date(),
-                                email: user.email,
-                                orderId: session.metadata.orderId,
-                                products: order.products,
-                                deliveryFee: order.deliveryFee,
-                            }),
+                    _c = (_b = resend.emails).send;
+                    _d = {
+                        from: "Fotballdraktbutikken AS <fdb@fotballdraktbutikken.com>",
+                        to: [user.email],
+                        subject: "Takk for din bestilling. Her er din kvittering."
+                    };
+                    return [4 /*yield*/, (0, ReceiptEmail_1.ReceiptEmailHtml)({
+                            date: new Date(),
+                            email: user.email,
+                            orderId: session.metadata.orderId,
+                            products: order.products,
+                            deliveryFee: order.deliveryFee,
                         })];
-                case 9:
-                    data = _d.sent();
+                case 9: return [4 /*yield*/, _c.apply(_b, [(_d.html = _g.sent(),
+                            _d)])];
+                case 10:
+                    data = _g.sent();
                     console.log("Receipt email sent successfully:", data);
                     return [2 /*return*/, res.status(200).json({ data: data })];
-                case 10:
-                    error_1 = _d.sent();
+                case 11:
+                    error_1 = _g.sent();
                     console.error("Error sending receipt email:", error_1);
                     return [2 /*return*/, res.status(500).json({ error: "Failed to send receipt email" })];
-                case 11: return [3 /*break*/, 13];
-                case 12:
+                case 12: return [3 /*break*/, 14];
+                case 13:
                     console.error("Missing userId in session metadata", session.id);
                     return [2 /*return*/, res.status(400).send("Webhook Error: Missing userId in metadata")];
-                case 13: return [3 /*break*/, 15];
-                case 14:
-                    error_2 = _d.sent();
+                case 14: return [3 /*break*/, 16];
+                case 15:
+                    error_2 = _g.sent();
                     console.error("Error processing checkout.session.completed event:", error_2);
                     return [2 /*return*/, res
                             .status(500)
                             .send("Internal server error during webhook processing.")];
-                case 15: return [2 /*return*/];
+                case 16: return [2 /*return*/];
             }
         });
     });
