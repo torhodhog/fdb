@@ -1,23 +1,19 @@
-# Bruk en base image med Node.js
 FROM node:18
 
 # Sett arbeidskatalogen
 WORKDIR /app
 
-# Kopier package.json og package-lock.json
-COPY package*.json ./
+# Kopier package.json og yarn.lock
+COPY package.json yarn.lock ./
 
-# Ignorer engine-feltet
-RUN echo "engine-strict=false" > .npmrc
-
-# Installer avhengigheter
-RUN npm install --legacy-peer-deps
+# Installer avhengigheter med yarn
+RUN yarn install --ignore-engines
 
 # Kopier resten av applikasjonen
 COPY . .
 
 # Bygg applikasjonen
-RUN npm run build
+RUN yarn build
 
 # Start applikasjonen
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
