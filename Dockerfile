@@ -7,6 +7,9 @@ WORKDIR /app
 # Kopier package.json og package-lock.json
 COPY package*.json ./
 
+# Ignorer engine-feltet
+RUN echo "engine-strict=false" > .npmrc
+
 # Installer avhengigheter
 RUN npm install --legacy-peer-deps
 
