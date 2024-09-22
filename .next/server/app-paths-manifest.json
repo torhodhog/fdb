@@ -1,17 +1,17 @@
 {
   "/_not-found": "app/_not-found.js",
-  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
+  "/(auth)/verify-email/page": "app/(auth)/verify-email/page.js",
   "/FdbStore/page": "app/FdbStore/page.js",
   "/Sale/page": "app/Sale/page.js",
+  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
   "/(auth)/sign-up/page": "app/(auth)/sign-up/page.js",
-  "/cart/page": "app/cart/page.js",
   "/finalesale/page": "app/finalesale/page.js",
-  "/page": "app/page.js",
   "/contact/page": "app/contact/page.js",
   "/product/[productId]/page": "app/product/[productId]/page.js",
   "/terms/page": "app/terms/page.js",
-  "/(auth)/verify-email/page": "app/(auth)/verify-email/page.js",
-  "/products/page": "app/products/page.js",
   "/thank-you/page": "app/thank-you/page.js",
+  "/products/page": "app/products/page.js",
+  "/page": "app/page.js",
+  "/cart/page": "app/cart/page.js",
   "/api/trpc/[trpc]/route": "app/api/trpc/[trpc]/route.js"
 }
