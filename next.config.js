@@ -22,7 +22,10 @@ const nextConfig = {
     ],
   },
   env: {
-    NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://fotballdb.no',
+    NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 
+                            (process.env.NODE_ENV === 'production' 
+                             ? 'https://fotballdb.no' 
+                             : 'http://localhost:3000'),
     // Legg til andre miljøvariabler hvis nødvendig
   },
   reactStrictMode: true, // Aktiverer strict mode for å fange opp potensielle problemer

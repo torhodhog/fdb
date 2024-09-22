@@ -1,0 +1,5 @@
+"use strict";exports.id=359,exports.ids=[359],exports.modules={86359:(e,t,n)=>{n.r(t),n.d(t,{default:()=>o});var r=n(20997),s=n(56859),i=n.n(s);let MyDocument=class MyDocument extends i(){render(){return(0,r.jsxs)(s.Html,{lang:"en",children:[(0,r.jsxs)(s.Head,{children:[r.jsx("link",{rel:"icon",href:"/favico.ico"}),r.jsx("meta",{name:"description",content:"Your site description here"}),r.jsx("meta",{property:"og:title",content:"Your site title here"}),r.jsx("meta",{property:"og:description",content:"Your site description here"}),r.jsx("meta",{property:"og:image",content:"/thumbnail.jpg"}),r.jsx("link",{rel:"alternate",hrefLang:"no",href:"https://fotballdb.no"}),r.jsx("link",{rel:"alternate",hrefLang:"en",href:"https://en.fotballdb.no"}),r.jsx("script",{src:"https://cdn.weglot.com/weglot.min.js",async:!0}),r.jsx("script",{dangerouslySetInnerHTML:{__html:`
+                Weglot.initialize({
+                  api_key: 'wg_637608e12b26daef9cf89edc1fc07fa27'
+                });
+              `},async:!0})]}),(0,r.jsxs)("body",{children:[r.jsx(s.Main,{}),r.jsx(s.NextScript,{})]})]})}};let o=MyDocument}};
