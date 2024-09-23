@@ -1,3 +1,5 @@
+const path = require('path');
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -9,11 +11,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'www.fotballdb.no',
       },
-      // Hvis "localhost" kun er nødvendig for utvikling, kan du vurdere å fjerne denne fra produksjonsmiljøet.
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
+     
       {
         protocol: 'https',
         hostname: 'forsoker-ny-botte.s3.eu-north-1.amazonaws.com',
@@ -21,10 +19,11 @@ const nextConfig = {
     ],
   },
   env: {
-    NEXT_PUBLIC_SERVER_URL: process.env.NODE_ENV === 'production' 
-      ? 'https://fotballdb.no' 
-      : 'http://localhost:3000',
-    // Legg til andre miljøvariabler hvis nødvendig
+    NEXT_PUBLIC_SERVER_URL:
+      process.env.NEXT_PUBLIC_SERVER_URL ||
+      (process.env.NODE_ENV === 'production'
+        ? 'https://fotballdb.no'
+        : 'http://localhost:3000'),
   },
   reactStrictMode: true,
   swcMinify: true,
@@ -36,7 +35,7 @@ const nextConfig = {
     return [
       {
         source: '/sell',
-        destination: 'https://fotballdb.no/admin', // Endret for å bruke direkte produksjons-URL
+        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`,
       },
     ];
   },
