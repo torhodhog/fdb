@@ -8,11 +8,7 @@
 /coverage
 
 # next.js specific
-/.next/cache
-/.next/static
-/.next/server
-/.next/*.log
-/.next/trace
+
 
 # production
 /out/
