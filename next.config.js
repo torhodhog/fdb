@@ -28,6 +28,14 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   },
+  async rewrites() {
+    return [
+      {
+        source: '/sell',
+        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`, // Peker til admin-ruten
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
