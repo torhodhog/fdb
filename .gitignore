@@ -8,7 +8,8 @@
 /coverage
 
 # next.js specific
-/.next/
+.next/cache/
+.next/static/
 /out/
 
 
