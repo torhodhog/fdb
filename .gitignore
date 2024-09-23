@@ -8,6 +8,8 @@
 /coverage
 
 # next.js specific
+/.next/
+/out/
 
 
 # production
