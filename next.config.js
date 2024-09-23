@@ -28,11 +28,19 @@ const nextConfig = {
                              : 'http://localhost:3000'),
     // Legg til andre miljøvariabler hvis nødvendig
   },
-  reactStrictMode: true, // Aktiverer strict mode for å fange opp potensielle problemer
-  swcMinify: true, // Aktiverer SWC minifier for raskere builds
+  reactStrictMode: true,
+  swcMinify: true,
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname);
     return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/sell',
+        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`, // Peker til admin-ruten i Payload.
+      },
+    ];
   },
 };
 
