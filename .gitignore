@@ -9,7 +9,7 @@
 
 # next.js specific
 
-.next/static/
+.next/
 /out/
 
 
