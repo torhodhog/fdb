@@ -11,7 +11,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Script from "next/script"; // Legg til denne importen
 
 const Page = () => {
   const { items, removeItem } = useCart();
@@ -74,23 +73,18 @@ const Page = () => {
     <>
       <Head>
         <title>Shopping Cart</title>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-16715509548');
+            `,
+          }}
+        />
       </Head>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"
-        strategy="afterInteractive"
-      />
-      <Script
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-16715509548');
-          `,
-        }}
-      />
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight  sm:text-4xl">
