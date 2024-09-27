@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 import { TextEffect } from "@/components/TextEffectProp";
 import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
-import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher
+import WeglotSwitcher from "@/components/WeglotSwitcher";
 import SalePage from "./Sale/page";
 
 const perks = [
@@ -41,22 +41,6 @@ const perks = [
 
 export default function Home() {
   useEffect(() => {
-    // Legg til Google Tag Manager script
-    const script1 = document.createElement("script");
-    script1.src = "https://www.googletagmanager.com/gtag/js?id=AW-16606503757";
-    script1.async = true;
-    document.body.appendChild(script1);
-
-    // Legg til Google Ads script
-    const script2 = document.createElement("script");
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-16606503757');
-    `;
-    document.body.appendChild(script2);
-
     // Legg til Elfsight script
     const script3 = document.createElement("script");
     script3.src = "https://static.elfsight.com/platform/platform.js";
@@ -66,8 +50,6 @@ export default function Home() {
 
     // Rydd opp ved avmontering
     return () => {
-      document.body.removeChild(script1);
-      document.body.removeChild(script2);
       document.body.removeChild(script3);
     };
   }, []);
@@ -81,7 +63,11 @@ export default function Home() {
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"></script>
+        {/* Google Tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"
+        ></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -96,51 +82,48 @@ export default function Home() {
 
       <MaxWidthWrapper className="overflow-visible">
         <div className="z-0">
-          <div className="bg-transparent py-4 ">
+          <div className="bg-transparent py-4">
             <div className="flex justify-center space-x-8">
-                        <Link
-              href={{ pathname: "/products", query: { nation: "England" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇬🇧</span>
-            </Link>
-            <Link
-              href={{ pathname: "/products", query: { nation: "Spania" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇪🇸</span>
-            </Link>
-            <Link
-              href={{ pathname: "/products", query: { nation: "Norge" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇳🇴</span>
-            </Link>
-            <Link
-              href={{ pathname: "/products", query: { nation: "Italia" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇮🇹</span>
-            </Link>
-            <Link
-              href={{ pathname: "/products", query: { nation: "Frankrike" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇫🇷</span>
-            </Link>
-            <Link
-              href={{ pathname: "/products", query: { nation: "Tyskland" } }}
-              className="text-black text-lg font-semibold hover:underline"
-            >
-              <span style={{ fontSize: "2rem" }}>🇩🇪</span>
-            </Link>
-            
-           
-              
+              <Link
+                href={{ pathname: "/products", query: { nation: "England" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇬🇧</span>
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Spania" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇪🇸</span>
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Norge" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇳🇴</span>
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Italia" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇮🇹</span>
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Frankrike" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇫🇷</span>
+              </Link>
+              <Link
+                href={{ pathname: "/products", query: { nation: "Tyskland" } }}
+                className="text-black text-lg font-semibold hover:underline"
+              >
+                <span style={{ fontSize: "2rem" }}>🇩🇪</span>
+              </Link>
             </div>
           </div>
           <div className="z-0">
-            <div className="bg-transparent  rounded-br-[10px] rounded-bl-[10px]">
+            <div className="bg-transparent rounded-br-[10px] rounded-bl-[10px]">
               <div className="flex justify-center space-x-8">
                 <a
                   className="text-black text-lg font-semibold hover:underline"
