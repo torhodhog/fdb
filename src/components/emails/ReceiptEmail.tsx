@@ -34,7 +34,7 @@ export const ReceiptEmail = ({
           <Section>
             <Column>
               <Img
-                src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fdblogo.png"
+                src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/favicon-Photoroom.png"
                 width={100}
                 height={100}
                 alt="Fdblogo"
