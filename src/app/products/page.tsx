@@ -282,12 +282,7 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             >
               <span style={{ fontSize: "2rem" }}>🇩🇪</span>
             </Link>
-          <Link
-            href={{ pathname: "/products", query: { nation: "Tyskland" } }}
-            className="text-black text-lg font-semibold hover:underline"
-          >
-            <span style={{ fontSize: "2rem" }}> 🇩🇪</span>
-          </Link>
+         
           <Link
             href="/products"
             className="text-black text-lg font-semibold hover:underline"
