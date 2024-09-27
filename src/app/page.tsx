@@ -81,27 +81,7 @@ export default function Home() {
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-16715509548');
-            `,
-          }}
-        />
         
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              gtag('event', 'ads_conversion_Start_betalingsprosesse_1', {
-                // <event_parameters>
-              });
-            `,
-          }}
-        />
       </Head>
 
       <MaxWidthWrapper className="overflow-visible">
@@ -139,7 +119,7 @@ export default function Home() {
               <span style={{ fontSize: "2rem" }}>🇫🇷</span>
             </Link>
             <Link
-              href={{ pathname: "/products", query: { nation: "Tyskaland" } }}
+              href={{ pathname: "/products", query: { nation: "Tyskland" } }}
               className="text-black text-lg font-semibold hover:underline"
             >
               <span style={{ fontSize: "2rem" }}>🇩🇪</span>
