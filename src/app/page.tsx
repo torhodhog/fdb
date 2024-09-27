@@ -81,7 +81,17 @@ export default function Home() {
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
 
-        
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-16715509548');
+            `,
+          }}
+        />
       </Head>
 
       <MaxWidthWrapper className="overflow-visible">
