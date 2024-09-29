@@ -28,7 +28,6 @@ class MyDocument extends Document {
             async
           />
 
-          {/* Google Tag (gtag.js) */}
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"

@@ -73,7 +73,14 @@ const Page = () => {
     <>
       <Head>
         <title>Shopping Cart</title>
-    
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              gtag('event', 'ads_conversion_Start_betalingsprosesse_1', {
+              });
+            `,
+          }}
+        />
       </Head>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
