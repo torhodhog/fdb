@@ -27,6 +27,22 @@ class MyDocument extends Document {
             }}
             async
           />
+
+          {/* Google Tag (gtag.js) */}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=AW-16715509548"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'AW-16715509548');
+              `,
+            }}
+          />
           {/* Legg til flere ressurser eller meta-tags her */}
         </Head>
         <body>
