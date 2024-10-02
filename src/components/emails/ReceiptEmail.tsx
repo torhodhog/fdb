@@ -19,7 +19,7 @@ export const ReceiptEmail = ({
   date,
   orderId,
   products,
-  deliveryFee,
+  deliveryFee = 0, // Standardverdi på 0 hvis frakten er gratis
 }: ReceiptEmailProps) => {
   const total =
     products.reduce((acc, curr) => acc + curr.price, 0) + deliveryFee;
@@ -34,7 +34,7 @@ export const ReceiptEmail = ({
           <Section>
             <Column>
               <Img
-                src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/favicon-Photoroom.png"
+                src="/public/logo-5.png"
                 width={100}
                 height={100}
                 alt="Fdblogo"
