@@ -5,6 +5,7 @@ import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import ImageSlider from "./ImageSlider";
+import Image from "next/image";
 
 interface ProductListingProps {
   product: Product | null;
@@ -42,7 +43,7 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
       })}
       href={`/product/${product.id}`}
     >
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full relative">
         <ImageSlider urls={validUrls} />
 
         {product.isSold ? (
@@ -55,29 +56,36 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
             <p className="mt-1 text-sm text-gray-500">
               Størrelse: {product.size}
             </p>
+
+            {/* Plasser merkelappen fast til bildet */}
+            {product.exclusive && (
+              <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 flex justify-center">
+                <Image
+                  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/KunNettEn.png"
+                  alt="Exclusive Product"
+                  width={100}
+                  height={100}
+                  className="w-20 h-20 object-cover"
+                  style={{ maxWidth: '100px', maxHeight: '100px' }} // Begrens størrelsen
+                />
+              </div>
+            )}
+
             {product.onSale &&
             product.salePrice !== null &&
             product.salePrice !== undefined ? (
               <>
-                <p
-                  className="mt-1 font-medium text-sm font-bla"
-                  style={{ textDecoration: "line-through" }}
-                >
+                <p className="mt-1 font-medium text-sm line-through">
                   {formatPrice(product.price)}
                 </p>
-                <p
-                  className="mt-1 font-medium text-sm font-bla"
-                  style={{ color: "red" }}
-                >
+                <p className="mt-1 font-medium text-sm text-red-500">
                   {formatPrice(product.salePrice)} (
                   {Math.round((1 - product.salePrice / product.price) * 100)}%
                   off)
                 </p>
               </>
             ) : (
-              <p className="mt-1 font-medium text-sm font-bla">
-                {formatPrice(product.price)}
-              </p>
+              <p className="mt-1 font-medium text-sm">{formatPrice(product.price)}</p>
             )}
           </>
         )}

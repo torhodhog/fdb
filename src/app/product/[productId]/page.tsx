@@ -50,7 +50,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
 
   const price = product.salePrice || product.price;
   const isOnSale = Boolean(product.salePrice);
-  const isExclusive = product.exclusive; // Anta at dette er en boolean som indikerer om produktet er eksklusivt
+  const isExclusive = product.exclusive;
 
   return (
     <MaxWidthWrapper className="bg-white">
@@ -120,23 +120,27 @@ const Page = async ({ params, searchParams }: PageProps) => {
                   <div className="mt-4">
                     <h2 className="text-lg font-bold">Størrelse: {product.size as string}</h2>
                   </div>
+
+                  {/* Plasser merkelappen her */}
+                  {isExclusive && (
+                    <div className="mt-4">
+                      <Image
+                        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/KunNettEn.png"
+                        alt="Exclusive product"
+                        width={120}
+                        height={120}
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
           </div>
 
           <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
-            <div className="aspect-square rounded-lg">
-              {isExclusive ? (
-                <Image
-                  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/KunNettEn.png"
-                  alt="Exclusive product"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              ) : (
-                <ImageSlider urls={validUrls} />
-              )}
+            <div className="aspect-square rounded-lg relative">
+              <ImageSlider urls={validUrls} />
             </div>
           </div>
 
