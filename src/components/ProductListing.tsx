@@ -57,20 +57,6 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
               Størrelse: {product.size}
             </p>
 
-            {/* Plasser merkelappen fast til bildet */}
-            {product.exclusive && (
-              <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 flex justify-center">
-                <Image
-                  src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/KunNettEn.png"
-                  alt="Exclusive Product"
-                  width={100}
-                  height={100}
-                  className="w-20 h-20 object-cover"
-                  style={{ maxWidth: '100px', maxHeight: '100px' }} // Begrens størrelsen
-                />
-              </div>
-            )}
-
             {product.onSale &&
             product.salePrice !== null &&
             product.salePrice !== undefined ? (
@@ -89,7 +75,9 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
             )}
           </>
         )}
+        
       </div>
+      
     </Link>
   );
 };

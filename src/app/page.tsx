@@ -165,7 +165,7 @@ export default function Home() {
         </Link>
       </div>
       
-      <MaxWidthWrapper className="py-20">
+      {/* <MaxWidthWrapper className="py-20">
       <div className="p-8 h-auto">
   <h1 className="text-center mb-12 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-900 leading-tight drop-shadow-md">
     Utvalgte drakter
@@ -204,7 +204,7 @@ export default function Home() {
           />
         </Link>
       </div>
-    </MaxWidthWrapper>
+    </MaxWidthWrapper> */}
 
       <section>
         <MaxWidthWrapper className="py-20">
