@@ -40,7 +40,7 @@ var date_fns_1 = require("date-fns");
 var React = __importStar(require("react"));
 var utils_1 = require("../../lib/utils");
 var ReceiptEmail = function (_a) {
-    var email = _a.email, date = _a.date, orderId = _a.orderId, products = _a.products, deliveryFee = _a.deliveryFee;
+    var email = _a.email, date = _a.date, orderId = _a.orderId, products = _a.products, _b = _a.deliveryFee, deliveryFee = _b === void 0 ? 0 : _b;
     var total = products.reduce(function (acc, curr) { return acc + curr.price; }, 0) + deliveryFee;
     return (React.createElement(components_1.Html, null,
         React.createElement(components_1.Head, null),
@@ -49,7 +49,7 @@ var ReceiptEmail = function (_a) {
             React.createElement(components_1.Container, { style: container },
                 React.createElement(components_1.Section, null,
                     React.createElement(components_1.Column, null,
-                        React.createElement(components_1.Img, { src: "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/fdblogo.png", width: 100, height: 100, alt: "Fdblogo" })),
+                        React.createElement(components_1.Img, { src: "/public/logo-5.png", width: 100, height: 100, alt: "Fdblogo" })),
                     React.createElement(components_1.Column, { align: "right", style: tableCell },
                         React.createElement(components_1.Text, { style: heading }, "Kvittering"))),
                 React.createElement(components_1.Section, { style: informationTable },
