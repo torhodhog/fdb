@@ -1,20 +1,12 @@
 "use client";
 import React, { useEffect } from "react";
-import FinalSale from "@/components/FinalSale";
 import HeroImage from "@/components/HeroImage";
-import HeroVideo from "@/components/HeroVideo";
 import Info from "@/components/Info";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import PlayVideo from "@/components/PlayVideo";
-import ResponsiveImage from "@/components/ResponsiveImage";
-import ResponsiveVideo from "@/components/ResponsiveImage";
 import { ArrowDownToLine, CheckCircleIcon, Leaf } from "lucide-react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { TextEffect } from "@/components/TextEffectProp";
-import Hero from "../components/Hero";
 import ProductReel from "../components/ProductReel";
 import WeglotSwitcher from "@/components/WeglotSwitcher";
 import SalePage from "./Sale/page";
@@ -165,46 +157,7 @@ export default function Home() {
         </Link>
       </div>
       
-      {/* <MaxWidthWrapper className="py-20">
-      <div className="p-8 h-auto">
-  <h1 className="text-center mb-12 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-900 leading-tight drop-shadow-md">
-    Utvalgte drakter
-  </h1>
-</div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Link href="https://fotballdb.no/product/66e42e4ac99f67e1f2d8d7cf">
-        <h3 className="text-center mb-6 font-extrabold">CHILE</h3>
-          <Image
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/BILDE1.jpeg"
-            alt="Product 1"
-            width={300}
-            height={300}
-            className=""
-          />
-        </Link>
-        <Link href="https://fotballdb.no/product/66f2aaadd74fe5cfdd22bbc3">
-        <h3 className="text-center mb-6 font-extrabold">ARGENTINA</h3>
-          <Image
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/BILDE3.jpeg"
-            alt="Product 2"
-            width={300}
-            height={300}
-            className=""
-          />
-        </Link>
-        <Link href="https://fotballdb.no/product/66e45f1bc99f67e1f2d8f434">
-        <h3 className="text-center mb-6 font-extrabold">TYSKLAND</h3>
-          <Image
-            src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/BILDE2.jpeg"
-            alt="Product 3"
-            width={300}
-            height={300}
-            className=""
-          />
-        </Link>
-      </div>
-    </MaxWidthWrapper> */}
+      
 
       <section>
         <MaxWidthWrapper className="py-20">

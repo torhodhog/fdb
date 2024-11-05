@@ -4,23 +4,25 @@ import { cloudStorage } from "@payloadcms/plugin-cloud-storage";
 import { s3Adapter } from "@payloadcms/plugin-cloud-storage/s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import dotenv from "dotenv";
-import path from "path";
+import path from "path"
+
+dotenv.config({
+  path: path.resolve(__dirname, "../.env"),
+})
+;
 import { buildConfig } from "payload/config";
 import { RichTextAdapter } from "payload/types";
 
+import { Newsletter } from "./collections/Newsletter";
 import { Media } from "./collections/Media";
 import { Orders } from "./collections/Orders";
 import { ProductFiles } from "./collections/ProductFile";
 import { Products } from "./collections/Products/Products";
 import { Users } from "./collections/Users";
 
-dotenv.config({
-  path: path.resolve(__dirname, "../.env"),
-})
-
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "",
-  collections: [Users, Products, Media, ProductFiles, Orders],
+  collections: [Users, Products, Media, ProductFiles, Orders, Newsletter],
   routes: {
     admin: "/sell",
   },

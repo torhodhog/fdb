@@ -3,13 +3,14 @@
 import { FC } from "react";
 import HeroImage from "./HeroImage";
 import CellHeroImage from "./CellHeroImage";
+import { TextHoverEffectDemo } from "./TextHoverEffectDemo";
 
 const Hero: FC = () => {
   return (
     <div className="relative flex lg:flex-row flex-col-reverse lg:h-auto h-[auto]">
       {/* Desktop View with Image */}
       <div className="lg:block hidden">
-        <HeroImage />
+        <TextHoverEffectDemo />
       </div>
 
       {/* Mobile View with Image */}
