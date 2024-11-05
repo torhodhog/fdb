@@ -6,14 +6,21 @@ const PopupNewsletter = () => {
   const [email, setEmail] = useState("");
   const [showPopup, setShowPopup] = useState(false);
 
-  // Vis popup etter 60 sekunder
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPopup(true);
-    }, 30000); // 60000 millisekunder = 60 sekunder
+    // Sjekk om popupen kan vises
+    const lastShown = localStorage.getItem("newsletterLastShown");
+    const now = new Date().getTime();
+    const thirtyMinutes = 30 * 60 * 1000; // 30 minutter i millisekunder
 
-    // Rydd opp når komponenten fjernes
-    return () => clearTimeout(timer);
+    if (!lastShown || now - parseInt(lastShown) > thirtyMinutes) {
+      // Vis popupen etter 30 sekunder hvis det har gått mer enn 30 minutter
+      const timer = setTimeout(() => {
+        setShowPopup(true);
+      }, 30000); // 30000 millisekunder = 30 sekunder
+
+      // Rydd opp når komponenten fjernes
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleSubscribe = async () => {
@@ -34,6 +41,7 @@ const PopupNewsletter = () => {
       if (response.ok) {
         setEmail(""); // Tøm inputfeltet
         setShowPopup(false); // Skjul popup
+        localStorage.setItem("newsletterSubscribed", "true"); // Lagre at brukeren har meldt seg på
         alert("Takk for at du meldte deg på nyhetsbrevet!");
       } else {
         alert("Noe gikk galt. Vennligst prøv igjen.");
@@ -41,6 +49,12 @@ const PopupNewsletter = () => {
     } catch (error) {
       alert("Noe gikk galt. Vennligst prøv igjen.");
     }
+  };
+
+  const handleClose = () => {
+    setShowPopup(false);
+    // Lagre tidspunktet for når popupen ble lukket
+    localStorage.setItem("newsletterLastShown", new Date().getTime().toString());
   };
 
   return (
@@ -70,7 +84,7 @@ const PopupNewsletter = () => {
               Ved å melde deg på samtykker du til å motta nyhetsbrev fra oss.
             </p>
             <button
-              onClick={() => setShowPopup(false)}
+              onClick={handleClose}
               className="text-gray-500 hover:text-gray-700 mt-4 underline"
             >
               Lukk
