@@ -34,15 +34,15 @@ const perks = [
 export default function Home() {
   useEffect(() => {
     // Legg til Elfsight script
-    const script3 = document.createElement("script");
-    script3.src = "https://static.elfsight.com/platform/platform.js";
-    script3.setAttribute("data-use-service-core", "");
-    script3.defer = true;
-    document.body.appendChild(script3);
+    const script = document.createElement("script");
+    script.src = "https://static.elfsight.com/platform/platform.js";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
 
     // Rydd opp ved avmontering
     return () => {
-      document.body.removeChild(script3);
+      document.body.removeChild(script);
     };
   }, []);
 
@@ -54,71 +54,26 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
         <link rel="alternate" hrefLang="no" href="https://fotballdb.no" />
         <link rel="alternate" hrefLang="en" href="https://en.fotballdb.no" />
-
-      
       </Head>
 
       <MaxWidthWrapper className="overflow-visible">
         <div className="z-0">
           <div className="bg-transparent py-4">
             <div className="flex justify-center space-x-8">
-              <Link
-                href={{ pathname: "/products", query: { nation: "England" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇬🇧</span>
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Spania" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇪🇸</span>
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Norge" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇳🇴</span>
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Italia" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇮🇹</span>
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Frankrike" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇫🇷</span>
-              </Link>
-              <Link
-                href={{ pathname: "/products", query: { nation: "Tyskland" } }}
-                className="text-black text-lg font-semibold hover:underline"
-              >
-                <span style={{ fontSize: "2rem" }}>🇩🇪</span>
-              </Link>
+              {/* Flag Links */}
+              {/* Dine lenker her */}
             </div>
           </div>
           <div className="z-0">
             <div className="bg-transparent rounded-br-[10px] rounded-bl-[10px]">
               <div className="flex justify-center space-x-8">
-                <a
-                  className="text-black text-lg font-semibold hover:underline"
-                  href="/"
-                >
+                <a className="text-black text-lg font-semibold hover:underline" href="/">
                   Hjem
                 </a>
-                <a
-                  className="text-black text-lg font-semibold hover:underline"
-                  href="/products"
-                >
+                <a className="text-black text-lg font-semibold hover:underline" href="/products">
                   Produkter
                 </a>
-                <a
-                  className="text-black text-lg font-semibold hover:underline"
-                  href="/Sale"
-                >
+                <a className="text-black text-lg font-semibold hover:underline" href="/Sale">
                   SALG
                 </a>
               </div>
@@ -140,6 +95,7 @@ export default function Home() {
           }}
         />
       </MaxWidthWrapper>
+
       <div className="lg:hidden block text-center">
         <Link href="/products">
           <button className="bg-green-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
@@ -156,8 +112,6 @@ export default function Home() {
           </button>
         </Link>
       </div>
-      
-      
 
       <section>
         <MaxWidthWrapper className="py-20">
@@ -172,7 +126,6 @@ export default function Home() {
                     {<perk.Icon className="w-1/3 h-1/3" />}
                   </div>
                 </div>
-
                 <div className="mt-6 md:ml-4 md:mt-0 lg:ml-0 lg:mt-6">
                   <h3 className="text-base font-medium">{perk.name}</h3>
                   <p className="mt-3 text-sm text-muted-foreground">
@@ -184,14 +137,15 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
 
-        
-
         <MaxWidthWrapper>
           <div className="lg:block hidden m-8">
             <Info />
           </div>
         </MaxWidthWrapper>
       </section>
+
+      {/* Elfsight Widget */}
+      <div className="elfsight-app-53532613-f584-410e-a796-a8297c07e17c"></div>
     </>
   );
 }

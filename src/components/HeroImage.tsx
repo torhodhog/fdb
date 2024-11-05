@@ -12,7 +12,7 @@ const HeroImage: FC = () => {
         src="/heroimage.jpg" // Pass på at bildefilen er riktig plassert i public-mappen
         alt="Hero Background"
         layout="fill"
-        objectFit="cover"
+        objectFit="contain"
         // Juster opasiteten for ønsket effekt
         priority // Laster inn bildet tidlig for bedre ytelse
       />
