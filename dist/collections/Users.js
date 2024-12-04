@@ -82,5 +82,23 @@ exports.Users = {
             type: 'text',
             required: true,
         },
+        {
+            name: 'address',
+            label: 'Address',
+            type: 'text',
+            required: true,
+        },
+        {
+            name: 'country',
+            label: 'Country',
+            type: 'text',
+            required: true,
+        },
+        {
+            name: 'postalCode',
+            label: 'Postal Code',
+            type: 'text',
+            required: true,
+        },
     ],
 };

@@ -46,12 +46,12 @@ exports.authRouter = (0, trpc_1.router)({
     createPayloadUser: trpc_1.publicProcedure
         .input(account_credentials_validators_1.AuthCredentialsValidator)
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var email, password, phone, payload, users;
+        var email, password, phone, address, country, postalCode, payload, users;
         var input = _b.input;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    email = input.email, password = input.password, phone = input.phone;
+                    email = input.email, password = input.password, phone = input.phone, address = input.address, country = input.country, postalCode = input.postalCode;
                     return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
                 case 1:
                     payload = _c.sent();
@@ -73,6 +73,9 @@ exports.authRouter = (0, trpc_1.router)({
                                 email: email,
                                 password: password,
                                 phone: phone || "", // use the phone from input, or an empty string if it's undefined
+                                address: address,
+                                country: country,
+                                postalCode: postalCode,
                                 role: "user",
                             },
                         })];

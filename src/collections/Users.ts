@@ -60,7 +60,6 @@ export const Users: CollectionConfig = {
       name: 'role',
       defaultValue: 'user',
       required: true,
-
       type: 'select',
       options: [
         { label: 'Admin', value: 'admin' },
@@ -68,10 +67,28 @@ export const Users: CollectionConfig = {
       ],
     },
     {
-  name: 'phone',
-  label: 'Phone',
-  type: 'text',
-  required: true,
-},
+      name: 'phone',
+      label: 'Phone',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'address',
+      label: 'Address',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'country',
+      label: 'Country',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'postalCode',
+      label: 'Postal Code',
+      type: 'text',
+      required: true,
+    },
   ],
 }

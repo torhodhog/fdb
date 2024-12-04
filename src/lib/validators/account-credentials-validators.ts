@@ -6,15 +6,19 @@ export const AuthCredentialsValidator = z.object({
     .string()
     .min(8, { message: "Passordet må være minst 8 tegn langt" }),
   phone: z.string().optional().refine(phone => {
-    if (phone === undefined) {
-      return true; // allow undefined phone numbers
-    }
-    const phoneRegex = /^\d{8}$/;
+    if (!phone) return true; // Tillat undefined eller tomme telefonnumre
+
+    // Regex for å godta internasjonale telefonnumre
+    const phoneRegex = /^\+?[0-9]{1,15}$/;
     return phoneRegex.test(phone);
   }, {
-    message: "Telefonnummeret er ikke gyldig",
+    message: "Telefonnummeret må være gyldig og inkludere landskode (f.eks. +39 for Italia)",
   }),
+  address: z.string().min(1, { message: "Adresse er påkrevd" }),
+  country: z.string().min(1, { message: "Land er påkrevd" }),
+  postalCode: z.string().min(1, { message: "Postnummer er påkrevd" }),
 });
+
 export const SignInCredentialsValidator = z.object({
   email: z.string().email(),
   password: z

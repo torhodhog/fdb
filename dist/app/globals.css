@@ -177,3 +177,6 @@ aside.weglot_switcher {
   display: none !important;
 }
 
+.elfsight-app-view .elfsight-app-edit-widget {
+  display: none !important;
+}

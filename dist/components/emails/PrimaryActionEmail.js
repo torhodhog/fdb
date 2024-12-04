@@ -35,30 +35,46 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrimaryActionEmailHtml = exports.EmailTemplate = void 0;
-var components_1 = require("@react-email/components");
 var React = __importStar(require("react"));
+var components_1 = require("@react-email/components");
 var EmailTemplate = function (_a) {
     var actionLabel = _a.actionLabel, buttonText = _a.buttonText, href = _a.href;
+    var logoUrl = "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/logo-5.png";
     return (React.createElement(components_1.Html, null,
         React.createElement(components_1.Head, null),
         React.createElement(components_1.Preview, null, "Din leverand\u00F8r for skjedne fotballdrakter"),
         React.createElement(components_1.Body, { style: main },
             React.createElement(components_1.Container, { style: container },
-                React.createElement(components_1.Img, { src: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/sign-up.fdb.png"), width: "150", height: "150", alt: "Fotballdraktbutikken", style: logo }),
-                React.createElement(components_1.Text, { style: paragraph }, "Hallayen,"),
+                React.createElement(components_1.Img, { src: logoUrl, width: "150", height: "150", alt: "Fotballdraktbutikken", style: logo }),
+                React.createElement(components_1.Text, { style: paragraph }, "Hallayen "),
                 React.createElement(components_1.Text, { style: paragraph },
-                    "Velkommen til fotballdraktbutikken. H\u00E5per du blir forn\u00F8yd og send oss gjerne en melding om noe ikke lever opp til forventningene.",
+                    "Velkommen til fdb.343. H\u00E5per du blir forn\u00F8yd og send oss gjerne en melding om noe ikke lever opp til forventningene.",
                     " ",
+                    actionLabel,
+                    ". ",
+                    " ",
+                    "/",
+                    " ",
+                    " Welcome to fdb.343. We hope you are satisfied, and please feel free to send us a message if something does not meet your expectations. ",
                     actionLabel,
                     "."),
                 React.createElement(components_1.Section, { style: btnContainer },
                     React.createElement(components_1.Button, { style: button, href: href }, buttonText)),
                 React.createElement(components_1.Text, { style: paragraph },
-                    "Med vennlig hilsen,",
+                    "Med vennlig hilsen ",
+                    "",
+                    " / ",
+                    "",
+                    " Best regards,",
                     React.createElement("br", null),
                     "Fotballdraktbutikken AS"),
                 React.createElement(components_1.Hr, { style: hr }),
-                React.createElement(components_1.Text, { style: footer }, "Hvis du ikke forventet denne mailen, kan du se vekk i fra den.")))));
+                React.createElement(components_1.Text, { style: footer },
+                    "Hvis du ikke forventet denne mailen, kan du se vekk i fra den.",
+                    "",
+                    " / ",
+                    "",
+                    " If you did not expect this email, you can ignore it.")))));
 };
 exports.EmailTemplate = EmailTemplate;
 var PrimaryActionEmailHtml = function (props) {

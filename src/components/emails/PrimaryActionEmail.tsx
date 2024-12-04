@@ -1,5 +1,5 @@
-import { Body, Button, Container, Head, Hr, Html, Img, Preview, render, Section, Text } from "@react-email/components";
 import * as React from "react";
+import { Body, Button, Container, Head, Hr, Html, Img, Preview, render, Section, Text } from "@react-email/components";
 
 interface EmailTemplateProps {
   actionLabel: string;
@@ -12,6 +12,8 @@ export const EmailTemplate = ({
   buttonText,
   href,
 }: EmailTemplateProps) => {
+  const logoUrl = "https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/logo-5.png";
+
   return (
     <Html>
       <Head />
@@ -19,17 +21,17 @@ export const EmailTemplate = ({
       <Body style={main}>
         <Container style={container}>
           <Img
-            src={`${process.env.NEXT_PUBLIC_SERVER_URL}/sign-up.fdb.png`}
+            src={logoUrl}
             width="150"
             height="150"
             alt="Fotballdraktbutikken"
             style={logo}
           />
-          <Text style={paragraph}>Hallayen,</Text>
+          <Text style={paragraph}>Hallayen </Text>
           <Text style={paragraph}>
-            Velkommen til fotballdraktbutikken. Håper du blir fornøyd og send
+            Velkommen til fdb.343. Håper du blir fornøyd og send
             oss gjerne en melding om noe ikke lever opp til forventningene.{" "}
-            {actionLabel}.
+            {actionLabel}. {" "}/{" "} Welcome to fdb.343. We hope you are satisfied, and please feel free to send us a message if something does not meet your expectations. {actionLabel}.
           </Text>
           <Section style={btnContainer}>
             <Button style={button} href={href}>
@@ -37,13 +39,13 @@ export const EmailTemplate = ({
             </Button>
           </Section>
           <Text style={paragraph}>
-            Med vennlig hilsen,
+            Med vennlig hilsen {""} / {""} Best regards,
             <br />
             Fotballdraktbutikken AS
           </Text>
           <Hr style={hr} />
           <Text style={footer}>
-            Hvis du ikke forventet denne mailen, kan du se vekk i fra den.
+            Hvis du ikke forventet denne mailen, kan du se vekk i fra den.{""} / {""} If you did not expect this email, you can ignore it.
           </Text>
         </Container>
       </Body>

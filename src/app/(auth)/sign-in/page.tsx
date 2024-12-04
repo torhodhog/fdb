@@ -59,7 +59,7 @@ const Page = () => {
   });
 
   const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
-    signIn({ email, password, phone });
+    signIn({ email, password, phone, address: "", country: "", postalCode: "" });
   };
 
   return (
