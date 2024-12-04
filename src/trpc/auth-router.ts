@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { getPayloadClient } from "../get-payload";
-import { AuthCredentialsValidator } from "../lib/validators/account-credentials-validators";
+import { AuthCredentialsValidator, SignInCredentialsValidator } from "../lib/validators/account-credentials-validators";
 import { publicProcedure, router } from "./trpc";
 
 export const authRouter = router({
@@ -57,7 +57,7 @@ export const authRouter = router({
     }),
 
   signIn: publicProcedure
-    .input(AuthCredentialsValidator)
+    .input(SignInCredentialsValidator)
     .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
       const { res } = ctx;

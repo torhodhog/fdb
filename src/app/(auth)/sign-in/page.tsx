@@ -11,13 +11,11 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import {
-  AuthCredentialsValidator,
-  TAuthCredentialsValidator,
+  SignInCredentialsValidator,
   TSignInCredentialsValidator,
 } from "@/lib/validators/account-credentials-validators";
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
-import { ZodError } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
@@ -34,8 +32,8 @@ const Page = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TAuthCredentialsValidator>({
-    resolver: zodResolver(AuthCredentialsValidator),
+  } = useForm<TSignInCredentialsValidator>({
+    resolver: zodResolver(SignInCredentialsValidator),
   });
 
   const { mutate: signIn, isLoading } = trpc.auth.signIn.useMutation({
@@ -58,8 +56,11 @@ const Page = () => {
     },
   });
 
-  const onSubmit = ({ email, password, phone }: TSignInCredentialsValidator) => {
-    signIn({ email, password, phone, address: "", country: "", postalCode: "" });
+  const onSubmit = ({ email, password }: TSignInCredentialsValidator) => {
+    signIn({ 
+      email, 
+      password
+    });
   };
 
   return (
@@ -119,6 +120,8 @@ const Page = () => {
                     </p>
                   )}
                 </div>
+
+                
 
                 <Button disabled={isLoading}>
                   {isLoading && (

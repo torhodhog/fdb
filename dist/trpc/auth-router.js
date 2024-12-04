@@ -110,7 +110,7 @@ exports.authRouter = (0, trpc_1.router)({
         });
     }); }),
     signIn: trpc_1.publicProcedure
-        .input(account_credentials_validators_1.AuthCredentialsValidator)
+        .input(account_credentials_validators_1.SignInCredentialsValidator)
         .mutation(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
         var email, password, res, payload, err_1;
         var input = _b.input, ctx = _b.ctx;
