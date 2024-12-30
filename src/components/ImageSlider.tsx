@@ -38,7 +38,7 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
   const inactiveStyles = 'hidden text-gray-400'
 
   return (
-    <div className='group relative bg-zinc-100 aspect-square overflow-hidden'>
+    <div className='group relative  bg-zinc-100 aspect-square overflow-hidden'>
       <div className='absolute z-10 inset-0 opacity-0 group-hover:opacity-100 transition'>
         <button
           onClick={(e) => {
@@ -73,30 +73,34 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
       </div>
 
       <Swiper
-        pagination={{
-          renderBullet: (_, className) => {
-            return `<span class="rounded-full transition ${className}"></span>`
-          },
-        }}
-        onSwiper={(swiper) => setSwiper(swiper)}
-        spaceBetween={50}
-        modules={[Pagination]}
-        slidesPerView={1}
-        className='h-full w-full'>
-        {urls.map((url, i) => (
-          <SwiperSlide key={i} className='-z-10 relative h-full w-full'>
-            <Image
-              className='-z-10 object-center'
-              src={url}
-              alt={`Product image ${i + 1}`}
-              fill
-              sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              style={{ objectFit: 'cover' }}
-              priority={i === 0} // Legger til priority for det første bildet
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+  pagination={{
+    renderBullet: (_, className) => {
+      return `<span class="rounded-full transition ${className}"></span>`;
+    },
+  }}
+  onSwiper={(swiper) => setSwiper(swiper)}
+  spaceBetween={10}
+  slidesPerView={1}
+  modules={[Pagination]}
+  touchRatio={1} // Standard touch-sensitivitet
+  touchStartPreventDefault={false} // Tillat standard scrolling ved touch-start
+  simulateTouch={true} // Sørg for at touch-simulering er aktiv
+  className="h-full w-full">
+  {urls.map((url, i) => (
+    <SwiperSlide key={i} className="-z-10 relative h-full w-full">
+      <Image
+        className="-z-10 object-center"
+        src={url}
+        alt={`Product image ${i + 1}`}
+        fill
+        sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        style={{ objectFit: 'cover' }}
+        priority={i === 0}
+      />
+    </SwiperSlide>
+  ))}
+</Swiper>
+
     </div>
   )
 }
