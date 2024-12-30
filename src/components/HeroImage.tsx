@@ -1,26 +1,16 @@
-"use client";
-
-import { FC } from "react";
 import Image from 'next/image';
-import { TextHoverEffectDemo } from "./TextHoverEffectDemo";
 
-const HeroImage: FC = () => {
+const HeroImage = () => {
   return (
-    <div className="relative flex justify-center items-center w-full h-96 mt-6 bg-transparent z-1">
-      {/* Bakgrunnsbilde */}
+    <div className="relative w-auto h-auto">
       <Image
-        src="/heroimage.jpg" // Pass på at bildefilen er riktig plassert i public-mappen
+        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herojul1-Photoroom.png"
         alt="Hero Background"
-        layout="fill"
-        objectFit="contain"
-        // Juster opasiteten for ønsket effekt
-        priority // Laster inn bildet tidlig for bedre ytelse
+        width={1920}
+        height={500}
+        priority
+        className=""
       />
-      
-      {/* Hover-effekt over bakgrunnen */}
-      {/* <div className="absolute z-10">
-        <TextHoverEffectDemo />
-      </div> */}
     </div>
   );
 };

@@ -16,7 +16,7 @@ const PopupNewsletter = () => {
       // Vis popupen etter 30 sekunder hvis det har gått mer enn 30 minutter
       const timer = setTimeout(() => {
         setShowPopup(true);
-      }, 30000); // 30000 millisekunder = 30 sekunder
+      }, 600000); // 30000 millisekunder = 30 sekunder
 
       // Rydd opp når komponenten fjernes
       return () => clearTimeout(timer);
