@@ -70,23 +70,22 @@ var trpc_1 = require("./trpc");
 exports.searchProducts = trpc_1.publicProcedure
     .input(zod_1.z.object({ term: zod_1.z.string().optional() }))
     .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-    var payload, term, docs, error_1;
-    var _c, _d;
+    var payload, term, LIMIT, _c, docs, totalDocs, hasMore, slicedDocs, err_1;
+    var _d, _e;
     var input = _b.input;
-    return __generator(this, function (_e) {
-        switch (_e.label) {
+    return __generator(this, function (_f) {
+        switch (_f.label) {
             case 0: return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
             case 1:
-                payload = _e.sent();
-                term = (_d = (_c = input.term) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : "";
-                // Hvis brukeren ikke har skrevet noe, returner tom array.
+                payload = _f.sent();
+                term = (_e = (_d = input.term) === null || _d === void 0 ? void 0 : _d.trim()) !== null && _e !== void 0 ? _e : "";
                 if (!term) {
-                    return [2 /*return*/, []];
+                    return [2 /*return*/, { docs: [], hasMore: false }];
                 }
-                _e.label = 2;
+                LIMIT = 11;
+                _f.label = 2;
             case 2:
-                _e.trys.push([2, 4, , 5]);
-                console.log("SØKETERM:", term);
+                _f.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, payload.find({
                         collection: "products",
                         where: {
@@ -95,15 +94,20 @@ exports.searchProducts = trpc_1.publicProcedure
                                 contains: term,
                             },
                         },
-                        limit: 10,
-                        depth: 1,
+                        limit: LIMIT,
                     })];
             case 3:
-                docs = (_e.sent()).docs;
-                return [2 /*return*/, docs];
+                _c = _f.sent(), docs = _c.docs, totalDocs = _c.totalDocs;
+                hasMore = docs.length > 10;
+                slicedDocs = hasMore ? docs.slice(0, 10) : docs;
+                return [2 /*return*/, {
+                        docs: slicedDocs,
+                        hasMore: hasMore,
+                        totalDocs: totalDocs,
+                    }];
             case 4:
-                error_1 = _e.sent();
-                console.error("Error searching products:", error_1);
+                err_1 = _f.sent();
+                console.error("Error searching products:", err_1);
                 throw new Error("Error searching products");
             case 5: return [2 /*return*/];
         }
@@ -125,7 +129,7 @@ exports.appRouter = (0, trpc_1.router)({
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, _d, sortBy, _e, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _f, items, totalDocs, error_2;
+        var cursor, query, _c, _d, sortBy, _e, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _f, items, totalDocs, error_1;
         var input = _b.input;
         return __generator(this, function (_g) {
             switch (_g.label) {
@@ -184,8 +188,8 @@ exports.appRouter = (0, trpc_1.router)({
                             totalDocs: totalDocs,
                         }];
                 case 4:
-                    error_2 = _g.sent();
-                    console.error("Error fetching products:", error_2); // Log any errors
+                    error_1 = _g.sent();
+                    console.error("Error fetching products:", error_1); // Log any errors
                     throw new Error("Error fetching products");
                 case 5: return [2 /*return*/];
             }

@@ -297,18 +297,19 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
           <LottieAnimation /> // Display the Lottie animation while loading
         ) : (
           <ProductReel
-            title={label ?? "Alle produkter"}
-            query={{
-              category,
-              sort: sort === "desc" || sort === "asc" ? sort : undefined,
-              searchTerm: team ? team : searchTerm,
-              liga_system: ligaSystem,
-              size: size,
-              limit: 1000,
-              hasPrint: hasPrint, // Pass the selected print option to the query
-              nation: selectedNation || nation, // Pass the nation parameter to the query
-            }}
-          />
+  title={label ?? "Alle produkter"}
+  query={{
+    category,
+    sort: sort === "desc" || sort === "asc" ? sort : undefined,
+    searchTerm: team ? team : searchTerm, // <--- henter fra din local state
+    liga_system: ligaSystem,
+    size: size,
+    limit: 1000,
+    hasPrint: hasPrint,
+    nation: selectedNation || nation,
+  }}
+/>
+
         )}
       </MaxWidthWrapper>
     </>

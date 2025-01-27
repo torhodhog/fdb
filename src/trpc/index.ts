@@ -15,35 +15,42 @@ export const searchProducts = publicProcedure
     const payload = await getPayloadClient();
     const term = input.term?.trim() ?? "";
 
-    // Hvis brukeren ikke har skrevet noe, returner tom array.
     if (!term) {
-      return [];
+      return { docs: [], hasMore: false };
     }
 
-    try {
-      console.log("SØKETERM:", term);
+    // Øk limit til f.eks. 11, slik at vi kan se om det finnes "flere enn 10"
+    const LIMIT = 11;
 
-      // Eksempel: Vil du bare vise "approved" produkter?
-      // Legg inn: approvedForSale: { equals: "approved" },
-      const { docs } = await payload.find({
+    try {
+      const { docs, totalDocs } = await payload.find({
         collection: "products",
         where: {
-          
-            approvedForSale: { equals: "approved" },
+          approvedForSale: { equals: "approved" },
           name: {
-            contains: term, 
+            contains: term,
           },
         },
-        limit: 10,
-        depth: 1,
+        limit: LIMIT,
       });
-      return docs;
-      
-    } catch (error) {
-      console.error("Error searching products:", error);
+
+      // Hvis vi har mer enn 10 elementer, setter vi hasMore = true
+      const hasMore = docs.length > 10;
+
+      // Returner bare de 10 første i `docs`
+      const slicedDocs = hasMore ? docs.slice(0, 10) : docs;
+
+      return {
+        docs: slicedDocs,
+        hasMore,
+        totalDocs,
+      };
+    } catch (err) {
+      console.error("Error searching products:", err);
       throw new Error("Error searching products");
     }
   });
+  
 export const appRouter = router({
   auth: authRouter,
   payment: paymentRouter,
