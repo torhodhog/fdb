@@ -1,17 +1,55 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { getPayloadClient } from '../get-payload';
-import { QueryValidator } from '../lib/validators/query-validator';
-import { authRouter } from './auth-router';
-import { paymentRouter } from './payment-router';
-import { productRouter } from './routers/product-router';
-import { publicProcedure, router } from './trpc';
+import { getPayloadClient } from "../get-payload";
+import { QueryValidator } from "../lib/validators/query-validator";
+import { authRouter } from "./auth-router";
+import { paymentRouter } from "./payment-router";
+import { productRouter } from "./routers/product-router";
+import { publicProcedure, router } from "./trpc";
+import { equal } from "assert";
 
+// 1) Egen prosedyre for "fritt søk"
+export const searchProducts = publicProcedure
+  .input(z.object({ term: z.string().optional() }))
+  .query(async ({ input }) => {
+    const payload = await getPayloadClient();
+    const term = input.term?.trim() ?? "";
+
+    // Hvis brukeren ikke har skrevet noe, returner tom array.
+    if (!term) {
+      return [];
+    }
+
+    try {
+      console.log("SØKETERM:", term);
+
+      // Eksempel: Vil du bare vise "approved" produkter?
+      // Legg inn: approvedForSale: { equals: "approved" },
+      const { docs } = await payload.find({
+        collection: "products",
+        where: {
+          
+            approvedForSale: { equals: "approved" },
+          name: {
+            contains: term, 
+          },
+        },
+        limit: 10,
+        depth: 1,
+      });
+      return docs;
+      
+    } catch (error) {
+      console.error("Error searching products:", error);
+      throw new Error("Error searching products");
+    }
+  });
 export const appRouter = router({
   auth: authRouter,
   payment: paymentRouter,
   product: productRouter,
 
+  // 2) Din eksisterende rute for å hente et uendelig antall produkter med filtrering
   getInfiniteProducts: publicProcedure
     .input(
       z.object({
@@ -53,7 +91,9 @@ export const appRouter = router({
 
       Object.entries(queryOpts).forEach(([key, value]) => {
         if (key === "onSale") {
-          parsedQueryOpts[key] = { equals: value === "true" || value === true };
+          parsedQueryOpts[key] = {
+            equals: value === "true" || value === true,
+          };
         } else {
           parsedQueryOpts[key] = { equals: value };
         }
@@ -102,6 +142,9 @@ export const appRouter = router({
         throw new Error("Error fetching products");
       }
     }),
+
+  // 3) Legg til den nye "searchProducts"-prosedyren
+  searchProducts,
 });
 
 export type AppRouter = typeof appRouter;

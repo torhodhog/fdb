@@ -14,6 +14,7 @@ import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
+import Searchbar from "./Searchbar";
 
 const Navbar = async () => {
   const nextCookies = cookies();
@@ -36,6 +37,10 @@ const Navbar = async () => {
               <div className="hidden z-50 lg:ml-8 lg:block lg:self-stretch">
                 <NavItems />
               </div>
+              
+              <div className="mt-16 mb-1 md:mt-0">
+  <Searchbar />
+</div>
 
 
               <div className="ml-auto flex items-center">
@@ -78,23 +83,7 @@ const Navbar = async () => {
                   <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex">
                     <Cart />
                     <ModeToggle />
-                    {/* Legg til flagglenker her */}
-                    {/* <Link href="/no" locale="no"> //BRUKE DENNE NÅR OVERSETTELSE ER KLAR
-                      <Image
-                        src="/norway-flag.png" // Plassér flaggikoner i public-mappen
-                        alt="Norsk"
-                        width={24}
-                        height={16}
-                      />
-                    </Link>
-                    <Link href="/en" locale="en">
-                      <Image
-                        src="/uk-flag.png" // Plassér flaggikoner i public-mappen
-                        alt="English"
-                        width={24}
-                        height={16}
-                      />
-                    </Link> */}
+                 
                   </div>
                 </div>
               </div>

@@ -13,16 +13,3 @@ const handler = (req: Request) => {
 
 export { handler as GET, handler as POST };
 
-// import { appRouter } from '../../../../trpc/index';
-// import * as trpcNext from '@trpc/server/adapters/next';
-// import { inferAsyncReturnType } from '@trpc/server';
-// import { NextApiRequest, NextApiResponse } from 'next';
-
-// export const createContext = ({ req, res }: { req: NextApiRequest, res: NextApiResponse }) => {
-//   return { req, res };
-// };
-
-// export default trpcNext.createNextApiHandler({
-//   router: appRouter,
-//   createContext,
-// });

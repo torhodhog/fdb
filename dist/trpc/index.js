@@ -58,7 +58,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.appRouter = void 0;
+exports.appRouter = exports.searchProducts = void 0;
 var zod_1 = require("zod");
 var get_payload_1 = require("../get-payload");
 var query_validator_1 = require("../lib/validators/query-validator");
@@ -66,10 +66,54 @@ var auth_router_1 = require("./auth-router");
 var payment_router_1 = require("./payment-router");
 var product_router_1 = require("./routers/product-router");
 var trpc_1 = require("./trpc");
+// 1) Egen prosedyre for "fritt søk"
+exports.searchProducts = trpc_1.publicProcedure
+    .input(zod_1.z.object({ term: zod_1.z.string().optional() }))
+    .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var payload, term, docs, error_1;
+    var _c, _d;
+    var input = _b.input;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0: return [4 /*yield*/, (0, get_payload_1.getPayloadClient)()];
+            case 1:
+                payload = _e.sent();
+                term = (_d = (_c = input.term) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : "";
+                // Hvis brukeren ikke har skrevet noe, returner tom array.
+                if (!term) {
+                    return [2 /*return*/, []];
+                }
+                _e.label = 2;
+            case 2:
+                _e.trys.push([2, 4, , 5]);
+                console.log("SØKETERM:", term);
+                return [4 /*yield*/, payload.find({
+                        collection: "products",
+                        where: {
+                            approvedForSale: { equals: "approved" },
+                            name: {
+                                contains: term,
+                            },
+                        },
+                        limit: 10,
+                        depth: 1,
+                    })];
+            case 3:
+                docs = (_e.sent()).docs;
+                return [2 /*return*/, docs];
+            case 4:
+                error_1 = _e.sent();
+                console.error("Error searching products:", error_1);
+                throw new Error("Error searching products");
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
 exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
     product: product_router_1.productRouter,
+    // 2) Din eksisterende rute for å hente et uendelig antall produkter med filtrering
     getInfiniteProducts: trpc_1.publicProcedure
         .input(zod_1.z.object({
         limit: zod_1.z.number().min(1).max(1000).default(20),
@@ -81,7 +125,7 @@ exports.appRouter = (0, trpc_1.router)({
         }),
     }))
         .query(function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
-        var cursor, query, _c, _d, sortBy, _e, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _f, items, totalDocs, error_1;
+        var cursor, query, _c, _d, sortBy, _e, sortOrder, limit, searchTerm, liga_system, names, queryOpts, payload, page, parsedQueryOpts, sortDirection, sortString, _f, items, totalDocs, error_2;
         var input = _b.input;
         return __generator(this, function (_g) {
             switch (_g.label) {
@@ -97,7 +141,9 @@ exports.appRouter = (0, trpc_1.router)({
                     Object.entries(queryOpts).forEach(function (_a) {
                         var key = _a[0], value = _a[1];
                         if (key === "onSale") {
-                            parsedQueryOpts[key] = { equals: value === "true" || value === true };
+                            parsedQueryOpts[key] = {
+                                equals: value === "true" || value === true,
+                            };
                         }
                         else {
                             parsedQueryOpts[key] = { equals: value };
@@ -138,11 +184,13 @@ exports.appRouter = (0, trpc_1.router)({
                             totalDocs: totalDocs,
                         }];
                 case 4:
-                    error_1 = _g.sent();
-                    console.error("Error fetching products:", error_1); // Log any errors
+                    error_2 = _g.sent();
+                    console.error("Error fetching products:", error_2); // Log any errors
                     throw new Error("Error fetching products");
                 case 5: return [2 /*return*/];
             }
         });
     }); }),
+    // 3) Legg til den nye "searchProducts"-prosedyren
+    searchProducts: exports.searchProducts,
 });
