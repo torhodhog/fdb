@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { trpc } from "@/trpc/client";
 import Link from "next/link";
 import Image from "next/image";
+import { FaSpinner } from "react-icons/fa"; // 1) Import spinner-ikon
 
 interface Product {
   id: string;
@@ -40,15 +41,24 @@ export default function Searchbar() {
   const hasMore = data?.hasMore || false;
 
   return (
-    <div className="relative w-full max-w-md">
-      {/* Søkefeltet */}
-      <input
-        type="text"
-        placeholder="Søk etter drakt..."
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
-        className="w-full p-2 rounded-md border border-gray-300 focus:outline-none"
-      />
+    <div className="relative w-full max-w-md ml-20 mt-">
+      <div className="relative">
+        {/* Søkefeltet */}
+        <input
+          type="text"
+          placeholder="Søk etter drakt..."
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          className="w-full p-2 rounded-md border border-gray-300 focus:outline-none"
+        />
+        
+        {/* 2) Spinner: vises kun når isLoading === true */}
+        {isLoading && (
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <FaSpinner className="animate-spin text-gray-500" />
+          </div>
+        )}
+      </div>
 
       {/* Dropdown for resultater */}
       {term && !isLoading && results.length > 0 && (
@@ -64,8 +74,8 @@ export default function Searchbar() {
             rounded-md
             shadow-lg
             border border-gray-200
-            max-h-72        /* valgfritt: begrense høyden */
-            overflow-y-auto /* valgfritt: scroll hvis mange resultater */
+            max-h-72        
+            overflow-y-auto 
           "
         >
           {results.map((product: Product) => {

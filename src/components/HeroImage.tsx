@@ -4,7 +4,7 @@ const HeroImage = () => {
   return (
     <div className="relative w-auto h-auto">
       <Image
-        src="/HERO1.png"
+        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herosale-Photoroom.png"
         alt="Hero Background"
         width={1920}
         height={500}
