@@ -12,9 +12,9 @@ import MobileNav from "./MobildeNav";
 // Sørg for at importen er korrekt her
 import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
+import Searchbar from "./Searchbar";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
-import Searchbar from "./Searchbar";
 
 const Navbar = async () => {
   const nextCookies = cookies();

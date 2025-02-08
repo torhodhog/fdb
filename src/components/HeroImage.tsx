@@ -1,15 +1,13 @@
-import Image from 'next/image';
-
 const HeroImage = () => {
   return (
     <div className="relative w-auto h-auto">
-      <Image
-        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/herosale-Photoroom.png"
-        alt="Hero Background"
-        width={1920}
-        height={500}
-        priority
-        className=""
+      <video
+        src="https://forsoker-ny-botte.s3.eu-north-1.amazonaws.com/HERO2.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="w-full h-auto object-cover"
       />
     </div>
   );

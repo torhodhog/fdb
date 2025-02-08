@@ -1,9 +1,24 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { trpc } from "@/trpc/client";
 import Link from "next/link";
 import Image from "next/image";
-import { FaSpinner } from "react-icons/fa"; // 1) Import spinner-ikon
+import { FaSpinner } from "react-icons/fa";
+
+// 1) Debounce-hook
+function useDebounce<T>(value: T, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 interface Product {
   id: string;
@@ -31,10 +46,13 @@ function getFirstImageUrl(product: Product): string | null {
 export default function Searchbar() {
   const [term, setTerm] = useState("");
 
-  // Henter { docs, hasMore, ... } fra TRPC, men viser bare når term ikke er tomt
-  const { data, isLoading } = trpc.searchProducts.useQuery(
-    { term },
-    { enabled: term.trim().length > 0 }
+  // 2) Debounce selve søketermen
+  const debouncedTerm = useDebounce(term, 300);
+
+  // 3) Bare kjør query hvis minst 3 tegn
+  const { data, isFetching } = trpc.searchProducts.useQuery(
+    { term: debouncedTerm },
+    { enabled: debouncedTerm.trim().length >= 3 }
   );
 
   const results = data?.docs || [];
@@ -51,19 +69,21 @@ export default function Searchbar() {
           onChange={(e) => setTerm(e.target.value)}
           className="w-full p-2 rounded-md border border-gray-300 focus:outline-none"
         />
-        
-        {/* 2) Spinner: vises kun når isLoading === true */}
-        {isLoading && (
+
+        {/* Spinner vises når isFetching === true */}
+        {isFetching && (
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
             <FaSpinner className="animate-spin text-gray-500" />
           </div>
         )}
       </div>
 
-      {/* Dropdown for resultater */}
-      {term && !isLoading && results.length > 0 && (
-        <div
-          className="
+      {/* Dropdown for resultater (vis bare hvis vi faktisk har minst 3 tegn) */}
+      {debouncedTerm.trim().length >= 3 &&
+        !isFetching &&
+        results.length > 0 && (
+          <div
+            className="
             absolute 
             left-0 
             top-full 
@@ -77,50 +97,52 @@ export default function Searchbar() {
             max-h-72        
             overflow-y-auto 
           "
-        >
-          {results.map((product: Product) => {
-            const imageUrl = getFirstImageUrl(product);
-            return (
+          >
+            {results.map((product: Product) => {
+              const imageUrl = getFirstImageUrl(product);
+              return (
+                <Link
+                  key={product.id}
+                  href={`/product/${product.id}`}
+                  className="flex items-center p-2 border-b border-gray-200 last:border-none hover:bg-gray-50"
+                  onClick={() => setTerm("")} // Nullstill søketeksten når man klikker
+                >
+                  {imageUrl && (
+                    <div className="w-10 h-10 relative mr-2 flex-shrink-0">
+                      <Image
+                        src={imageUrl}
+                        alt={product.name}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        className="rounded"
+                        sizes="40px"
+                      />
+                    </div>
+                  )}
+                  <span className="ml-2 text-sm">{product.name}</span>
+                </Link>
+              );
+            })}
+
+            {/* Se alle treff */}
+            {hasMore && (
               <Link
-                key={product.id}
-                href={`/product/${product.id}`}
-                className="flex items-center p-2 border-b border-gray-200 last:border-none hover:bg-gray-50"
+                href={`/products?searchTerm=${debouncedTerm}`}
+                className="block p-2 border-t border-gray-200 text-sm text-blue-600 hover:bg-gray-50"
                 onClick={() => setTerm("")}
               >
-                {imageUrl && (
-                  <div className="w-10 h-10 relative mr-2 flex-shrink-0">
-                    <Image
-                      src={imageUrl}
-                      alt={product.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="rounded"
-                      sizes="40px"
-                    />
-                  </div>
-                )}
-                <span className="ml-2 text-sm">{product.name}</span>
+                Se alle treff
               </Link>
-            );
-          })}
+            )}
+          </div>
+        )}
 
-          {/* Se alle treff */}
-          {hasMore && (
-            <Link
-              href={`/products?searchTerm=${term}`}
-              className="block p-2 border-t border-gray-200 text-sm text-blue-600 hover:bg-gray-50"
-              onClick={() => setTerm("")}
-            >
-              Se alle treff
-            </Link>
-          )}
-        </div>
-      )}
-
-      {/* Ingen treff */}
-      {term && !isLoading && results.length === 0 && (
-        <div
-          className="
+      {/* Ingen treff – vises bare hvis søk er aktivt (>=3 tegn) og 0 resultater */}
+      {debouncedTerm.trim().length >= 3 &&
+        !isFetching &&
+        results.length === 0 && (
+          <div
+            className="
             absolute
             left-0
             top-full
@@ -133,10 +155,10 @@ export default function Searchbar() {
             border border-gray-200
             p-2
           "
-        >
-          <p className="text-sm">Ingen treff ...</p>
-        </div>
-      )}
+          >
+            <p className="text-sm">Ingen treff ...</p>
+          </div>
+        )}
     </div>
   );
 }
