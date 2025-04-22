@@ -3,6 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GET = GET;
 const get_payload_1 = require("@/get-payload");
 async function GET() {
+    // Hopp over under statisk bygg for å unngå feilmelding
+    if (process.env.NEXT_BUILD === "true") {
+        console.warn("⚠️ Skipping /api/top-favoritter during static export.");
+        return new Response(JSON.stringify([]), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
     const payload = await (0, get_payload_1.getPayloadClient)();
     // Fetch alle favorites
     const { docs: favorites } = await payload.find({

@@ -1,6 +1,15 @@
 import { getPayloadClient } from "@/get-payload";
 
 export async function GET() {
+  // Hopp over under statisk bygg for å unngå feilmelding
+  if (process.env.NEXT_BUILD === "true") {
+    console.warn("⚠️ Skipping /api/top-favoritter during static export.");
+    return new Response(JSON.stringify([]), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const payload = await getPayloadClient();
 
   // Fetch alle favorites
