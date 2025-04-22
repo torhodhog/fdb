@@ -95,11 +95,17 @@
   "devDependencies": {
     "@types/axios": "^0.9.36",
     "@types/express": "^4.17.20",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20.16.5",
     "@types/nodemailer": "^6.4.14",
+    "@types/passport": "^1.0.17",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^18.2.0",
+    "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/react-lottie": "^1.2.10",
+    "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.0.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
@@ -108,7 +114,8 @@
     "nodemon": "^3.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vite": "^6.3.2"
   },
   "volta": {
     "node": "18.17.1",

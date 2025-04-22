@@ -32,14 +32,14 @@ export const ReceiptEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Section>
-            <Column>
+            {/* <Column>
               <Img
                 src="/public/logo-5.png"
                 width={100}
                 height={100}
                 alt="Fdblogo"
               />
-            </Column>
+            </Column> */}
 
             <Column align="right" style={tableCell}>
               <Text style={heading}>Kvittering</Text>

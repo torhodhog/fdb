@@ -2,7 +2,9 @@ const path = require('path');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -17,22 +19,25 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'forsoker-ny-botte.s3.eu-north-1.amazonaws.com',
       },
-      ...(!isProduction ? [
-        {
-          protocol: 'http',
-          hostname: 'localhost',
-        },
-      ] : []),
+      ...(!isProduction
+        ? [
+            {
+              protocol: 'http',
+              hostname: 'localhost',
+            },
+          ]
+        : []),
     ],
   },
   env: {
-    NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_SERVER_URL:
+      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   },
   async rewrites() {
     return [
       {
         source: '/sell',
-        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`, // Peker til admin-ruten
+        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`,
       },
     ];
   },

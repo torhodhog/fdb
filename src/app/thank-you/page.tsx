@@ -1,9 +1,11 @@
+// app/(routes)/thank-you/page.tsx
+
 import PaymentStatus from "@/components/Paymentstatus";
 import { PRODUCT_CATEGORIES } from "@/config";
 import { getPayloadClient } from "@/get-payload";
 import { getServerSideUser } from "@/lib/payload-utils";
 import { formatPrice } from "@/lib/utils";
-import { Product, ProductFile, User } from "@/payload-types";
+import { Product, User } from "@/payload-types";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,11 +48,12 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
   const products = order.products as Product[];
 
   const orderTotal = products.reduce((total, product) => {
-    // Use the sale price if it's available, otherwise use the regular price
     const price = product.salePrice || product.price;
     return total + price;
   }, 0);
-  const deliveryFee = 74;
+
+  const deliveryFee = order.deliveryMethod === "delivery" ? 74 : 0;
+  const totalWithDelivery = orderTotal + deliveryFee;
 
   return (
     <main className="relative lg:min-h-full">
@@ -92,7 +95,7 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
               <div className="mt-2 text-gray-900">{order.id}</div>
 
               <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-muted-foreground">
-                {(order.products as Product[]).map((product) => {
+                {products.map((product) => {
                   const label = PRODUCT_CATEGORIES.find(
                     ({ value }) => value === product.category
                   )?.label;
@@ -115,7 +118,6 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
                       <div className="flex-auto flex flex-col justify-between">
                         <div className="space-y-1">
                           <h3 className="text-gray-900">{product.name}</h3>
-
                           <p className="my-1">Kategori: {label}</p>
                         </div>
                       </div>
@@ -130,28 +132,28 @@ const ThankYouPage = async ({ searchParams }: PageProps) => {
 
               <div className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-muted-foreground">
                 <div className="flex justify-between">
-                  <p>Delsum: </p>
+                  <p>Delsum:</p>
                   <p className="text-gray-900">{formatPrice(orderTotal)}</p>
                 </div>
 
-                <div className="flex justify-between">
-                  <p>Levering</p>
-                  <p className="text-gray-900">{formatPrice(deliveryFee)}</p>
-                </div>
+                {deliveryFee > 0 && (
+                  <div className="flex justify-between">
+                    <p>Levering</p>
+                    <p className="text-gray-900">{formatPrice(deliveryFee)}</p>
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <p className="text-base">Totalt</p>
-                  <p className="text-base">
-                    {formatPrice(orderTotal + deliveryFee)}
-                  </p>
+                  <p className="text-base">{formatPrice(totalWithDelivery)}</p>
                 </div>
               </div>
 
-             <PaymentStatus
-  isPaid={order._isPaid || false}
-  orderEmail={(order.user as User).email}
-  orderId={order.id}
-/>
+              <PaymentStatus
+                isPaid={order._isPaid || false}
+                orderEmail={(order.user as User).email}
+                orderId={order.id}
+              />
 
               <div className="mt-16 border-t border-gray-200 py-6 text-right">
                 <Link
