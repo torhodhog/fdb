@@ -1,22 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Favorites = {
+const Favorites = {
     slug: 'favorites',
     admin: {
         useAsTitle: 'user',
     },
     access: {
-        create: function (_a) {
-            var user = _a.req.user;
+        create: ({ req: { user } }) => {
             // Only allow authenticated users to create favorites
             return Boolean(user);
         },
-        delete: function (_a) {
-            var user = _a.req.user;
+        delete: ({ req: { user } }) => {
             // Only allow authenticated users to delete their own favorites
             return Boolean(user);
         },
-        read: function () { return true; }, // Allow everyone to read favorites
+        read: ({ req: { user } }) => {
+            if (!user)
+                return false;
+            return {
+                user: {
+                    equals: user.id,
+                },
+            };
+        },
     },
     fields: [
         {

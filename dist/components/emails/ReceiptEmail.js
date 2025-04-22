@@ -1,143 +1,53 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReceiptEmailHtml = exports.ReceiptEmail = void 0;
-var components_1 = require("@react-email/components");
-var date_fns_1 = require("date-fns");
-var React = __importStar(require("react"));
-var utils_1 = require("../../lib/utils");
-var ReceiptEmail = function (_a) {
-    var email = _a.email, date = _a.date, orderId = _a.orderId, products = _a.products, _b = _a.deliveryFee, deliveryFee = _b === void 0 ? 0 : _b;
-    var total = products.reduce(function (acc, curr) { return acc + curr.price; }, 0) + deliveryFee;
-    return (React.createElement(components_1.Html, null,
-        React.createElement(components_1.Head, null),
-        React.createElement(components_1.Preview, null, "Din kvittering fra Fotballdraktbutikken"),
-        React.createElement(components_1.Body, { style: main },
-            React.createElement(components_1.Container, { style: container },
-                React.createElement(components_1.Section, null,
-                    React.createElement(components_1.Column, null,
-                        React.createElement(components_1.Img, { src: "/public/logo-5.png", width: 100, height: 100, alt: "Fdblogo" })),
-                    React.createElement(components_1.Column, { align: "right", style: tableCell },
-                        React.createElement(components_1.Text, { style: heading }, "Kvittering"))),
-                React.createElement(components_1.Section, { style: informationTable },
-                    React.createElement(components_1.Row, { style: informationTableRow },
-                        React.createElement(components_1.Column, { style: informationTableColumn },
-                            React.createElement(components_1.Text, { style: informationTableLabel }, "EMAIL"),
-                            React.createElement(components_1.Link, { style: __assign({}, informationTableValue) }, email)),
-                        React.createElement(components_1.Column, { style: informationTableColumn },
-                            React.createElement(components_1.Text, { style: informationTableLabel }, "Fakturadato"),
-                            React.createElement(components_1.Text, { style: informationTableValue }, (0, date_fns_1.format)(date, "dd MMM yyyy"))),
-                        React.createElement(components_1.Column, { style: informationTableColumn },
-                            React.createElement(components_1.Text, { style: informationTableLabel }, "BestillingsId"),
-                            React.createElement(components_1.Link, { style: __assign({}, informationTableValue) }, orderId)))),
-                React.createElement(components_1.Section, { style: productTitleTable },
-                    React.createElement(components_1.Text, { style: productsTitle }, "Bestillingssammendrag")),
-                products.map(function (product) {
-                    var _a;
-                    var image = product.images[0].image;
-                    return (React.createElement(components_1.Section, { key: product.id },
-                        React.createElement(components_1.Column, { style: { width: "64px" } }, typeof image !== "string" && image.url ? (React.createElement(components_1.Img, { src: image.url, width: "64", height: "64", alt: "Product Image", style: productIcon })) : null),
-                        React.createElement(components_1.Column, { style: { paddingLeft: "22px" } },
-                            React.createElement(components_1.Text, { style: productTitle }, product.name),
-                            product.description ? (React.createElement(components_1.Text, { style: productDescription }, product.description.length > 50
-                                ? ((_a = product.description) === null || _a === void 0 ? void 0 : _a.slice(0, 50)) + "..."
-                                : product.description)) : null,
-                            React.createElement(components_1.Link, { href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/thank-you?orderId=").concat(orderId), style: productLink })),
-                        React.createElement(components_1.Column, { style: productPriceWrapper, align: "right" },
-                            React.createElement(components_1.Text, { style: productPrice }, (0, utils_1.formatPrice)(product.price)))));
-                }),
-                React.createElement(components_1.Section, null,
-                    React.createElement(components_1.Column, { style: { width: "64px" } }),
-                    React.createElement(components_1.Column, { style: {
-                            paddingLeft: "40px",
-                            paddingTop: 20,
-                        } },
-                        React.createElement(components_1.Text, { style: productTitle }, "Leveringskostnader")),
-                    React.createElement(components_1.Column, { style: productPriceWrapper, align: "right" },
-                        React.createElement(components_1.Text, { style: productPrice }, (0, utils_1.formatPrice)(deliveryFee)))),
-                React.createElement(components_1.Hr, { style: productPriceLine }),
-                React.createElement(components_1.Section, { align: "right" },
-                    React.createElement(components_1.Column, { style: tableCell, align: "right" },
-                        React.createElement(components_1.Text, { style: productPriceTotal }, "TOTAL")),
-                    React.createElement(components_1.Column, { style: productPriceVerticalLine }),
-                    React.createElement(components_1.Column, { style: productPriceLargeWrapper },
-                        React.createElement(components_1.Text, { style: productPriceLarge }, (0, utils_1.formatPrice)(total)))),
-                React.createElement(components_1.Hr, { style: productPriceLineBottom }),
-                React.createElement(components_1.Text, { style: footerLinksWrapper },
-                    React.createElement(components_1.Link, { href: "#" }, "Account Settings"),
-                    " \u2022",
-                    " ",
-                    React.createElement(components_1.Link, { href: "#" }, "Terms of Sale"),
-                    " \u2022",
-                    " ",
-                    React.createElement(components_1.Link, { href: "#" }, "Privacy Policy ")),
-                React.createElement(components_1.Text, { style: footerCopyright },
-                    "Copyright \u00A9 2023 Fotballdraktbutikken AS ",
-                    React.createElement("br", null),
-                    " ",
-                    React.createElement(components_1.Link, { href: "#" }, "All rettigheter reservert"))))));
+const jsx_runtime_1 = require("react/jsx-runtime");
+const components_1 = require("@react-email/components");
+const date_fns_1 = require("date-fns");
+const utils_1 = require("../../lib/utils");
+const ReceiptEmail = ({ email, date, orderId, products, deliveryFee = 0, // Standardverdi på 0 hvis frakten er gratis
+ }) => {
+    const total = products.reduce((acc, curr) => acc + curr.price, 0) + deliveryFee;
+    return ((0, jsx_runtime_1.jsxs)(components_1.Html, { children: [(0, jsx_runtime_1.jsx)(components_1.Head, {}), (0, jsx_runtime_1.jsx)(components_1.Preview, { children: "Din kvittering fra Fotballdraktbutikken" }), (0, jsx_runtime_1.jsx)(components_1.Body, { style: main, children: (0, jsx_runtime_1.jsxs)(components_1.Container, { style: container, children: [(0, jsx_runtime_1.jsxs)(components_1.Section, { children: [(0, jsx_runtime_1.jsx)(components_1.Column, { children: (0, jsx_runtime_1.jsx)(components_1.Img, { src: "/public/logo-5.png", width: 100, height: 100, alt: "Fdblogo" }) }), (0, jsx_runtime_1.jsx)(components_1.Column, { align: "right", style: tableCell, children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: heading, children: "Kvittering" }) })] }), (0, jsx_runtime_1.jsx)(components_1.Section, { style: informationTable, children: (0, jsx_runtime_1.jsxs)(components_1.Row, { style: informationTableRow, children: [(0, jsx_runtime_1.jsxs)(components_1.Column, { style: informationTableColumn, children: [(0, jsx_runtime_1.jsx)(components_1.Text, { style: informationTableLabel, children: "EMAIL" }), (0, jsx_runtime_1.jsx)(components_1.Link, { style: {
+                                                    ...informationTableValue,
+                                                }, children: email })] }), (0, jsx_runtime_1.jsxs)(components_1.Column, { style: informationTableColumn, children: [(0, jsx_runtime_1.jsx)(components_1.Text, { style: informationTableLabel, children: "Fakturadato" }), (0, jsx_runtime_1.jsx)(components_1.Text, { style: informationTableValue, children: (0, date_fns_1.format)(date, "dd MMM yyyy") })] }), (0, jsx_runtime_1.jsxs)(components_1.Column, { style: informationTableColumn, children: [(0, jsx_runtime_1.jsx)(components_1.Text, { style: informationTableLabel, children: "BestillingsId" }), (0, jsx_runtime_1.jsx)(components_1.Link, { style: {
+                                                    ...informationTableValue,
+                                                }, children: orderId })] })] }) }), (0, jsx_runtime_1.jsx)(components_1.Section, { style: productTitleTable, children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productsTitle, children: "Bestillingssammendrag" }) }), products.map((product) => {
+                            const { image } = product.images[0];
+                            return ((0, jsx_runtime_1.jsxs)(components_1.Section, { children: [(0, jsx_runtime_1.jsx)(components_1.Column, { style: { width: "64px" }, children: typeof image !== "string" && image.url ? ((0, jsx_runtime_1.jsx)(components_1.Img, { src: image.url, width: "64", height: "64", alt: "Product Image", style: productIcon })) : null }), (0, jsx_runtime_1.jsxs)(components_1.Column, { style: { paddingLeft: "22px" }, children: [(0, jsx_runtime_1.jsx)(components_1.Text, { style: productTitle, children: product.name }), product.description ? ((0, jsx_runtime_1.jsx)(components_1.Text, { style: productDescription, children: product.description.length > 50
+                                                    ? product.description?.slice(0, 50) + "..."
+                                                    : product.description })) : null, (0, jsx_runtime_1.jsx)(components_1.Link, { href: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${orderId}`, style: productLink })] }), (0, jsx_runtime_1.jsx)(components_1.Column, { style: productPriceWrapper, align: "right", children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productPrice, children: (0, utils_1.formatPrice)(product.price) }) })] }, product.id));
+                        }), (0, jsx_runtime_1.jsxs)(components_1.Section, { children: [(0, jsx_runtime_1.jsx)(components_1.Column, { style: { width: "64px" } }), (0, jsx_runtime_1.jsx)(components_1.Column, { style: {
+                                        paddingLeft: "40px",
+                                        paddingTop: 20,
+                                    }, children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productTitle, children: "Leveringskostnader" }) }), (0, jsx_runtime_1.jsx)(components_1.Column, { style: productPriceWrapper, align: "right", children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productPrice, children: (0, utils_1.formatPrice)(deliveryFee) }) })] }), (0, jsx_runtime_1.jsx)(components_1.Hr, { style: productPriceLine }), (0, jsx_runtime_1.jsxs)(components_1.Section, { align: "right", children: [(0, jsx_runtime_1.jsx)(components_1.Column, { style: tableCell, align: "right", children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productPriceTotal, children: "TOTAL" }) }), (0, jsx_runtime_1.jsx)(components_1.Column, { style: productPriceVerticalLine }), (0, jsx_runtime_1.jsx)(components_1.Column, { style: productPriceLargeWrapper, children: (0, jsx_runtime_1.jsx)(components_1.Text, { style: productPriceLarge, children: (0, utils_1.formatPrice)(total) }) })] }), (0, jsx_runtime_1.jsx)(components_1.Hr, { style: productPriceLineBottom }), (0, jsx_runtime_1.jsxs)(components_1.Text, { style: footerLinksWrapper, children: [(0, jsx_runtime_1.jsx)(components_1.Link, { href: "#", children: "Account Settings" }), " \u2022", " ", (0, jsx_runtime_1.jsx)(components_1.Link, { href: "#", children: "Terms of Sale" }), " \u2022", " ", (0, jsx_runtime_1.jsx)(components_1.Link, { href: "#", children: "Privacy Policy " })] }), (0, jsx_runtime_1.jsxs)(components_1.Text, { style: footerCopyright, children: ["Copyright \u00A9 2023 Fotballdraktbutikken AS ", (0, jsx_runtime_1.jsx)("br", {}), " ", (0, jsx_runtime_1.jsx)(components_1.Link, { href: "#", children: "All rettigheter reservert" })] })] }) })] }));
 };
 exports.ReceiptEmail = ReceiptEmail;
-var ReceiptEmailHtml = function (props) {
-    return (0, components_1.render)(React.createElement(exports.ReceiptEmail, __assign({}, props)), {
-        pretty: true,
-    });
-};
+const ReceiptEmailHtml = (props) => (0, components_1.render)((0, jsx_runtime_1.jsx)(exports.ReceiptEmail, { ...props }), {
+    pretty: true,
+});
 exports.ReceiptEmailHtml = ReceiptEmailHtml;
-var main = {
+const main = {
     fontFamily: '"Helvetica Neue",Helvetica,Arial,sans-serif',
     backgroundColor: "#ffffff",
 };
-var resetText = {
+const resetText = {
     margin: "0",
     padding: "0",
     lineHeight: 1.4,
 };
-var container = {
+const container = {
     margin: "0 auto",
     padding: "20px 0 48px",
     width: "660px",
 };
-var tableCell = { display: "table-cell" };
-var heading = {
+const tableCell = { display: "table-cell" };
+const heading = {
     fontSize: "28px",
     fontWeight: "300",
     color: "#888888",
 };
-var informationTable = {
+const informationTable = {
     borderCollapse: "collapse",
     borderSpacing: "0px",
     color: "rgb(51,51,51)",
@@ -146,44 +56,60 @@ var informationTable = {
     fontSize: "12px",
     marginTop: "12px",
 };
-var informationTableRow = {
+const informationTableRow = {
     height: "46px",
 };
-var informationTableColumn = {
+const informationTableColumn = {
     paddingLeft: "20px",
     borderStyle: "solid",
     borderColor: "white",
     borderWidth: "0px 1px 1px 0px",
     height: "44px",
 };
-var informationTableLabel = __assign(__assign({}, resetText), { color: "rgb(102,102,102)", fontSize: "10px" });
-var informationTableValue = {
+const informationTableLabel = {
+    ...resetText,
+    color: "rgb(102,102,102)",
+    fontSize: "10px",
+};
+const informationTableValue = {
     fontSize: "12px",
     margin: "0",
     padding: "0",
     lineHeight: 1.4,
 };
-var productTitleTable = __assign(__assign({}, informationTable), { margin: "30px 0 15px 0", height: "24px" });
-var productsTitle = {
+const productTitleTable = {
+    ...informationTable,
+    margin: "30px 0 15px 0",
+    height: "24px",
+};
+const productsTitle = {
     background: "#fafafa",
     paddingLeft: "10px",
     fontSize: "14px",
     fontWeight: "500",
     margin: "0",
 };
-var productIcon = {
+const productIcon = {
     margin: "0 0 0 20px",
     borderRadius: "14px",
     border: "1px solid rgba(128,128,128,0.2)",
 };
-var productTitle = __assign({ fontSize: "12px", fontWeight: "600" }, resetText);
-var productDescription = __assign({ fontSize: "12px", color: "rgb(102,102,102)" }, resetText);
-var productLink = {
+const productTitle = {
+    fontSize: "12px",
+    fontWeight: "600",
+    ...resetText,
+};
+const productDescription = {
+    fontSize: "12px",
+    color: "rgb(102,102,102)",
+    ...resetText,
+};
+const productLink = {
     fontSize: "12px",
     color: "rgb(0,112,201)",
     textDecoration: "none",
 };
-var productPriceTotal = {
+const productPriceTotal = {
     margin: "0",
     color: "rgb(102,102,102)",
     fontSize: "10px",
@@ -191,42 +117,42 @@ var productPriceTotal = {
     padding: "0px 30px 0px 0px",
     textAlign: "right",
 };
-var productPrice = {
+const productPrice = {
     fontSize: "12px",
     fontWeight: "600",
     margin: "0",
 };
-var productPriceLarge = {
+const productPriceLarge = {
     margin: "0px 20px 0px 0px",
     fontSize: "16px",
     fontWeight: "600",
     whiteSpace: "nowrap",
     textAlign: "right",
 };
-var productPriceWrapper = {
+const productPriceWrapper = {
     display: "table-cell",
     padding: "0px 20px 0px 0px",
     width: "100px",
     verticalAlign: "top",
 };
-var productPriceLine = { margin: "30px 0 0 0" };
-var productPriceVerticalLine = {
+const productPriceLine = { margin: "30px 0 0 0" };
+const productPriceVerticalLine = {
     height: "48px",
     borderLeft: "1px solid",
     borderColor: "rgb(238,238,238)",
 };
-var productPriceLargeWrapper = {
+const productPriceLargeWrapper = {
     display: "table-cell",
     width: "90px",
 };
-var productPriceLineBottom = { margin: "0 0 75px 0" };
-var footerLinksWrapper = {
+const productPriceLineBottom = { margin: "0 0 75px 0" };
+const footerLinksWrapper = {
     margin: "8px 0 0 0",
     textAlign: "center",
     fontSize: "12px",
     color: "rgb(102,102,102)",
 };
-var footerCopyright = {
+const footerCopyright = {
     margin: "25px 0 0 0",
     textAlign: "center",
     fontSize: "12px",

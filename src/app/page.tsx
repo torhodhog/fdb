@@ -10,6 +10,7 @@ import Link from "next/link";
 import ProductReel from "../components/ProductReel";
 import WeglotSwitcher from "@/components/WeglotSwitcher";
 import SalePage from "./Sale/page";
+import FavorittPall from "@/components/FavorittPall";
 
 const perks = [
   {
@@ -112,6 +113,13 @@ export default function Home() {
           </button>
         </Link>
       </div>
+
+      <section>
+        <MaxWidthWrapper className="py-20">
+   
+        <FavorittPall />
+          </MaxWidthWrapper>
+      </section>
 
       <section>
         <MaxWidthWrapper className="py-20">

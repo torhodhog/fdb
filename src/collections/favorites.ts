@@ -14,7 +14,16 @@ const Favorites: CollectionConfig = {
       // Only allow authenticated users to delete their own favorites
       return Boolean(user);
     },
-    read: () => true, // Allow everyone to read favorites
+    read: ({ req: { user } }) => {
+      if (!user) return false;
+    
+      return {
+        user: {
+          equals: user.id,
+        },
+      };
+    },
+    
   },
   fields: [
     {

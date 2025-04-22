@@ -1,59 +1,50 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cn = cn;
 exports.formatPrice = formatPrice;
 exports.constructMetadata = constructMetadata;
-var clsx_1 = require("clsx");
-var tailwind_merge_1 = require("tailwind-merge");
-function cn() {
-    var inputs = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        inputs[_i] = arguments[_i];
-    }
+const clsx_1 = require("clsx");
+const tailwind_merge_1 = require("tailwind-merge");
+function cn(...inputs) {
     return (0, tailwind_merge_1.twMerge)((0, clsx_1.clsx)(inputs));
 }
-function formatPrice(price, options) {
-    if (options === void 0) { options = {}; }
-    var _a = options.currency, currency = _a === void 0 ? "NOK" : _a, _b = options.notation, notation = _b === void 0 ? "standard" : _b;
-    var numericPrice = typeof price === "string" ? parseFloat(price) : price;
+function formatPrice(price, options = {}) {
+    const { currency = "NOK", notation = "standard" } = options;
+    const numericPrice = typeof price === "string" ? parseFloat(price) : price;
     return new Intl.NumberFormat("nb-NO", {
         style: "currency",
-        currency: currency,
-        notation: notation,
+        currency,
+        notation,
         maximumFractionDigits: 2,
     }).format(numericPrice);
 }
-function constructMetadata(_a) {
-    var _b = _a === void 0 ? {} : _a, _c = _b.title, title = _c === void 0 ? 'Fotballdraktbutikken - markedet for brukte, unike fotballdrakter' : _c, _d = _b.description, description = _d === void 0 ? 'Fotballdraktbutikken is an open-source marketplace for high-quality digital goods.' : _d, _e = _b.image, image = _e === void 0 ? '/herologo.png' : _e, _f = _b.icons, icons = _f === void 0 ? '/herologo.png' : _f, _g = _b.noIndex, noIndex = _g === void 0 ? false : _g;
-    return __assign({ title: title, description: description, openGraph: {
-            title: title,
-            description: description,
+function constructMetadata({ title = 'Fotballdraktbutikken - markedet for brukte, unike fotballdrakter', description = 'Fotballdraktbutikken is an open-source marketplace for high-quality digital goods.', image = '/herologo.png', icons = '/herologo.png', noIndex = false, } = {}) {
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
             images: [
                 {
                     url: image,
                 },
             ],
-        }, twitter: {
+        },
+        twitter: {
             card: 'summary_large_image',
-            title: title,
-            description: description,
+            title,
+            description,
             images: [image],
             creator: '@torhodhog',
-        }, icons: icons, metadataBase: new URL('https://fdb-production-7fbb.up.railway.app') }, (noIndex && {
-        robots: {
-            index: false,
-            follow: false,
         },
-    }));
+        icons,
+        metadataBase: new URL('https://fdb-production-7fbb.up.railway.app'),
+        ...(noIndex && {
+            robots: {
+                index: false,
+                follow: false,
+            },
+        }),
+    };
 }

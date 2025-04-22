@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
-var PrimaryActionEmail_1 = require("../components/emails/PrimaryActionEmail");
-var adminsAndUser = function (_a) {
-    var user = _a.req.user;
+const PrimaryActionEmail_1 = require("../components/emails/PrimaryActionEmail");
+const adminsAndUser = ({ req: { user } }) => {
     if (user.role === 'admin')
         return true;
     return {
@@ -16,43 +15,32 @@ exports.Users = {
     slug: 'users',
     auth: {
         verify: {
-            generateEmailHTML: function (_a) {
-                var token = _a.token;
+            generateEmailHTML: ({ token }) => {
                 return (0, PrimaryActionEmail_1.PrimaryActionEmailHtml)({
                     actionLabel: "verify your account",
                     buttonText: "Verify Account",
-                    href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/verify-email?token=").concat(token)
+                    href: `${process.env.NEXT_PUBLIC_SERVER_URL}/verify-email?token=${token}`
                 });
             },
         },
         forgotPassword: {
-            generateEmailHTML: function (_a) {
-                var _b = _a === void 0 ? {} : _a, req = _b.req, token = _b.token, user = _b.user;
+            generateEmailHTML: ({ req, token, user } = {}) => {
                 return (0, PrimaryActionEmail_1.PrimaryActionEmailHtml)({
                     actionLabel: "reset your password",
                     buttonText: "Reset Password",
-                    href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/reset-password?token=").concat(token)
+                    href: `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-password?token=${token}`
                 });
             },
         },
     },
     access: {
         read: adminsAndUser,
-        create: function () { return true; },
-        update: function (_a) {
-            var req = _a.req;
-            return req.user.role === 'admin';
-        },
-        delete: function (_a) {
-            var req = _a.req;
-            return req.user.role === 'admin';
-        },
+        create: () => true,
+        update: ({ req }) => req.user.role === 'admin',
+        delete: ({ req }) => req.user.role === 'admin',
     },
     admin: {
-        hidden: function (_a) {
-            var user = _a.user;
-            return user.role !== 'admin';
-        },
+        hidden: ({ user }) => user.role !== 'admin',
         defaultColumns: ['id'],
     },
     fields: [
@@ -60,7 +48,7 @@ exports.Users = {
             name: 'products',
             label: 'Products',
             admin: {
-                condition: function () { return false; },
+                condition: () => false,
             },
             type: 'relationship',
             relationTo: 'products',
@@ -70,7 +58,7 @@ exports.Users = {
             name: 'product_files',
             label: 'Product files',
             admin: {
-                condition: function () { return false; },
+                condition: () => false,
             },
             type: 'relationship',
             relationTo: 'product_files',
@@ -98,10 +86,7 @@ exports.Users = {
             type: 'text',
             required: false,
             admin: {
-                condition: function (_a) {
-                    var operation = _a.operation;
-                    return operation !== 'forgotPassword';
-                },
+                condition: ({ operation }) => operation !== 'forgotPassword',
             },
         },
         {
@@ -110,10 +95,7 @@ exports.Users = {
             type: 'text',
             required: false,
             admin: {
-                condition: function (_a) {
-                    var operation = _a.operation;
-                    return operation !== 'forgotPassword';
-                },
+                condition: ({ operation }) => operation !== 'forgotPassword',
             },
         },
         {
@@ -122,10 +104,7 @@ exports.Users = {
             type: 'text',
             required: false,
             admin: {
-                condition: function (_a) {
-                    var operation = _a.operation;
-                    return operation !== 'forgotPassword';
-                },
+                condition: ({ operation }) => operation !== 'forgotPassword',
             },
         },
         {
@@ -139,8 +118,7 @@ exports.Users = {
     ],
     hooks: {
         beforeChange: [
-            function (_a) {
-                var data = _a.data, operation = _a.operation;
+            ({ data, operation }) => {
                 if (operation === 'update' && data && data._isForgotPassword) {
                     // Skip validation for address, country, and postalCode during forgotPassword
                     data.address = undefined;

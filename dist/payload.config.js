@@ -3,24 +3,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var bundler_webpack_1 = require("@payloadcms/bundler-webpack");
-var db_mongodb_1 = require("@payloadcms/db-mongodb");
-var plugin_cloud_storage_1 = require("@payloadcms/plugin-cloud-storage");
-var s3_1 = require("@payloadcms/plugin-cloud-storage/s3");
-var richtext_slate_1 = require("@payloadcms/richtext-slate");
-var dotenv_1 = __importDefault(require("dotenv"));
-var path_1 = __importDefault(require("path"));
+const bundler_webpack_1 = require("@payloadcms/bundler-webpack");
+const db_mongodb_1 = require("@payloadcms/db-mongodb");
+const plugin_cloud_storage_1 = require("@payloadcms/plugin-cloud-storage");
+const s3_1 = require("@payloadcms/plugin-cloud-storage/s3");
+const richtext_slate_1 = require("@payloadcms/richtext-slate");
+const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config({
     path: path_1.default.resolve(__dirname, "../.env"),
 });
-var config_1 = require("payload/config");
-var Newsletter_1 = require("./collections/Newsletter");
-var Media_1 = require("./collections/Media");
-var Orders_1 = require("./collections/Orders");
-var ProductFile_1 = require("./collections/ProductFile");
-var Products_1 = require("./collections/Products/Products");
-var Users_1 = require("./collections/Users");
-var favorites_1 = __importDefault(require("./collections/favorites"));
+const config_1 = require("payload/config");
+const Newsletter_1 = require("./collections/Newsletter");
+const Media_1 = require("./collections/Media");
+const Orders_1 = require("./collections/Orders");
+const ProductFile_1 = require("./collections/ProductFile");
+const Products_1 = require("./collections/Products/Products");
+const Users_1 = require("./collections/Users");
+const favorites_1 = __importDefault(require("./collections/favorites"));
 exports.default = (0, config_1.buildConfig)({
     serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "",
     collections: [Users_1.Users, Products_1.Products, Media_1.Media, ProductFile_1.ProductFiles, Orders_1.Orders, Newsletter_1.Newsletter, favorites_1.default],

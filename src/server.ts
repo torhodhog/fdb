@@ -1,23 +1,21 @@
-// server.ts
 import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import bodyParser from "body-parser";
 import express from "express";
-import { Request } from 'express';
+import { Request } from "express";
 import { IncomingMessage } from "http";
 import nextBuild from "next/dist/build";
 import path from "path";
-import { PayloadRequest } from 'payload/types';
+import { PayloadRequest } from "payload/types";
 import { parse } from "url";
 
 import { getPayloadClient } from "./get-payload";
-// Sørg for at stien er korrekt
 import { nextApp, nextHandler } from "./next-utils";
 import { appRouter } from "./trpc";
-import { stripeWebhookHandler } from './webhooks';
+import { stripeWebhookHandler } from "./webhooks";
 
 interface MyRequest extends Request {
-  payload: PayloadRequest['payload'];
+  payload: PayloadRequest["payload"];
 }
 
 const app = express();
@@ -37,28 +35,25 @@ export type WebhookRequest = IncomingMessage & {
   rawBody: Buffer;
 };
 
+// 👇 Dette må ligge før noe annet middleware
+app.post(
+  "/api/webhooks/stripe",
+  bodyParser.raw({ type: "application/json" }), // 👈 Bruk direkte her
+  stripeWebhookHandler // 👈 Ikke pakk i egen arrow-funksjon hvis du ikke trenger det
+);
+
+
 const start = async () => {
-  const webhookMiddleware = bodyParser.json({
-    verify: (req: WebhookRequest, _, buffer) => {
-      req.rawBody = buffer;
-    },
-  });
+  // 📌 Legg vanlig JSON-parser ETTER webhooken
+  app.use(bodyParser.json());
 
-  app.post(
-    "/api/webhooks/stripe",
-    webhookMiddleware,
-    async (req: express.Request, res: express.Response) => {
-      console.log("Received Stripe webhook event");
-      await stripeWebhookHandler(req, res);
-    }
-  );
-
-  // Initialiserer Payload via getPayloadClient
   const payload = await getPayloadClient({
     initOptions: {
       express: app,
       onInit: async (cmsInstance: any) => {
-        cmsInstance.logger.info(`Payload Admin URL: ${cmsInstance.getAdminURL()}`);
+        cmsInstance.logger.info(
+          `Payload Admin URL: ${cmsInstance.getAdminURL()}`
+        );
       },
     },
   });
@@ -66,30 +61,30 @@ const start = async () => {
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {
       payload.logger.info("Next.js is building for production");
-
-      // Pass på at alle nødvendige argumenter sendes til nextBuild
-      await nextBuild(path.join(__dirname, "../"), false, false, true, false, false, undefined, null, 'default');
-
+      await nextBuild(
+        path.join(__dirname, "../"),
+        false,
+        false,
+        true,
+        false,
+        false,
+        undefined,
+        null,
+        "default"
+      );
       process.exit();
     });
-
     return;
   }
 
   const cartRouter = express.Router();
-
-  // Bruk Payload-instansen til å autentisere
   cartRouter.use(payload.authenticate);
 
   cartRouter.get("/", (req, res) => {
     const request = req as PayloadRequest;
-
     if (!request.user) return res.redirect("/sign-in?origin=cart");
-
     const parsedUrl = parse(req.url, true);
-    const { query } = parsedUrl;
-
-    return nextApp.render(req, res, "/cart", query);
+    return nextApp.render(req, res, "/cart", parsedUrl.query);
   });
 
   app.use("/cart", cartRouter);
@@ -102,12 +97,13 @@ const start = async () => {
     })
   );
 
-  // Log available TRPC routes manually
-  console.log("Available TRPC routes:", Object.keys(appRouter._def.procedures));
+  console.log(
+    "Available TRPC routes:",
+    Object.keys(appRouter._def.procedures)
+  );
 
-  app.get('/api/products', async (req: Request, res) => {
+  app.get("/api/products", async (req: Request, res) => {
     const myReq = req as MyRequest;
-
     const searchTerm = (myReq.query as any).searchTerm;
     const ligaSystem = (myReq.query as any).liga_system;
     const onSale = (myReq.query as any).onSale;
@@ -116,18 +112,18 @@ const start = async () => {
 
     let query: Record<string, any> = {};
     if (searchTerm) {
-      query.name = { $regex: new RegExp(searchTerm, 'i') };
+      query.name = { $regex: new RegExp(searchTerm, "i") };
     }
     if (ligaSystem) {
       query.liga_system = ligaSystem;
     }
     if (onSale) {
-      query.onSale = onSale === 'true';
+      query.onSale = onSale === "true";
     }
 
     try {
       const totalItemsResult = await myReq.payload.find({
-        collection: 'products',
+        collection: "products",
         where: query,
         limit: 0,
       });
@@ -135,7 +131,7 @@ const start = async () => {
       const totalItems = totalItemsResult.totalDocs || 0;
 
       const { docs: products } = await myReq.payload.find({
-        collection: 'products',
+        collection: "products",
         where: query,
         limit,
         page,
@@ -143,8 +139,8 @@ const start = async () => {
 
       res.json({ items: products, totalItems });
     } catch (error) {
-      console.error('Error fetching products:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.error("Error fetching products:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   });
 
@@ -152,14 +148,15 @@ const start = async () => {
 
   nextApp.prepare().then(() => {
     payload.logger.info("Next.js started");
-
-    app.listen(PORT, async () => {
-      payload.logger.info(`Next.js App URL: ${process.env.NEXT_PUBLIC_SERVER_URL}`);
+    app.listen(PORT, () => {
+      payload.logger.info(
+        `Next.js App URL: ${process.env.NEXT_PUBLIC_SERVER_URL}`
+      );
     });
   });
 };
 
 start().catch((error) => {
-  console.error('Error starting server:', error);
+  console.error("Error starting server:", error);
   process.exit(1);
 });

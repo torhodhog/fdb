@@ -28,7 +28,7 @@ export const authRouter = router({
         data: {
           email,
           password,
-          phone: phone || "", // use the phone from input, or an empty string if it's undefined
+          phone: phone || "", 
           address,
           country,
           postalCode,

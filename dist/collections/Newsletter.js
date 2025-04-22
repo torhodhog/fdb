@@ -7,20 +7,13 @@ exports.Newsletter = {
         useAsTitle: 'email',
     },
     access: {
-        read: function (_a) {
-            var user = _a.req.user;
+        read: ({ req: { user } }) => {
             // Gir kun tilgang til admin-brukere
             return user && user.role === 'admin';
         },
-        create: function () { return true; }, // Tillater alle å sende inn e-poster
-        update: function (_a) {
-            var user = _a.req.user;
-            return user && user.role === 'admin';
-        },
-        delete: function (_a) {
-            var user = _a.req.user;
-            return user && user.role === 'admin';
-        },
+        create: () => true, // Tillater alle å sende inn e-poster
+        update: ({ req: { user } }) => user && user.role === 'admin',
+        delete: ({ req: { user } }) => user && user.role === 'admin',
     },
     fields: [
         {
@@ -35,7 +28,7 @@ exports.Newsletter = {
             admin: {
                 readOnly: true,
             },
-            defaultValue: function () { return new Date(); },
+            defaultValue: () => new Date(),
         },
     ],
 };
