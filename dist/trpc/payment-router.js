@@ -101,11 +101,12 @@ exports.paymentRouter = (0, trpc_1.router)({
                             data: {
                                 products: filteredProducts.map(function (prod) { return prod.id.toString(); }),
                                 user: user.id,
+                                deliveryMethod: deliveryMethod,
                             },
                         })];
                 case 3:
                     order = _c.sent();
-                    console.log("Order created with ID:", order.id);
+                    console.log("Order created with ID:", order.id, "and delivery method:", deliveryMethod);
                     currency = countryToCurrencyMap[leveringsinfo.land.toUpperCase()] || "nok";
                     line_items = filteredProducts.map(function (product) { return ({
                         price_data: {

@@ -28,7 +28,7 @@ const VerifyEmailPage = ({ searchParams }: PageProps) => {
               />
             </div>
 
-            <h3 className="font-semibold text-2xl">Sjekk mailen</h3>
+            <h3 className="font-semibold text-2xl text-center">Sjekk mailen</h3>
 
             {toEmail ? (
               <p className="text-muted-foreground text-center">
@@ -40,7 +40,7 @@ const VerifyEmailPage = ({ searchParams }: PageProps) => {
                 Vi har sendt en verifikasjonsmail til din mail.
               </p>
             )}
-            <p>Finner du den ikke? Sjekk søppelpost, eller ta kontakt med oss</p>
+            <p className="text-center flex pt-8">Finner du den ikke? Sjekk søppelpost, eller ta kontakt med oss</p>
           </div>
         )}
       </div>

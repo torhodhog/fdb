@@ -181,8 +181,6 @@ exports.appRouter = (0, trpc_1.router)({
                         })];
                 case 3:
                     _f = _g.sent(), items = _f.docs, totalDocs = _f.totalDocs;
-                    console.log("Fetched items: ".concat(items.length), items); // Log the fetched items
-                    console.log("Total documents:", totalDocs); // Log the total documents
                     return [2 /*return*/, {
                             items: items,
                             totalDocs: totalDocs,

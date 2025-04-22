@@ -151,6 +151,8 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
                     router: trpc_1.appRouter,
                     createContext: createContext,
                 }));
+                // Log available TRPC routes manually
+                console.log("Available TRPC routes:", Object.keys(trpc_1.appRouter._def.procedures));
                 app.get('/api/products', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
                     var myReq, searchTerm, ligaSystem, onSale, page, limit, query, totalItemsResult, totalItems, products, error_1;
                     return __generator(this, function (_a) {

@@ -52,7 +52,7 @@ const ProductReel = (props: ProductReelProps) => {
 
   useEffect(() => {
     if (queryResults && queryResults.items) {
-      console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); // Log the fetched items
+      console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); 
       setLoadedProducts(queryResults.items);
       setIsLoading(false); // Set loading to false after products are loaded
     } else {

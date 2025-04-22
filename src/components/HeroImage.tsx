@@ -2,6 +2,7 @@
 
 import HeroDraktDisplay from "./HeroDraktDisplay";
 import Image from "next/image";
+import HeroVideo from "./HeroVideo";
 
 const HeroImage = () => {
   return (
@@ -21,9 +22,9 @@ const HeroImage = () => {
           priority
         />
       </div>
+      <HeroVideo />
 
-      {/* Drakter + slagord */}
-      <HeroDraktDisplay />
+  
     </div>
   );
 };

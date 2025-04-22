@@ -6,7 +6,6 @@ import { authRouter } from "./auth-router";
 import { paymentRouter } from "./payment-router";
 import { productRouter } from "./routers/product-router";
 import { publicProcedure, router } from "./trpc";
-import { equal } from "assert";
 
 // 1) Egen prosedyre for "fritt søk"
 export const searchProducts = publicProcedure
@@ -137,8 +136,7 @@ export const appRouter = router({
           page,
         });
 
-        console.log(`Fetched items: ${items.length}`, items); // Log the fetched items
-        console.log("Total documents:", totalDocs); // Log the total documents
+       
 
         return {
           items,

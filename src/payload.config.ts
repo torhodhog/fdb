@@ -19,10 +19,11 @@ import { Orders } from "./collections/Orders";
 import { ProductFiles } from "./collections/ProductFile";
 import { Products } from "./collections/Products/Products";
 import { Users } from "./collections/Users";
+import Favorites from "./collections/favorites";
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "",
-  collections: [Users, Products, Media, ProductFiles, Orders, Newsletter],
+  collections: [Users, Products, Media, ProductFiles, Orders, Newsletter, Favorites],
   routes: {
     admin: "/sell",
   },

@@ -80,10 +80,11 @@ export const paymentRouter = router({
         data: {
           products: filteredProducts.map((prod) => prod.id.toString()),
           user: user.id,
+          deliveryMethod, // Lagre leveringsmetoden i ordren
         },
       });
 
-      console.log("Order created with ID:", order.id);
+      console.log("Order created with ID:", order.id, "and delivery method:", deliveryMethod);
 
       // Bestem valuta basert på kundens land
       const currency = countryToCurrencyMap[leveringsinfo.land.toUpperCase()] || "nok"; // Standard til NOK hvis landet ikke er i kartet

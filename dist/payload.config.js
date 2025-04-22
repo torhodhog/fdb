@@ -20,9 +20,10 @@ var Orders_1 = require("./collections/Orders");
 var ProductFile_1 = require("./collections/ProductFile");
 var Products_1 = require("./collections/Products/Products");
 var Users_1 = require("./collections/Users");
+var favorites_1 = __importDefault(require("./collections/favorites"));
 exports.default = (0, config_1.buildConfig)({
     serverURL: process.env.NEXT_PUBLIC_SERVER_URL || "",
-    collections: [Users_1.Users, Products_1.Products, Media_1.Media, ProductFile_1.ProductFiles, Orders_1.Orders, Newsletter_1.Newsletter],
+    collections: [Users_1.Users, Products_1.Products, Media_1.Media, ProductFile_1.ProductFiles, Orders_1.Orders, Newsletter_1.Newsletter, favorites_1.default],
     routes: {
         admin: "/sell",
     },

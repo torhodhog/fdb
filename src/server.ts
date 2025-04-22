@@ -102,6 +102,9 @@ const start = async () => {
     })
   );
 
+  // Log available TRPC routes manually
+  console.log("Available TRPC routes:", Object.keys(appRouter._def.procedures));
+
   app.get('/api/products', async (req: Request, res) => {
     const myReq = req as MyRequest;
 

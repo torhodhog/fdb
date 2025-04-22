@@ -98,9 +98,9 @@ exports.Products = {
         useAsTitle: "name",
     },
     access: {
-        read: isAdmin,
-        update: isAdmin,
-        delete: isAdmin,
+        read: function () { return true; }, // Tillat alle brukere å lese produkter
+        update: isAdmin, // Begrens oppdatering til admin
+        delete: isAdmin, // Begrens sletting til admin
     },
     hooks: {
         afterChange: [markAsSold],

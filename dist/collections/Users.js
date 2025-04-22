@@ -25,6 +25,16 @@ exports.Users = {
                 });
             },
         },
+        forgotPassword: {
+            generateEmailHTML: function (_a) {
+                var _b = _a === void 0 ? {} : _a, req = _b.req, token = _b.token, user = _b.user;
+                return (0, PrimaryActionEmail_1.PrimaryActionEmailHtml)({
+                    actionLabel: "reset your password",
+                    buttonText: "Reset Password",
+                    href: "".concat(process.env.NEXT_PUBLIC_SERVER_URL, "/reset-password?token=").concat(token)
+                });
+            },
+        },
     },
     access: {
         read: adminsAndUser,
@@ -80,25 +90,65 @@ exports.Users = {
             name: 'phone',
             label: 'Phone',
             type: 'text',
-            required: true,
+            required: false,
         },
         {
             name: 'address',
             label: 'Address',
             type: 'text',
-            required: true,
+            required: false,
+            admin: {
+                condition: function (_a) {
+                    var operation = _a.operation;
+                    return operation !== 'forgotPassword';
+                },
+            },
         },
         {
             name: 'country',
             label: 'Country',
             type: 'text',
-            required: true,
+            required: false,
+            admin: {
+                condition: function (_a) {
+                    var operation = _a.operation;
+                    return operation !== 'forgotPassword';
+                },
+            },
         },
         {
             name: 'postalCode',
             label: 'Postal Code',
             type: 'text',
-            required: true,
+            required: false,
+            admin: {
+                condition: function (_a) {
+                    var operation = _a.operation;
+                    return operation !== 'forgotPassword';
+                },
+            },
+        },
+        {
+            name: 'favorites',
+            label: 'Favorites',
+            type: 'relationship',
+            relationTo: 'products',
+            hasMany: true,
+            required: false,
         },
     ],
+    hooks: {
+        beforeChange: [
+            function (_a) {
+                var data = _a.data, operation = _a.operation;
+                if (operation === 'update' && data && data._isForgotPassword) {
+                    // Skip validation for address, country, and postalCode during forgotPassword
+                    data.address = undefined;
+                    data.country = undefined;
+                    data.postalCode = undefined;
+                }
+                return data;
+            },
+        ],
+    },
 };

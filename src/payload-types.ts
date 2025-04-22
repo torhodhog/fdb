@@ -14,6 +14,7 @@ export interface Config {
     product_files: ProductFile;
     orders: Order;
     newsletter: Newsletter;
+    favorites: Favorite;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -28,7 +29,11 @@ export interface User {
   products?: (string | Product)[] | null;
   product_files?: (string | ProductFile)[] | null;
   role: 'admin' | 'user';
-  phone: string;
+  phone?: string | null;
+  address?: string | null;
+  country?: string | null;
+  postalCode?: string | null;
+  favorites?: (string | Product)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -155,6 +160,7 @@ export interface Order {
   _isPaid?: boolean | null;
   user: string | User;
   products: (string | Product)[];
+  deliveryMethod: 'pickup' | 'delivery';
   updatedAt: string;
   createdAt: string;
 }
@@ -167,6 +173,17 @@ export interface Newsletter {
   email: string;
   createdAt: string;
   updatedAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "favorites".
+ */
+export interface Favorite {
+  id: string;
+  user: string | User;
+  product: string | Product;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -204,6 +221,6 @@ export interface PayloadMigration {
 }
 
 
-// declare module 'payload' {
-//   export interface GeneratedTypes extends Config {}
-// }
+declare module 'payload' {
+  export interface GeneratedTypes extends Config {}
+}

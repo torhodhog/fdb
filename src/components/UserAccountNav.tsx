@@ -44,7 +44,7 @@ const UserAccountNav: React.FC<UserAccountNavProps> = ({ user }) => {
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem asChild>
-            <Link href="/sell">Mine ordre</Link>
+            <Link href="/sell">Mine side</Link>
           </DropdownMenuItem>
         )}
 

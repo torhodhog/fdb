@@ -49,5 +49,15 @@ export const Orders: CollectionConfig = {
       required: true,
       hasMany: true,
     },
+    {
+      name: 'deliveryMethod',
+      label: 'Delivery Method',
+      type: 'select',
+      options: [
+        { label: 'Pickup', value: 'pickup' },
+        { label: 'Delivery', value: 'delivery' },
+      ],
+      required: true,
+    },
   ],
 };

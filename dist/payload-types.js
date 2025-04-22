@@ -7,6 +7,3 @@
  * and re-run `payload generate:types` to regenerate this file.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-// declare module 'payload' {
-//   export interface GeneratedTypes extends Config {}
-// }

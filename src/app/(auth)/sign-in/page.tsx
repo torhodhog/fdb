@@ -121,7 +121,14 @@ const Page = () => {
                   )}
                 </div>
 
-                
+                <div className="text-center">
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    Glemt passord?
+                  </Link>
+                </div>
 
                 <Button disabled={isLoading}>
                   {isLoading && (

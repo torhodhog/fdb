@@ -16,12 +16,21 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: {
     verify: {
-      generateEmailHTML: ({ token }) => {
+      generateEmailHTML: ({ token }: { token: string }) => {
         return PrimaryActionEmailHtml({
           actionLabel: "verify your account",
           buttonText: "Verify Account",
           href: `${process.env.NEXT_PUBLIC_SERVER_URL}/verify-email?token=${token}`
-        })
+        });
+      },
+    },
+    forgotPassword: {
+      generateEmailHTML: ({ req, token, user } = {}) => {
+        return PrimaryActionEmailHtml({
+          actionLabel: "reset your password",
+          buttonText: "Reset Password",
+          href: `${process.env.NEXT_PUBLIC_SERVER_URL}/reset-password?token=${token}`
+        });
       },
     },
   },
@@ -70,25 +79,55 @@ export const Users: CollectionConfig = {
       name: 'phone',
       label: 'Phone',
       type: 'text',
-      required: true,
+      required: false,
     },
     {
       name: 'address',
       label: 'Address',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        condition: ({ operation }) => operation !== 'forgotPassword',
+      },
     },
     {
       name: 'country',
       label: 'Country',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        condition: ({ operation }) => operation !== 'forgotPassword',
+      },
     },
     {
       name: 'postalCode',
       label: 'Postal Code',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        condition: ({ operation }) => operation !== 'forgotPassword',
+      },
+    },
+    {
+      name: 'favorites',
+      label: 'Favorites',
+      type: 'relationship',
+      relationTo: 'products',
+      hasMany: true,
+      required: false,
     },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data, operation }) => {
+        if (operation === 'update' && data && data._isForgotPassword) {
+          // Skip validation for address, country, and postalCode during forgotPassword
+          data.address = undefined;
+          data.country = undefined;
+          data.postalCode = undefined;
+        }
+        return data;
+      },
+    ],
+  },
 }
