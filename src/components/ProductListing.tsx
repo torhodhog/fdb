@@ -85,54 +85,53 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
   }, []);
 
   const toggleFavorite = async (productId: string) => {
+    const isCurrentlyFavorite = favorites.has(productId);
+  
+    // Gi umiddelbar visuell tilbakemelding
+    setFavorites((prev) => {
+      const updated = new Set(prev);
+      isCurrentlyFavorite ? updated.delete(productId) : updated.add(productId);
+      return updated;
+    });
+  
     try {
-      if (favorites.has(productId)) {
-        const response = await fetch(`/api/favorites/${productId}`, {
-          method: "DELETE",
+      // Vent på userId hvis vi skal legge til som favoritt
+      if (!isCurrentlyFavorite && !userId) {
+        alert("Du må være logget inn for å legge til favoritter.");
+        throw new Error("Bruker ikke logget inn");
+      }
+  
+      const response = await fetch(
+        isCurrentlyFavorite ? `/api/favorites/${productId}` : `/api/favorites`,
+        {
+          method: isCurrentlyFavorite ? "DELETE" : "POST",
+          headers: isCurrentlyFavorite
+            ? undefined
+            : { "Content-Type": "application/json" },
           credentials: "include",
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API error:", errorData);
-          alert("Kunne ikke oppdatere favoritt. Prøv igjen senere.");
-          return;
+          body: isCurrentlyFavorite
+            ? undefined
+            : JSON.stringify({ user: userId, product: productId }),
         }
-
-        setFavorites((prev) => {
-          const updated = new Set(prev);
-          updated.delete(productId);
-          return updated;
-        });
-      } else {
-        if (!userId) {
-          alert("Du må være logget inn for å legge til favoritter.");
-          return;
-        }
-
-        const response = await fetch(`/api/favorites`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ user: userId, product: productId }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API error:", errorData);
-          alert("Kunne ikke oppdatere favoritt. Prøv igjen senere.");
-          return;
-        }
-
-        setFavorites((prev) => new Set(prev).add(productId));
+      );
+  
+      if (!response.ok) {
+        throw new Error("Feil i favoritt-endepunktet");
       }
     } catch (error) {
-      console.error("Failed to toggle favorite:", error);
+      console.error("Feil under oppdatering av favoritt:", error);
+  
+      // Rull tilbake
+      setFavorites((prev) => {
+        const rollback = new Set(prev);
+        isCurrentlyFavorite ? rollback.add(productId) : rollback.delete(productId);
+        return rollback;
+      });
+  
+      alert("Kunne ikke oppdatere favoritt. Prøv igjen senere.");
     }
   };
-
+  
   if (!product || !isVisible) return <ProductPlaceholder />;
 
   const validUrls = product.images

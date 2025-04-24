@@ -1,7 +1,6 @@
 import { getPayloadClient } from "@/get-payload";
 
 export async function GET() {
-  // Hopp over under statisk bygg for å unngå feilmelding
   if (process.env.NEXT_BUILD === "true") {
     console.warn("⚠️ Skipping /api/top-favoritter during static export.");
     return new Response(JSON.stringify([]), {
@@ -12,39 +11,42 @@ export async function GET() {
 
   const payload = await getPayloadClient();
 
-  // Fetch alle favorites
   const { docs: favorites } = await payload.find({
     collection: "favorites",
-    limit: 1000, // juster om nødvendig
+    limit: 1000,
   });
 
-  // Tell hvor mange ganger hvert produkt er favorisert
   const counts: Record<string, number> = {};
   for (const fav of favorites) {
     const id = typeof fav.product === "string" ? fav.product : fav.product.id;
-    counts[id] = (counts[id] || 0) + 1;
+    if (id) counts[id] = (counts[id] || 0) + 1;
   }
 
-  // Sortér og hent top 3
-  const topProductIds = Object.entries(counts)
+  const sorted = Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([id]) => id);
+    .slice(0, 10); // 👈 hent topp 10
 
-  // Hent produktdata for de 3
-  const { docs: products } = await payload.find({
+  const topProductIds = sorted.map(([id]) => id);
+
+  const { docs: products }: { docs: Array<{ id: string; [key: string]: any }> } = await payload.find({
     collection: "products",
     where: {
       id: { in: topProductIds },
     },
-    limit: 3,
+    limit: 10,
   });
 
-  // Legg på antall favoriseringer
-  const enriched = products.map((p: { id: string; [key: string]: any }) => ({
-    ...p,
-    favorites: counts[p.id] || 0,
-  }));
+  // Behold rekkefølge fra counts
+  const enriched = topProductIds
+    .map((id) => {
+      const product = products.find((p) => p.id === id);
+      if (!product) return null;
+      return {
+        ...product,
+        favorites: counts[id] || 0,
+      };
+    })
+    .filter(Boolean);
 
   return new Response(JSON.stringify(enriched), {
     status: 200,
