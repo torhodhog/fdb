@@ -6,7 +6,8 @@ import { Request } from "express";
 import { IncomingMessage } from "http";
 import nextBuild from "next/dist/build";
 import path from "path";
-import { PayloadRequest } from "payload/types";
+import type { PayloadRequest } from "payload/types";
+
 import { parse } from "url";
 
 import { getPayloadClient } from "./get-payload";

@@ -7,3 +7,15 @@ interface Weglot {
 interface Window {
   Weglot: Weglot;
 }
+
+// src/global.d.ts
+
+import type { Request } from "express";
+import type { Payload } from "payload";
+
+declare module "express-serve-static-core" {
+  interface Request {
+    payload: Payload;
+    user?: any;
+  }
+}
