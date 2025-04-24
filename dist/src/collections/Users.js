@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 const PrimaryActionEmail_1 = require("../components/emails/PrimaryActionEmail");
 const adminsAndUser = ({ req: { user } }) => {
+    if (!user)
+        return false;
     if (user.role === 'admin')
         return true;
     return {

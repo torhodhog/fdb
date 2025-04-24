@@ -24,7 +24,7 @@ const yourOwnAndPurchased: Access = async ({ req }) => {
     },
   });
 
-  const ownProductFileIds = products.map((prod) => prod.product_files).flat();
+  const ownProductFileIds = products.map((prod: { product_files: any[] }) => prod.product_files).flat();
 
   const { docs: orders } = await req.payload.find({
     collection: "orders",
@@ -37,7 +37,7 @@ const yourOwnAndPurchased: Access = async ({ req }) => {
   });
 
   const purchasedProductFileIds = orders
-    .map((order) => {
+    .map((order: any) => {
       return (order.products as any[]).map((product: any) => {
         if (typeof product === "string")
           return req.payload.logger.error(

@@ -1,15 +1,18 @@
 // src/global.d.ts
+
+// Weglot på window
 interface Weglot {
   initialize: (config: { api_key: string }) => void;
   switchTo: (lang: string) => void;
 }
 
-interface Window {
-  Weglot: Weglot;
+declare global {
+  interface Window {
+    Weglot: Weglot;
+  }
 }
 
-// src/global.d.ts
-
+// Utvid express Request-type
 import type { Request } from "express";
 import type { Payload } from "payload";
 
