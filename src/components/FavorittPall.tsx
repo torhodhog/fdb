@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface Produkt {
@@ -7,6 +8,7 @@ interface Produkt {
   name: string;
   favorites: number;
   previousRank?: number;
+  slug?: string; // Added slug property
 }
 
 export default function FavorittTabell() {
@@ -16,23 +18,25 @@ export default function FavorittTabell() {
     const hentFavoritter = async () => {
       const res = await fetch('/api/top-favoritter');
       const data = await res.json();
-      setProdukter(data);
+      setProdukter(data.slice(0, 10)); // Bare topp 10
     };
 
     hentFavoritter();
   }, []);
 
   return (
-    <div className="mt-16">
-      <h2 className="text-4xl font-bold text-center mb-6">
+    <div className="mt-20">
+      <h2 className="text-4xl font-extrabold text-center mb-8 tracking-tight text-green-900">
         Draktligaen
       </h2>
-      <div className="max-w-2xl mx-auto border border-yellow-400  overflow-hidden">
-        <div className="grid grid-cols-3 bg-green-900 text-white font-semibold text-sm text-left border-b border-gray-300">
-          <div className="px-4 py-3 border-r border-yellow-400">#</div>
-          <div className="px-4 py-3 border-r border-yellow-400">Drakt</div>
-          <div className="px-4 py-3">❤️</div>
+
+      <div className="max-w-3xl mx-auto border border-gray-300 rounded-lg shadow-md overflow-hidden">
+        <div className="grid grid-cols-12 bg-green-900 text-white text-xs sm:text-sm font-semibold text-left">
+          <div className="col-span-1 px-2 py-3 text-center">#</div>
+          <div className="col-span-9 px-4 py-3">Drakt</div>
+          <div className="col-span-2 px-2 py-3 text-center">❤️</div>
         </div>
+
         {produkter.map((produkt, index) => {
           const forrige = produkt.previousRank ?? index;
           const differanse = forrige - index;
@@ -40,18 +44,29 @@ export default function FavorittTabell() {
           return (
             <div
               key={produkt.id}
-              className="grid grid-cols-3 items-center text-sm border-b border-yellow-400"
+              className={`grid grid-cols-12 items-center text-xs sm:text-sm border-t border-gray-200 hover:bg-gray-50 transition`}
             >
-              <div className="px-4 py-2 border-r border-yellow-400 font-semibold flex items-center gap-1">
-                {index + 1}.
+              <div className="col-span-1 px-2 py-3 text-center font-bold text-green-800">
+                {index + 1}
                 {index === 0 && (
-                  <span className="text-yellow-500 text-lg animate-bounce ml-20">👑</span>
+                  <span className="ml-1">👑</span>
                 )}
               </div>
-              <div className="px-4 py-2 border-r border-yellow-400">{produkt.name}</div>
-              <div className="px-4 py-2 flex items-center gap-1">
-                {produkt.favorites} stemmer                {differanse > 0 && <span className="text-green-500">▲</span>}
-                {differanse < 0 && <span className="text-blue-500">▼</span>}
+
+              <div className="col-span-9 px-4 py-3 text-gray-800 truncate">
+              <Link href={`/product/${produkt.slug ?? produkt.id}`} className="hover:underline text-blue-700">
+    {produkt.name}
+  </Link>
+              </div>
+
+              <div className="col-span-2 px-2 py-3 text-center flex items-center justify-center gap-1 font-semibold text-gray-700">
+                {produkt.favorites}
+                {differanse > 0 && (
+                  <span className="text-green-500 text-lg">▲</span>
+                )}
+                {differanse < 0 && (
+                  <span className="text-red-500 text-lg">▼</span>
+                )}
               </div>
             </div>
           );

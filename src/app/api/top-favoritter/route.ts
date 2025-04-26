@@ -1,48 +1,43 @@
 import { getPayloadClient } from "@/get-payload";
 
-export async function GET() {
-  // Hopp over under statisk bygg for å unngå feilmelding
-  if (process.env.NEXT_BUILD === "true") {
-    console.warn("⚠️ Skipping /api/top-favoritter during static export.");
-    return new Response(JSON.stringify([]), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+export const revalidate = 600; // Cache i 600 sekunder (10 minutter)
 
+export async function GET() {
   const payload = await getPayloadClient();
 
-  // Fetch alle favorites
   const { docs: favorites } = await payload.find({
     collection: "favorites",
-    limit: 1000, // juster om nødvendig
+    limit: 1000,
   });
 
-  // Tell hvor mange ganger hvert produkt er favorisert
   const counts: Record<string, number> = {};
   for (const fav of favorites) {
     const id = typeof fav.product === "string" ? fav.product : fav.product.id;
     counts[id] = (counts[id] || 0) + 1;
   }
 
-  // Sortér og hent top 3
   const topProductIds = Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
+    .slice(0, 10)
     .map(([id]) => id);
 
-  // Hent produktdata for de 3
   const { docs: products } = await payload.find({
     collection: "products",
     where: {
       id: { in: topProductIds },
     },
-    limit: 3,
+    limit: 10,
+    depth: 0, // Hent KUN toppnivå (ingen relasjoner osv.)
   });
 
-  // Legg på antall favoriseringer
-  const enriched = products.map((p: { id: string; [key: string]: any }) => ({
-    ...p,
+  const productsSorted = topProductIds.map((id) =>
+    products.find((p: { id: string }) => p.id === id)
+  ).filter(Boolean);
+
+  const enriched = productsSorted.map((p: { id: string; name: string; slug?: string }) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
     favorites: counts[p.id] || 0,
   }));
 

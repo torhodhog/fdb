@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import StripeComponent from "@/components/StripeComponent"; // Importer stripe komponenten
 import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher-komponenten
+import Assistant from "@/components/Assistant";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
               <Navbar />
               <WeglotSwitcher /> {/* Legg til WeglotSwitcher-komponenten her */}
               <StripeComponent /> {/* Legg til stripe komponenten her */}
+              <Assistant /> 
               <div className="flex-grow flex-1">{children}</div>
               <Footer />
             </Providers>

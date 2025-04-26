@@ -115,10 +115,10 @@ export default function Home() {
       </div>
 
       <section>
-        {/* <MaxWidthWrapper className="py-20">
+        <MaxWidthWrapper className="py-20">
    
         <FavorittPall />
-          </MaxWidthWrapper> */}
+          </MaxWidthWrapper>
       </section>
 
       <section>

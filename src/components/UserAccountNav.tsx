@@ -24,9 +24,18 @@ const UserAccountNav: React.FC<UserAccountNavProps> = ({ user }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="overflow-visible">
-        <Button variant="ghost" size="sm" className="relative">
-          Min konto
-        </Button>
+      <div className="relative group">
+  <Button variant="ghost" size="sm" className="relative font-bold">
+    Min side
+  </Button>
+    <div
+    className="absolute left-1/2 -translate-x-1/2 mt-10 w-max px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition-opacity"
+    dangerouslySetInnerHTML={{
+      __html: "Her kan du:<br/>- Se dine ordre<br/>- Finne dine favoritter",
+    }}
+  ></div>
+</div>
+
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="bg-white w-60" align="end">
