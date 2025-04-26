@@ -1,8 +1,11 @@
-import { getPayloadClient } from "@/get-payload";
+export const dynamic = "force-dynamic"; // 🛡️ Sikrer at denne API-ruten IKKE bygges statisk
 
-export const revalidate = 600; // Cache i 600 sekunder (10 minutter)
+export const revalidate = 600; // Cache 10 min
 
 export async function GET() {
+  // Lazy-import først for sikkerhets skyld
+  const { getPayloadClient } = await import("@/get-payload");
+
   const payload = await getPayloadClient();
 
   const { docs: favorites } = await payload.find({
@@ -27,7 +30,7 @@ export async function GET() {
       id: { in: topProductIds },
     },
     limit: 10,
-    depth: 0, // Hent KUN toppnivå (ingen relasjoner osv.)
+    depth: 0,
   });
 
   const productsSorted = topProductIds.map((id) =>
