@@ -106,7 +106,7 @@ const Cart = () => {
               className="relative mb-40 h-60 w-60  text-muted-foreground"
             >
                          <Image
-                src="/empty-cart.jpeg"
+                src="/pungtert.png"
                 className="rounded-md height-full"
                 fill
                 alt="empty shopping cart"

@@ -73,7 +73,7 @@ const Page = () => {
             <Link
               className={buttonVariants({
                 variant: "link",
-                className: "gap-1.5",
+                className: "gap-1.5 text-yellow-400",
               })}
               href="/sign-in"
             >
@@ -92,7 +92,7 @@ const Page = () => {
                     className={cn({
                       "focus-visible:ring-red-500": errors.email,
                     })}
-                    placeholder="you@example.com"
+                    placeholder="din@epost.com"
                   />
                   {errors?.email && (
                     <p className="text-sm text-red-500">
@@ -149,7 +149,7 @@ const Page = () => {
                     placeholder="Land"
                   />
                   {errors?.country && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-yellow-500">
                       {errors.country.message}
                     </p>
                   )}
@@ -166,14 +166,14 @@ const Page = () => {
                     placeholder="Passord"
                   />
                   {errors?.password && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-yellow-500">
                       {errors.password.message}
                     </p>
                   )}
                 </div>
 
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Laster..." : "Sign up"}
+                <Button className="bg-green-800" type="submit" disabled={isLoading}>
+                  {isLoading ? "Laster..." : "Lag konto"}
                 </Button>
               </div>
             </form>

@@ -76,7 +76,7 @@ const Page = () => {
             <Link
               className={buttonVariants({
                 variant: "link",
-                className: "gap-1.5",
+                className: "gap-1.5 ",
               })}
               href="/sign-up"
             >
@@ -124,13 +124,13 @@ const Page = () => {
                 <div className="text-center">
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-red-600 hover:underline"
+                    className="text-sm text-yellow-800 hover:underline"
                   >
                     Glemt passord?
                   </Link>
                 </div>
 
-                <Button disabled={isLoading}>
+                <Button disabled={isLoading} className="bg-green-800">
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}

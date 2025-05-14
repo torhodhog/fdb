@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { getPayloadClient } from "../get-payload";
 import { AuthCredentialsValidator, SignInCredentialsValidator } from "../lib/validators/account-credentials-validators";
 import { publicProcedure, router } from "./trpc";
@@ -11,7 +12,7 @@ export const authRouter = router({
       const { email, password, phone, address, country, postalCode } = input;
       const payload = await getPayloadClient();
 
-      // check if user already exists
+      // Sjkk om e-posten allerede eksisterer
       const { docs: users } = await payload.find({
         collection: "users",
         where: {
@@ -23,6 +24,8 @@ export const authRouter = router({
 
       if (users.length !== 0) throw new TRPCError({ code: "CONFLICT" });
 
+
+      // Opprett ny bruker i Payload med informasjonen fra input for å holde styr på sending av pakker
       await payload.create({
         collection: "users",
         data: {
@@ -38,6 +41,8 @@ export const authRouter = router({
 
       return { success: true, sentToEmail: email };
     }),
+
+    // Send e-post for å bekrefte kontoen 
 
   verifyEmail: publicProcedure
     .input(z.object({ token: z.string() }))

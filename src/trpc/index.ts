@@ -18,7 +18,7 @@ export const searchProducts = publicProcedure
       return { docs: [], hasMore: false };
     }
 
-    // Øk limit til f.eks. 11, slik at vi kan se om det finnes "flere enn 10"
+    // Øker limit til  11, sånn at vi kan se om det finnes "flere enn 10"
     const LIMIT = 11;
 
     try {
@@ -64,12 +64,12 @@ export const appRouter = router({
         query: QueryValidator.extend({
           sortBy: z.string().optional(),
           sortOrder: z.enum(["asc", "desc"]).optional(),
-          names: z.array(z.string()).optional(), // Add names to query schema
+          names: z.array(z.string()).optional(), 
         }),
       })
     )
     .query(async ({ input }) => {
-      console.log("Input received:", input); // Log the input
+      console.log("Input received:", input); // Logger input for debugging
 
       const { cursor, query } = input;
       const {
@@ -78,7 +78,7 @@ export const appRouter = router({
         limit,
         searchTerm,
         liga_system,
-        names, // Add names from input
+        names, // For å håndtere array av navn
         ...queryOpts
       } = query as {
         sortBy?: string;

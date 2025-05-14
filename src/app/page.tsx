@@ -68,14 +68,14 @@ export default function Home() {
           <div className="z-0">
             <div className="bg-transparent rounded-br-[10px] rounded-bl-[10px]">
               <div className="flex justify-center space-x-8">
-                <a className="text-black text-lg font-semibold hover:underline" href="/">
+                {/* <a className="text-black text-lg font-semibold hover:underline" href="/">
                   Hjem
-                </a>
+                </a> */}
                 <a className="text-black text-lg font-semibold hover:underline" href="/products">
                   Produkter
                 </a>
                 <a className="text-black text-lg font-semibold hover:underline" href="/Sale">
-                  SALG
+                  Salg <span className="text-red-700">%</span>
                 </a>
               </div>
             </div>

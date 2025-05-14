@@ -104,7 +104,7 @@ const Page = () => {
                     className="relative mb-4 h-40 w-40 text-muted-foreground"
                   >
                     <Image
-                      src="/empty-cart.jpeg"
+                      src="/pungtert.png"
                       fill
                       loading="eager"
                       alt="empty shopping cart"

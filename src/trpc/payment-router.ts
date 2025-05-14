@@ -12,7 +12,7 @@ const countryToCurrencyMap: Record<string, string> = {
   DK: "dkk",
   US: "usd",
   EU: "eur",
-  // Legg til flere land og deres valutaer her
+  // For å godkjenne flere land og deres valutaer.
 };
 
 interface Product {
@@ -140,34 +140,27 @@ export const paymentRouter = router({
         console.log("Stripe customer created with ID:", customer.id);
 
         const stripeSession = await stripe.checkout.sessions.create({
-          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-          payment_method_types: ["card", "klarna"],
-          mode: "payment",
-          shipping_address_collection: {
-            allowed_countries: [
-              "US", // USA
-              "CA", // Canada
-              "GB", // Storbritannia
-              "DE", // Tyskland
-              "FR", // Frankrike
-              "IT", // Italia
-              "ES", // Spania
-              "NL", // Nederland
-              "FI", // Finland
-              "IS", // Island
-              "CH", // Sveits
-              "NO", // Norge
-              "SE", // Sverige
-              "DK", // Danmark
-            ],
-          },
-          line_items,
-          metadata: { userId: user.id, orderId: order.id },
-          customer: customer.id,
-          allow_promotion_codes: true,
-        });
-        
+  success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+  cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+  payment_method_types: ["card", "klarna"],
+  mode: "payment",
+  shipping_address_collection: {
+    allowed_countries: [
+      "US", "CA", "GB", "DE", "FR", "IT", "ES", "NL", "FI", "IS", "CH", "NO", "SE", "DK",
+    ],
+  },
+  line_items,
+  customer: customer.id,
+  payment_intent_data: {
+    metadata: {
+      userId: user.id,
+      orderId: order.id,
+      deliveryMethod: order.deliveryMethod,
+    },
+  },
+  allow_promotion_codes: true,
+});
+
 
         console.log("Stripe Session created:", stripeSession.id);
         return { url: stripeSession.url };

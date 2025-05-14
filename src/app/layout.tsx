@@ -37,7 +37,7 @@ export default function RootLayout({
           <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
-              <WeglotSwitcher /> {/* Legg til WeglotSwitcher-komponenten her */}
+              {/* <WeglotSwitcher />  */}
               <StripeComponent /> {/* Legg til stripe komponenten her */}
               <Assistant /> 
               <div className="flex-grow flex-1">{children}</div>
