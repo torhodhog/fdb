@@ -6,6 +6,7 @@ import { Request } from "express";
 import { IncomingMessage } from "http";
 import nextBuild from "next/dist/build";
 import path from "path";
+
 import type { PayloadRequest } from "payload/types";
 
 import { parse } from "url";
@@ -39,13 +40,13 @@ export type WebhookRequest = IncomingMessage & {
 // 👇 Dette må ligge før noe annet middleware
 app.post(
   "/api/webhooks/stripe",
-  bodyParser.raw({ type: "application/json" }), // 👈 Bruk direkte her
-  stripeWebhookHandler // 👈 Ikke pakk i egen arrow-funksjon hvis du ikke trenger det
+  bodyParser.raw({ type: "application/json" }), 
+  stripeWebhookHandler 
 );
 
 
 const start = async () => {
-  // 📌 Legg vanlig JSON-parser ETTER webhooken
+  
   app.use(bodyParser.json());
 
   const payload = await getPayloadClient({

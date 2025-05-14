@@ -35,7 +35,7 @@ interface Args {
 }
 
 export const getPayloadClient = async ({ initOptions }: Args = {}): Promise<any> => {
-  // 🚫 Unngå init under statisk Next.js build
+ 
   if (process.env.NEXT_BUILD === "true") {
     console.warn("Skipping Payload init during static build");
     return {} as typeof payload;

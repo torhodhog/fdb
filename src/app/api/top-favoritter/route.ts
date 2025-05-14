@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic"; // 🛡️ Sikrer at denne API-ruten IKKE bygges statisk
+export const dynamic = "force-dynamic"; 
 
 export const revalidate = 600; // Cache 10 min
 
