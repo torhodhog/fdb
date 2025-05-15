@@ -37,7 +37,7 @@ export default buildConfig({
     },
   },
   rateLimit: {
-    max: 2000,
+    max: 10000,
   },
   editor: slateEditor({}) as unknown as RichTextAdapter<any, any, any>,
   db: mongooseAdapter({

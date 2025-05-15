@@ -17,6 +17,12 @@ export const getServerSideUser = async (
     }
   )
 
+  if (!meRes.ok) {
+    // Prøv å hente feilmelding fra responsen, hvis mulig
+    let errorText = await meRes.text();
+    throw new Error(`Failed to fetch user: ${meRes.status} - ${errorText}`);
+  }
+
   const { user } = (await meRes.json()) as {
     user: User | null
   }

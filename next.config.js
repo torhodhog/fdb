@@ -1,42 +1,43 @@
-const path = require('path');
+const path = require("path");
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone",
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'fotballdb.no',
+        protocol: "https",
+        hostname: "fotballdb.no",
       },
       {
-        protocol: 'https',
-        hostname: 'www.fotballdb.no',
+        protocol: "https",
+        hostname: "www.fotballdb.no",
       },
       {
-        protocol: 'https',
-        hostname: 'forsoker-ny-botte.s3.eu-north-1.amazonaws.com',
+        protocol: "https",
+        hostname: "forsoker-ny-botte.s3.eu-north-1.amazonaws.com",
       },
       ...(!isProduction
         ? [
             {
-              protocol: 'http',
-              hostname: 'localhost',
+              protocol: "http",
+              hostname: "localhost",
             },
           ]
         : []),
     ],
+    domains: ["localhost"], // Legg til denne linjen for å støtte next/image med localhost
   },
   env: {
     NEXT_PUBLIC_SERVER_URL:
-      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
+      process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000",
   },
   async rewrites() {
     return [
       {
-        source: '/sell',
+        source: "/sell",
         destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/admin`,
       },
     ];
@@ -45,7 +46,7 @@ const nextConfig = {
     if (!isServer) {
       config.externals = config.externals || [];
       config.externals.push({
-        sharp: 'commonjs sharp',
+        sharp: "commonjs sharp",
       });
     }
 

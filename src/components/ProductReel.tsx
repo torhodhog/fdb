@@ -17,8 +17,8 @@ interface ProductReelProps {
   hideSoldItems?: boolean;
   showSaleItems?: boolean;
   itemsPerPage?: number;
-  loadMore?: boolean; // Add this prop to control "Load More" button visibility
-  isHomePage?: boolean; // Flag to differentiate between home page and product page
+  loadMore?: boolean; 
+  isHomePage?: boolean; 
   finalSale?: boolean;
   productCode?: string;
   nasjon?: string;
@@ -33,8 +33,8 @@ const ProductReel = (props: ProductReelProps) => {
     sortBy = "createdAt",
     sortOrder = "desc",
     hideSoldItems = false,
-    loadMore = false, // Default to false
-    showSaleItems = false, // Default to false
+    loadMore = false, 
+    showSaleItems = false, 
   } = props;
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);

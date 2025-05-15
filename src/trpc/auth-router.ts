@@ -1,3 +1,12 @@
+// Denne filen håndterer alt som har med brukerautentisering å gjøre.
+// Den bruker trpc for å lage tre funksjoner:
+// 1. createPayloadUser – oppretter ny bruker i Payload CMS hvis e-posten ikke finnes fra før.
+// 2. verifyEmail – sjekker om verifikasjonstoken fra e-post er gyldig.
+// 3. signIn – logger inn brukeren ved å sende e-post og passord til Payload.
+// Alle funksjonene snakker med databasen via getPayloadClient().
+
+
+
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

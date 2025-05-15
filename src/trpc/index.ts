@@ -1,4 +1,13 @@
-import { z } from "zod";
+// Definerer hovedrouteren for tRPC (appRouter) og eksporterer prosedyrene for:
+// - Autentisering (authRouter)
+// - Betaling (paymentRouter)
+// - Produktspørringer (productRouter)
+// Inkluderer også egen "searchProducts" for søk, og "getInfiniteProducts" for uendelig scroll.
+// Alt bruker Payload som database via getPayloadClient().
+
+
+import { z } from "zod"; // Zod validerer input og sørger for at vi bare henter produkter med riktig format.
+
 
 import { getPayloadClient } from "../get-payload";
 import { QueryValidator } from "../lib/validators/query-validator";
@@ -69,8 +78,7 @@ export const appRouter = router({
       })
     )
     .query(async ({ input }) => {
-      console.log("Input received:", input); // Logger input for debugging
-
+      console.log("Input received:", input); 
       const { cursor, query } = input;
       const {
         sortBy = "createdAt",
@@ -78,7 +86,7 @@ export const appRouter = router({
         limit,
         searchTerm,
         liga_system,
-        names, // For å håndtere array av navn
+        names, 
         ...queryOpts
       } = query as {
         sortBy?: string;

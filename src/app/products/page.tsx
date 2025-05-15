@@ -163,7 +163,9 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
                       <DropdownMenuItem onClick={() => setTeam("Juventus")}>
                         Juventus
                       </DropdownMenuItem>
-                      {/* Add more teams as needed */}
+                      <DropdownMenuItem onClick={() => setTeam("Bayern Munchen")}>
+                        Bayern Munchen
+                      </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
