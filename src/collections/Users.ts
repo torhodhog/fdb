@@ -122,7 +122,7 @@ export const Users: CollectionConfig = {
     beforeChange: [
       ({ data, operation }) => {
         if (operation === 'update' && data && data._isForgotPassword) {
-          // Skip validation for address, country, and postalCode during forgotPassword
+          
           data.address = undefined;
           data.country = undefined;
           data.postalCode = undefined;

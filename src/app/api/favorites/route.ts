@@ -62,9 +62,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    console.log("Product exists:", product);
+    console.log("Produktet:", product);
 
-    console.log("Creating favorite with:", { user: user.id, product: productId });
+    console.log("Lager favoritt med id:", { user: user.id, product: productId });
 
     console.log("user.id:", user.id, "productId:", productId);
 
@@ -72,8 +72,8 @@ export async function POST(req: Request) {
       const newFavorite = await payload.create({
         collection: "favorites",
         data: {
-          user: user.id, // Use authenticated user's ID
-          product: productId, // Ensure this matches the product ID in the products collection
+          user: user.id, 
+          product: productId, 
         },
       });
       console.log("Successfully created favorite:", newFavorite);

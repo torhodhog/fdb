@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic"; 
 
-export const revalidate = 600; // Cache 10 min
+export const revalidate = 600; 
 
 export async function GET() {
   // Lazy-import først for sikkerhets skyld
