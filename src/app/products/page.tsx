@@ -5,7 +5,7 @@ import { PRODUCT_CATEGORIES } from "@/config";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import LottieAnimation from "@/components/LottieAnimation"; // Import LottieAnimation
+import LottieAnimation from "@/components/LottieAnimation"; 
 
 import {
   DropdownMenu,
@@ -36,7 +36,7 @@ const parse = (param: Param) => {
 const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const sort = parse(searchParams.sort);
   const category = parse(searchParams.category);
-  const nation = parse(searchParams.nation); // Parse the nation parameter
+  const nation = parse(searchParams.nation); // Nytt parameter for å hente nasjon til dropdown søk
 
   const label = PRODUCT_CATEGORIES.find(
     ({ value }) => value === category
@@ -45,16 +45,15 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [ligaSystem, setLigaSystem] = useState("");
   const [size, setSize] = useState("");
-  const [team, setTeam] = useState(""); // New state for team selection
-  const [hasPrint, setHasPrint] = useState<boolean | null>(null); // New state for hasPrint selection
-  const [selectedNation, setSelectedNation] = useState(""); // New state for nation selection
+  const [team, setTeam] = useState(""); // For å hente lag fra dropdown
+  const [hasPrint, setHasPrint] = useState<boolean | null>(null); // Har drakten trykk?
+  const [selectedNation, setSelectedNation] = useState(""); 
   const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = () => {
-    setIsLoading(true); // Set loading state to true when searching
-    // Simulate search delay
+    setIsLoading(true); // Setter loading til true for å vise animasjonen samtidig som vi henter data
     setTimeout(() => {
-      setIsLoading(false); // Set loading state to false after search
+      setIsLoading(false); // Setter den til false etter 500ms eller når dataene er lastet inn
     }, 500);
   };
 
@@ -63,18 +62,17 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
     setLigaSystem("");
     setSize("");
     setTeam("");
-    setHasPrint(null); // Reset hasPrint filter
-    setSelectedNation(""); // Reset nation filter
-    setIsLoading(true); // Set loading state to true
-    // Simulate reset delay
+    setHasPrint(null); // sett til null for å tilbakestille trykkfilteret
+    setSelectedNation(""); 
+    setIsLoading(true); // Setter loading til true for å vise animasjonen
     setTimeout(() => {
-      setIsLoading(false); // Set loading state to false after reset
+      setIsLoading(false); 
     }, 500);
   };
 
-  // Simulate loading by setting a delay
+  // Simulultere loading hvis det er første gang siden vi har en useEffect som setter den til false
   useEffect(() => {
-    setIsLoading(false); // Set loading state to false after initial load
+    setIsLoading(false); 
   }, []);
 
   return (

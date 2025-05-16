@@ -1,12 +1,14 @@
 export const dynamic = "force-dynamic"; 
 
-export const revalidate = 600; 
+export const revalidate = 600; // Hente inn oppdatert versjon hvert 10 minutt. 
 
 export async function GET() {
   // Lazy-import først for sikkerhets skyld
   const { getPayloadClient } = await import("@/get-payload");
 
   const payload = await getPayloadClient();
+
+  // Hente inn alle favoritter som er lagret i databasen, uavhengig av bruker
 
   const { docs: favorites } = await payload.find({
     collection: "favorites",

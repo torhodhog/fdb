@@ -52,10 +52,10 @@ const SalePage = () => {
             searchTerm: searchTerm,
             liga_system: ligaSystem,
             size: size,
-            onSale: true, // Add onSale prop to filter sale items
+            onSale: true, // Legg til onSale parameter
           }}
-          loadMore={true} // Enable load more button
-          showSaleItems={true} // Ensure showSaleItems is set to true
+          loadMore={true} // Vis om vi skal laste mer hvis det er flere produkter
+          showSaleItems={true} // Satt til true for å vise salgselementer
         />
       </MaxWidthWrapper>
     </>

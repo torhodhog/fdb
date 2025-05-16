@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import emailjs from '@emailjs/browser';
-import { toast } from 'sonner';  // Importerer toast fra sonner, antar at biblioteket eksporterer en funksjon kalt toast
+import { toast } from 'sonner';  // Importerer toast fra sonner, for å vise varsler på at meldingen er sendt
 
 export default function Contact() {
   const form = useRef<HTMLFormElement | null>(null);
