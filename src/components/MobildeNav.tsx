@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Home, ShoppingCart, Percent, Box, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { User as UserType } from "@/payload-types";
+import InstallAppButton from "./InstallAppButton";
 
 const MobileNav = ({ user }: { user: UserType | null }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,20 +15,32 @@ const MobileNav = ({ user }: { user: UserType | null }) => {
   };
 
   return (
-    <div className="lg:hidden"> {/* Ensure this div is only shown on mobile devices */}
-      <div className="fixed top-0 w-full bg-white bg-opacity-95 z-50">
-        <div className="flex justify-between items-center p-5 text-black">
-          <Link href="/">
+    <div className="lg:hidden">
+      {" "}
+      {/* Ensure this div is only shown on mobile devices */}
+      <div className="fixed top-0 w-full bg-white bg-opacity-95 z-[60] shadow-sm">
+        <div className="flex justify-between items-center px-4 py-4 text-black min-h-[60px]">
+          <Link href="/" className="flex items-center">
             <Home className="h-6 w-6" />
           </Link>
-          <button onClick={toggleMenu} className="text-black">
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center space-x-2">
+            <InstallAppButton />
+            <button
+              onClick={toggleMenu}
+              className="text-black p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Åpne meny"
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
-
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-40 flex flex-col justify-center items-center space-y-6 text-white">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-[55] flex flex-col justify-center items-center space-y-6 text-white">
           <Link href="/" onClick={toggleMenu} className="text-xl">
             Hjem
           </Link>
@@ -59,8 +72,5 @@ const MobileNav = ({ user }: { user: UserType | null }) => {
     </div>
   );
 };
-
-
-
 
 export default MobileNav;

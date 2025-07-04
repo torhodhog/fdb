@@ -71,34 +71,34 @@ const ProductListing = ({
             {user && (
               <button
                 onClick={handleFavoriteClick}
-                className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full shadow-md"
+                className="absolute top-1 sm:top-2 right-1 sm:right-2 z-10 bg-white p-1 sm:p-1.5 rounded-full shadow-md touch-manipulation"
               >
                 <Heart
-                  className={cn("h-5 w-5", {
+                  className={cn("h-4 w-4 sm:h-5 sm:w-5", {
                     "text-red-500 fill-red-500": isFavorited,
                     "text-gray-400": !isFavorited,
                   })}
                 />
               </button>
             )}
-            <div className="absolute bottom-2 right-2 z-10 bg-white px-2 py-1 rounded-full shadow-md flex items-center">
-              <Heart className="h-4 w-4 text-gray-500 mr-1" />
-              <span className="text-sm font-semibold text-gray-700">
+            <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 z-10 bg-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-md flex items-center">
+              <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 mr-0.5 sm:mr-1" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">
                 {favoriteCount}
               </span>
             </div>
           </div>
 
           <Link href={`/product/${product.id}`}>
-            <h3 className="mt-4 font-medium text-sm text-gray-700 dark:text-white">
+            <h3 className="mt-2 sm:mt-4 font-medium text-xs sm:text-sm text-gray-700 dark:text-white line-clamp-2">
               {product.name}
             </h3>
           </Link>
-          <div className="flex items-center justify-between">
-            <p className="mt-1 text-sm text-gray-500 dark:text-white">
+          <div className="flex items-center justify-between mt-1 sm:mt-2">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-white">
               {product.size}
             </p>
-            <p className="mt-1 font-medium text-sm text-gray-900 dark:text-white">
+            <p className="font-medium text-xs sm:text-sm text-gray-900 dark:text-white">
               {formatPrice(product.price)}
             </p>
           </div>

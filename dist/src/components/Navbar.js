@@ -18,6 +18,7 @@ const NavItems_1 = __importDefault(require("./NavItems"));
 const ClientSearchbarWrapper_1 = __importDefault(require("./ClientSearchbarWrapper"));
 const button_1 = require("./ui/button");
 const UserAccountNav_1 = __importDefault(require("./UserAccountNav"));
+const InstallAppButton_1 = __importDefault(require("./InstallAppButton"));
 const Navbar = async () => {
     const nextCookies = (0, headers_1.cookies)();
     const { user } = await (0, payload_utils_1.getServerSideUser)(nextCookies);
@@ -25,6 +26,6 @@ const Navbar = async () => {
                                                             variant: "ghost",
                                                         }), children: "Logg inn" }) }), (0, jsx_runtime_1.jsx)("span", { className: "h-6 w-px bg-gray-200", "aria-hidden": "true" }), (0, jsx_runtime_1.jsx)("div", { className: "hidden lg:flex", children: (0, jsx_runtime_1.jsx)(link_1.default, { href: "/sign-up", className: (0, button_1.buttonVariants)({
                                                             variant: "ghost",
-                                                        }), children: "Opprett konto" }) })] })), user && ((0, jsx_runtime_1.jsx)("span", { className: "h-6 w-px bg-gray-200", "aria-hidden": "true" })), (0, jsx_runtime_1.jsxs)("div", { className: "ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex", children: [(0, jsx_runtime_1.jsx)(Cart_1.default, {}), (0, jsx_runtime_1.jsx)(ModeToggle_1.ModeToggle, {})] })] }) })] }) }) }) }) }));
+                                                        }), children: "Opprett konto" }) })] })), user && ((0, jsx_runtime_1.jsx)("span", { className: "h-6 w-px bg-gray-200", "aria-hidden": "true" })), (0, jsx_runtime_1.jsxs)("div", { className: "ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6", children: [(0, jsx_runtime_1.jsx)(InstallAppButton_1.default, {}), (0, jsx_runtime_1.jsx)(Cart_1.default, {}), (0, jsx_runtime_1.jsx)(ModeToggle_1.ModeToggle, {})] })] }) })] }) }) }) }) }));
 };
 exports.default = Navbar;

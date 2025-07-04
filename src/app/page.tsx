@@ -71,10 +71,16 @@ export default function Home() {
                 {/* <a className="text-black text-lg font-semibold hover:underline" href="/">
                   Hjem
                 </a> */}
-                <a className="text-black text-lg font-semibold hover:underline" href="/products">
+                <a
+                  className="text-black text-lg font-semibold hover:underline"
+                  href="/products"
+                >
                   Produkter
                 </a>
-                <a className="text-black text-lg font-semibold hover:underline" href="/Sale">
+                <a
+                  className="text-black text-lg font-semibold hover:underline"
+                  href="/Sale"
+                >
                   Salg <span className="text-red-700">%</span>
                 </a>
               </div>
@@ -97,28 +103,15 @@ export default function Home() {
         />
       </MaxWidthWrapper>
 
-      <div className="lg:hidden block text-center">
-        <Link href="/products">
-          <button className="bg-green-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
-            Se alle drakter
-          </button>
-        </Link>
-      </div>
+      {/* Removed duplicate buttons since they're now in hero */}
 
       <SalePage />
-      <div className="lg:hidden block text-center">
-        <Link href="/products">
-          <button className="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-auto">
-            SALG
-          </button>
-        </Link>
-      </div>
+      {/* Sales button removed - now in hero section */}
 
       <section>
         <MaxWidthWrapper className="py-20">
-   
-        <FavorittPall />
-          </MaxWidthWrapper>
+          <FavorittPall />
+        </MaxWidthWrapper>
       </section>
 
       <section>

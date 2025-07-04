@@ -12,12 +12,19 @@ import { ThemeProvider } from "@/components/theme-provider";
 import StripeComponent from "@/components/StripeComponent"; // Importer stripe komponenten
 import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher-komponenten
 import Assistant from "@/components/Assistant";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Fotballdraktbutikken AS",
   description: "Fdb.343",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+  },
 };
 
 export default function RootLayout({
@@ -34,12 +41,13 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
+          <ServiceWorkerRegistration />
           <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
               {/* <WeglotSwitcher />  */}
               <StripeComponent /> {/* Legg til stripe komponenten her */}
-              <Assistant /> 
+              <Assistant />
               <div className="flex-grow flex-1">{children}</div>
               <Footer />
             </Providers>

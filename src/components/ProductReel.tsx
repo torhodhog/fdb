@@ -150,7 +150,7 @@ const ProductReel = (props: ProductReelProps) => {
 
       <div className="relative">
         <div className="mt-6 flex items-center w-full">
-          <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
+          <div className="w-full grid grid-cols-2 gap-x-3 gap-y-4 px-2 sm:px-0 sm:grid-cols-3 sm:gap-x-4 md:grid-cols-4 lg:grid-cols-4 md:gap-y-6 lg:gap-x-6">
             {filteredProducts.map((product, i) => {
               const favoriteCount =
                 favoritesData?.favoriteCounts[product.id] ?? 0;

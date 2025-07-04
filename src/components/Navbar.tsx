@@ -7,13 +7,14 @@ import { usePathname } from "next/navigation";
 
 // Importer next/image for å vise flagg
 import Cart from "./Cart";
+import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { Icons } from "./Icons";
+import InstallAppButton from "./InstallAppButton";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobildeNav";
 // Sørg for at importen er korrekt her
 import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
-import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 
@@ -81,7 +82,8 @@ const Navbar = async () => {
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   )}
 
-                  <div className="ml-8 flex flex-row flex-auto space-x-4 lg:ml-6 hidden lg:flex">
+                  <div className="ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6">
+                    <InstallAppButton />
                     <Cart />
                     <ModeToggle />
                   </div>

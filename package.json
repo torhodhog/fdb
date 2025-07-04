@@ -52,6 +52,7 @@
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.3.0",
     "@types/three": ">=0.134.0",
+    "@types/web-push": "^3.6.4",
     "ajv": "8.14.0",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
@@ -85,6 +86,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.164.1",
     "undici": "^5.26.5",
+    "web-push": "^3.6.7",
     "webpack": "^5.20.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
