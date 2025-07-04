@@ -64,9 +64,11 @@ const InstallAppButton = () => {
   // Vis suksess-melding hvis nettopp installert
   if (isInstalled) {
     return (
-      <button className="flex items-center gap-2 px-3 py-2 text-sm bg-green-100 text-green-800 rounded-lg cursor-default">
+      <button
+        className="flex items-center p-2 text-sm bg-green-100 text-green-800 rounded-full cursor-default"
+        title="App installert"
+      >
         <Check className="h-4 w-4" />
-        <span className="hidden sm:inline">App installert!</span>
       </button>
     );
   }
@@ -76,11 +78,10 @@ const InstallAppButton = () => {
     return (
       <button
         onClick={handleInstallClick}
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        className="flex items-center p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors"
         title="Installer appen på enheten din"
       >
         <Download className="h-4 w-4" />
-        <span className="hidden sm:inline">Installer app</span>
       </button>
     );
   }
@@ -91,11 +92,10 @@ const InstallAppButton = () => {
       <div className="relative">
         <button
           onClick={() => setShowIOSInstructions(!showIOSInstructions)}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+          className="flex items-center p-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-full transition-colors"
           title="Se hvordan du installerer på iOS"
         >
           <Smartphone className="h-4 w-4" />
-          <span className="hidden sm:inline">Installer</span>
         </button>
 
         {showIOSInstructions && (
@@ -127,11 +127,10 @@ const InstallAppButton = () => {
             "PWA installering er tilgjengelig når siden er deployet med HTTPS.\n\nI production vil denne knappen la deg installere appen som en desktop/mobil app!"
           );
         }}
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        className="flex items-center p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors"
         title="PWA installering (kun tilgjengelig i production)"
       >
         <Download className="h-4 w-4" />
-        <span className="hidden sm:inline">Installer app</span>
       </button>
     );
   }

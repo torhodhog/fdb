@@ -255,49 +255,49 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             </Button>
           </div>
         </div>
-        <div className="flex justify-center space-x-8 mt-16">
+        <div className="flex justify-center flex-wrap gap-4 sm:gap-8 mt-16 px-4">
           <Link
             href={{ pathname: "/products", query: { nation: "England" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇬🇧</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇬🇧</span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Spania" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇪🇸</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇪🇸</span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Norge" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇳🇴</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇳🇴</span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Italia" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇮🇹</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇮🇹</span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Frankrike" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇫🇷</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇫🇷</span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Tyskland" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "2rem" }}>🇩🇪</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇩🇪</span>
           </Link>
 
           <Link
             href="/products"
             className="text-black text-lg font-semibold hover:underline"
           >
-            <XCircle style={{ fontSize: "2rem" }} />
+            <XCircle style={{ fontSize: "1.5rem" }} className="sm:text-3xl" />
           </Link>
         </div>
       </MaxWidthWrapper>

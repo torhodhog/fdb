@@ -7,7 +7,7 @@ import HeroVideo from "./HeroVideo";
 
 const HeroImage = () => {
   return (
-    <div className="relative w-full h-[600px] bg-gradient-to-br from-green-50 to-white overflow-hidden mt-24 md:mt-0">
+    <div className="relative w-full h-[600px] bg-white overflow-hidden mt-24 md:mt-0">
       {/* Paraply - men mindre prominent */}
       <div className="absolute top-[10%] right-[10%] w-[200px] z-10 pointer-events-none block md:hidden opacity-30">
         <Image

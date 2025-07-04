@@ -20,7 +20,7 @@ const SalePage = () => {
             <Input
               className="flex-grow"
               type="search"
-              placeholder="Søk etter drakter"
+              placeholder="er"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

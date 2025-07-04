@@ -55,7 +55,14 @@ const ProductListing = ({
       return;
     }
     if (user && product) {
-      console.log("Toggling favorite for product:", product.id, "user:", user.id, "current status:", isFavorited);
+      console.log(
+        "Toggling favorite for product:",
+        product.id,
+        "user:",
+        user.id,
+        "current status:",
+        isFavorited
+      );
       toggleFavorite({
         productId: product.id,
         userId: user.id,
@@ -82,19 +89,23 @@ const ProductListing = ({
             <ImageSlider urls={validUrls} />
             <button
               onClick={handleFavoriteClick}
-              className="absolute top-1 sm:top-2 right-1 sm:right-2 z-10 bg-white p-1 sm:p-1.5 rounded-full shadow-md touch-manipulation"
-              title={user ? "Legg til favoritter" : "Logg inn for å legge til favoritter"}
+              className="absolute top-1 sm:top-2 right-1 sm:right-2 z-10 bg-white dark:bg-gray-800 p-1 sm:p-1.5 rounded-full shadow-md touch-manipulation"
+              title={
+                user
+                  ? "Legg til favoritter"
+                  : "Logg inn for å legge til favoritter"
+              }
             >
               <Heart
                 className={cn("h-4 w-4 sm:h-5 sm:w-5", {
                   "text-red-500 fill-red-500": user && isFavorited,
-                  "text-gray-400": !user || !isFavorited,
+                  "text-gray-400 dark:text-gray-500": !user || !isFavorited,
                 })}
               />
             </button>
-            <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 z-10 bg-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-md flex items-center">
-              <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 mr-0.5 sm:mr-1" />
-              <span className="text-xs sm:text-sm font-semibold text-gray-700">
+            <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 z-10 bg-white dark:bg-gray-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-md flex items-center">
+              <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 mr-0.5 sm:mr-1" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">
                 {favoriteCount}
               </span>
             </div>

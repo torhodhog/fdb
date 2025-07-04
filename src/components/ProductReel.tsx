@@ -43,7 +43,13 @@ const ProductReel = (props: ProductReelProps) => {
     showSaleItems = false,
   } = props;
 
-  const { data: userData } = trpc.auth.getMe.useQuery();
+  const { data: userData, isLoading: userLoading } = trpc.auth.getMe.useQuery(
+    undefined,
+    {
+      retry: 2,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    }
+  );
   const user = userData?.user;
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
@@ -68,7 +74,8 @@ const ProductReel = (props: ProductReelProps) => {
       userId: user?.id,
     },
     {
-      enabled: !!productIds && productIds.length > 0,
+      enabled: !!productIds && productIds.length > 0 && !userLoading,
+      staleTime: 1000 * 60 * 2, // 2 minutes
     }
   );
 
