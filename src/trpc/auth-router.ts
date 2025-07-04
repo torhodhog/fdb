@@ -93,4 +93,9 @@ export const authRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
     }),
+
+  getMe: publicProcedure.query(({ ctx }) => {
+    const { user } = ctx.req;
+    return { user };
+  }),
 });

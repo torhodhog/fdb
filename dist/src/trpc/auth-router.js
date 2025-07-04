@@ -1,4 +1,10 @@
 "use strict";
+// Denne filen håndterer alt som har med brukerautentisering å gjøre.
+// Den bruker trpc for å lage tre funksjoner:
+// 1. createPayloadUser – oppretter ny bruker i Payload CMS hvis e-posten ikke finnes fra før.
+// 2. verifyEmail – sjekker om verifikasjonstoken fra e-post er gyldig.
+// 3. signIn – logger inn brukeren ved å sende e-post og passord til Payload.
+// Alle funksjonene snakker med databasen via getPayloadClient().
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRouter = void 0;
 const server_1 = require("@trpc/server");
@@ -12,7 +18,7 @@ exports.authRouter = (0, trpc_1.router)({
         .mutation(async ({ input }) => {
         const { email, password, phone, address, country, postalCode } = input;
         const payload = await (0, get_payload_1.getPayloadClient)();
-        // check if user already exists
+        // Sjkk om e-posten allerede eksisterer
         const { docs: users } = await payload.find({
             collection: "users",
             where: {
@@ -23,6 +29,7 @@ exports.authRouter = (0, trpc_1.router)({
         });
         if (users.length !== 0)
             throw new server_1.TRPCError({ code: "CONFLICT" });
+        // Opprett ny bruker i Payload med informasjonen fra input for å holde styr på sending av pakker
         await payload.create({
             collection: "users",
             data: {
@@ -37,6 +44,7 @@ exports.authRouter = (0, trpc_1.router)({
         });
         return { success: true, sentToEmail: email };
     }),
+    // Send e-post for å bekrefte kontoen 
     verifyEmail: trpc_1.publicProcedure
         .input(zod_1.z.object({ token: zod_1.z.string() }))
         .query(async ({ input }) => {
@@ -70,5 +78,9 @@ exports.authRouter = (0, trpc_1.router)({
         catch (err) {
             throw new server_1.TRPCError({ code: "UNAUTHORIZED" });
         }
+    }),
+    getMe: trpc_1.publicProcedure.query(({ ctx }) => {
+        const { user } = ctx.req;
+        return { user };
     }),
 });

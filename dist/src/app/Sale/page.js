@@ -17,7 +17,7 @@ const SalePage = () => {
                     searchTerm: searchTerm,
                     liga_system: ligaSystem,
                     size: size,
-                    onSale: true, // Add onSale prop to filter sale items
+                    onSale: true, // Legg til onSale parameter
                 }, loadMore: true, showSaleItems: true }) }) }));
 };
 exports.default = SalePage;

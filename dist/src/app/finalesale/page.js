@@ -31,8 +31,8 @@ const FinalSalePage = ({ searchParams }) => {
                     sort: sort === "desc" || sort === "asc" ? sort : undefined,
                     searchTerm: searchTerm,
                     liga_system: ligaSystem,
-                    size: size, // Include size in the query object
-                    finalSale: true, // Only show products marked as final sale
+                    size: size,
+                    finalSale: true, // viser kun produkter med finalSale
                     limit: itemsPerPage,
                 } }) }) }));
 };

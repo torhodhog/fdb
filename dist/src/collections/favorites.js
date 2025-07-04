@@ -7,22 +7,14 @@ const Favorites = {
     },
     access: {
         create: ({ req: { user } }) => {
-            // Only allow authenticated users to create favorites
+            // Du må være innlogget for å opprette en favoritt
             return Boolean(user);
         },
         delete: ({ req: { user } }) => {
-            // Only allow authenticated users to delete their own favorites
+            // Kan bare slettes av den som opprettet favoritten 
             return Boolean(user);
         },
-        read: ({ req: { user } }) => {
-            if (!user)
-                return false;
-            return {
-                user: {
-                    equals: user.id,
-                },
-            };
-        },
+        read: () => true, // Alle skal kunne lese favoritter for å se popularitet
     },
     fields: [
         {

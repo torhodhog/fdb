@@ -14,15 +14,7 @@ const Favorites: CollectionConfig = {
       // Kan bare slettes av den som opprettet favoritten 
       return Boolean(user);
     },
-    read: ({ req: { user } }) => {
-      if (!user) return false;
-    
-      return {
-        user: {
-          equals: user.id,
-        },
-      };
-    },
+    read: () => true, // Alle skal kunne lese favoritter for å se popularitet
     
   },
   fields: [

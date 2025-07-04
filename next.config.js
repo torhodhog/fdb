@@ -5,6 +5,9 @@ const isProduction = process.env.NODE_ENV === "production";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  experimental: {
+    serverComponentsExternalPackages: ["sharp", "node-fetch", "payload"],
+  },
   images: {
     remotePatterns: [
       {
@@ -19,6 +22,17 @@ const nextConfig = {
         protocol: "https",
         hostname: "forsoker-ny-botte.s3.eu-north-1.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "/media/**",
+      },
+      {
+        protocol: "https",
+        hostname: "fdb-storage.s3.eu-north-1.amazonaws.com",
+        pathname: "/**",
+      },
       ...(!isProduction
         ? [
             {
@@ -28,7 +42,6 @@ const nextConfig = {
           ]
         : []),
     ],
-    domains: ["localhost"], // Legg til denne linjen for å støtte next/image med localhost
   },
   env: {
     NEXT_PUBLIC_SERVER_URL:
@@ -43,12 +56,13 @@ const nextConfig = {
     ];
   },
   webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.externals = config.externals || [];
-      config.externals.push({
-        sharp: "commonjs sharp",
-      });
+    // Mark sharp as an external module so it doesn't get bundled
+    if (isServer) {
+      config.externals.push("sharp");
     }
+
+    // Disable webpack caching to prevent stale builds
+    config.cache = false;
 
     return config;
   },

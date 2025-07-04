@@ -13,7 +13,7 @@ const countryToCurrencyMap = {
     DK: "dkk",
     US: "usd",
     EU: "eur",
-    // Legg til flere land og deres valutaer her
+    // For å godkjenne flere land og deres valutaer.
 };
 exports.paymentRouter = (0, trpc_1.router)({
     createSession: trpc_1.privateProcedure
@@ -113,25 +113,18 @@ exports.paymentRouter = (0, trpc_1.router)({
                 mode: "payment",
                 shipping_address_collection: {
                     allowed_countries: [
-                        "US", // USA
-                        "CA", // Canada
-                        "GB", // Storbritannia
-                        "DE", // Tyskland
-                        "FR", // Frankrike
-                        "IT", // Italia
-                        "ES", // Spania
-                        "NL", // Nederland
-                        "FI", // Finland
-                        "IS", // Island
-                        "CH", // Sveits
-                        "NO", // Norge
-                        "SE", // Sverige
-                        "DK", // Danmark
+                        "US", "CA", "GB", "DE", "FR", "IT", "ES", "NL", "FI", "IS", "CH", "NO", "SE", "DK",
                     ],
                 },
                 line_items,
-                metadata: { userId: user.id, orderId: order.id },
                 customer: customer.id,
+                payment_intent_data: {
+                    metadata: {
+                        userId: user.id,
+                        orderId: order.id,
+                        deliveryMethod: order.deliveryMethod,
+                    },
+                },
                 allow_promotion_codes: true,
             });
             console.log("Stripe Session created:", stripeSession.id);

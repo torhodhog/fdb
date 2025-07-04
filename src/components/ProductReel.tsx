@@ -4,21 +4,27 @@ import Link from "next/link";
 import { trpc } from "@/trpc/client";
 import ProductListing from "./ProductListing";
 import { TQueryValidator } from "@/lib/validators/query-validator";
-import { Product } from "@/payload-types";
+import { Product, User } from "@/payload-types";
 import LottieAnimation from "@/components/LottieAnimation";
 
 interface ProductReelProps {
   title: string;
   subtitle?: string;
   href?: string;
-  query: TQueryValidator & { size?: string; names?: string[], team?: string, hasPrint?: boolean | null, nation?: string };
+  query: TQueryValidator & {
+    size?: string;
+    names?: string[];
+    team?: string;
+    hasPrint?: boolean | null;
+    nation?: string;
+  };
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   hideSoldItems?: boolean;
   showSaleItems?: boolean;
   itemsPerPage?: number;
-  loadMore?: boolean; 
-  isHomePage?: boolean; 
+  loadMore?: boolean;
+  isHomePage?: boolean;
   finalSale?: boolean;
   productCode?: string;
   nasjon?: string;
@@ -33,72 +39,87 @@ const ProductReel = (props: ProductReelProps) => {
     sortBy = "createdAt",
     sortOrder = "desc",
     hideSoldItems = false,
-    loadMore = false, 
-    showSaleItems = false, 
+    loadMore = false,
+    showSaleItems = false,
   } = props;
+
+  const { data: userData } = trpc.auth.getMe.useQuery();
+  const user = userData?.user;
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { data: queryResults, isLoading: isQueryLoading, isError, error } = trpc.getInfiniteProducts.useQuery({
+  const {
+    data: queryResults,
+    isLoading: isQueryLoading,
+    isError,
+    error,
+  } = trpc.getInfiniteProducts.useQuery({
     limit: 200, // Set a high limit to fetch all products
     cursor: 1, // Start from the first page
-    query: {
-      ...query,
-      sortBy,
-      sortOrder,
-    },
+    query: { ...query, sortBy, sortOrder },
   });
+
+  const productIds = queryResults?.items.map((p: Product) => p.id);
+
+  const { data: favoritesData } = trpc.favoritesData.getFavoritesData.useQuery(
+    {
+      productIds: productIds ?? [],
+      userId: user?.id,
+    },
+    {
+      enabled: !!productIds && productIds.length > 0,
+    }
+  );
 
   useEffect(() => {
     if (queryResults && queryResults.items) {
-      console.log(`Fetched items: ${queryResults.items.length}`, queryResults.items); 
       setLoadedProducts(queryResults.items);
       setIsLoading(false); // Set loading to false after products are loaded
-    } else {
-      console.log("No items fetched");
     }
   }, [queryResults]);
-
-  useEffect(() => {
-    console.log("Query parameters:", query);
-  }, [query]);
 
   if (isQueryLoading && isLoading) {
     return <LottieAnimation />;
   }
 
   if (isError) {
-    console.error("Error fetching products:", error);
     return <div>Feil ved henting av produkter: {error.message}</div>;
   }
 
   if (!queryResults) {
-    console.warn("No query results returned");
     return <div className="mt-8">Vent litt, drakter lastes...</div>;
   }
 
-  const filteredProducts = (loadedProducts || []).filter(
-    (product) => {
-      const sizeMatch = !query.size || product.size === query.size;
-      const searchTermMatch = !query.searchTerm || product.name.toLowerCase().includes(query.searchTerm.toLowerCase());
-      const soldMatch = !product.isSold || !hideSoldItems;
-      const saleMatch = !props.showSaleItems || product.onSale;
-      const namesMatch = !query.names || query.names.includes(product.name);
-      const teamMatch = !query.team || product.name === query.team;
-      const printMatch = query.hasPrint === null || query.hasPrint === undefined || product.trykk === (query.hasPrint ? "Ja" : "Nei");
-      const finalSaleMatch = !props.finalSale || product.finalSale;
-      const nationMatch = !query.nation || product.nasjon === query.nation;
+  const filteredProducts = (loadedProducts || []).filter((product: Product) => {
+    const sizeMatch = !query.size || product.size === query.size;
+    const searchTermMatch =
+      !query.searchTerm ||
+      product.name.toLowerCase().includes(query.searchTerm.toLowerCase());
+    const soldMatch = !product.isSold || !hideSoldItems;
+    const saleMatch = !props.showSaleItems || product.onSale;
+    const namesMatch = !query.names || query.names.includes(product.name);
+    const teamMatch = !query.team || product.name === query.team;
+    const printMatch =
+      query.hasPrint === null ||
+      query.hasPrint === undefined ||
+      product.trykk === (query.hasPrint ? "Ja" : "Nei");
+    const finalSaleMatch = !props.finalSale || product.finalSale;
+    const nationMatch = !query.nation || product.nasjon === query.nation;
 
-      const matches = sizeMatch && searchTermMatch && soldMatch && saleMatch && namesMatch && teamMatch && printMatch && finalSaleMatch && nationMatch;
+    const matches =
+      sizeMatch &&
+      searchTermMatch &&
+      soldMatch &&
+      saleMatch &&
+      namesMatch &&
+      teamMatch &&
+      printMatch &&
+      finalSaleMatch &&
+      nationMatch;
 
-      if (!matches) {
-        console.log(`Product excluded: ${product.name} - Size match: ${sizeMatch}, Search term match: ${searchTermMatch}, Sold match: ${soldMatch}, Sale match: ${saleMatch}, Names match: ${namesMatch}, Team match: ${teamMatch}, Print match: ${printMatch}, Final sale match: ${finalSaleMatch}, Nation match: ${nationMatch}`);
-      }
-
-      return matches;
-    }
-  );
+    return matches;
+  });
 
   return (
     <section id="product-reel-section" className="py-12">
@@ -130,13 +151,23 @@ const ProductReel = (props: ProductReelProps) => {
       <div className="relative">
         <div className="mt-6 flex items-center w-full">
           <div className="w-full grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8">
-            {filteredProducts.map((product, i) => (
-              <ProductListing
-                key={`product-${i}`}
-                product={product}
-                index={i}
-              />
-            ))}
+            {filteredProducts.map((product, i) => {
+              const favoriteCount =
+                favoritesData?.favoriteCounts[product.id] ?? 0;
+              const isFavorited =
+                favoritesData?.userFavorites[product.id] ?? false;
+
+              return (
+                <ProductListing
+                  key={`product-${i}`}
+                  product={product}
+                  index={i}
+                  user={user as User}
+                  isFavorited={isFavorited}
+                  favoriteCount={favoriteCount}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

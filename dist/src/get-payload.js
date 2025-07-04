@@ -29,7 +29,6 @@ if (!cached) {
     };
 }
 const getPayloadClient = async ({ initOptions } = {}) => {
-    // 🚫 Unngå init under statisk Next.js build
     if (process.env.NEXT_BUILD === "true") {
         console.warn("Skipping Payload init during static build");
         return {};

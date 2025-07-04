@@ -1,23 +1,32 @@
 "use client";
 
-import { Product } from "@/payload-types";
+import { Product, User } from "@/payload-types";
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import ImageSlider from "./ImageSlider";
 import { Heart } from "lucide-react";
+import { trpc } from "@/trpc/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProductListingProps {
   product: Product | null;
   index: number;
+  user: User | null;
+  isFavorited: boolean;
+  favoriteCount: number;
 }
 
-const ProductListing = ({ product, index }: ProductListingProps) => {
+const ProductListing = ({
+  product,
+  index,
+  user,
+  isFavorited,
+  favoriteCount,
+}: ProductListingProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  const [userId, setUserId] = useState<string | null>(null);
-  const [hasFetchedFavorites, setHasFetchedFavorites] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,194 +36,89 @@ const ProductListing = ({ product, index }: ProductListingProps) => {
     return () => clearTimeout(timer);
   }, [index]);
 
-  useEffect(() => {
-    if (hasFetchedFavorites) return;
+  const { mutate: toggleFavorite } = trpc.favorites.toggleFavorite.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["favoritesData"] });
+    },
+  });
 
-    const fetchFavorites = async () => {
-      try {
-        const response = await fetch("/api/favorites", {
-          credentials: "include",
-        });
-
-        const data = await response.json();
-
-        const docs = Array.isArray(data) ? data : data.docs;
-
-        if (!Array.isArray(docs)) {
-          console.error("Uventet format på /api/favorites:", data);
-          return;
-        }
-
-        const productIds = docs.map((fav: any) =>
-          typeof fav.product === "string"
-            ? fav.product
-            : fav.product?.id || ""
-        );
-
-        setFavorites(new Set(productIds));
-        setHasFetchedFavorites(true);
-      } catch (error) {
-        console.error("Feil under henting av favoritter:", error);
-      }
-    };
-
-    fetchFavorites();
-  }, [hasFetchedFavorites]);
-    
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch("/api/user", {
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          console.error("Failed to fetch user:", await response.json());
-          return;
-        }
-
-        const data = await response.json();
-        setUserId(data.userId);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const toggleFavorite = async (productId: string) => {
-    const isCurrentlyFavorite = favorites.has(productId);
-  
-    // Gi umiddelbar visuell tilbakemelding
-    setFavorites((prev) => {
-      const updated = new Set(prev);
-      isCurrentlyFavorite ? updated.delete(productId) : updated.add(productId);
-      return updated;
-    });
-  
-    try {
-      // Vent på userId hvis vi skal legge til som favoritt
-      if (!isCurrentlyFavorite && !userId) {
-        alert("Du må være logget inn for å legge til favoritter.");
-        throw new Error("Bruker ikke logget inn");
-      }
-  
-      const response = await fetch(
-        isCurrentlyFavorite ? `/api/favorites/${productId}` : `/api/favorites`,
-        {
-          method: isCurrentlyFavorite ? "DELETE" : "POST",
-          headers: isCurrentlyFavorite
-            ? undefined
-            : { "Content-Type": "application/json" },
-          credentials: "include",
-          body: isCurrentlyFavorite
-            ? undefined
-            : JSON.stringify({ user: userId, product: productId }),
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error("Feil i favoritt-endepunktet");
-      }
-    } catch (error) {
-      console.error("Feil under oppdatering av favoritt:", error);
-  
-      // Rull tilbake
-      setFavorites((prev) => {
-        const rollback = new Set(prev);
-        isCurrentlyFavorite ? rollback.add(productId) : rollback.delete(productId);
-        return rollback;
+  const handleFavoriteClick = () => {
+    if (user && product) {
+      toggleFavorite({
+        productId: product.id,
+        userId: user.id,
+        isFavorited: isFavorited,
       });
-  
-      alert("Kunne ikke oppdatere favoritt. Prøv igjen senere.");
     }
   };
-  
+
   if (!product || !isVisible) return <ProductPlaceholder />;
 
   const validUrls = product.images
-    .map(({ image }) => {
-      if (typeof image === "string") {
-        return image;
-      } else if (image && "url" in image) {
-        return image.url;
-      }
-      return null;
-    })
+    .map(({ image }) => (typeof image === "string" ? image : image.url))
     .filter(Boolean) as string[];
 
-  return (
-    <Link
-      className={cn("invisible h-full w-full cursor-pointer group/main", {
-        "visible animate-in fade-in-5": isVisible,
-      })}
-      href={`/product/${product.id}`}
-    >
-      <div className="flex flex-col w-full relative">
-        <ImageSlider urls={validUrls} />
-
-        {product.isSold ? (
-          <p className=" text-gray-400 mt-8">
-            Dette produktet er dessverre solgt
-          </p>
-        ) : (
-          <>
-            <h3 className="mt-4 font-medium text-sm">{product.name}</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Størrelse: {product.size}
-            </p>
-
-            {product.onSale &&
-            product.salePrice !== null &&
-            product.salePrice !== undefined ? (
-              <>
-                <p className="mt-1 font-medium text-sm line-through">
-                  {formatPrice(product.price)}
-                </p>
-                <p className="mt-1 font-medium text-sm text-red-500">
-                  {formatPrice(product.salePrice)} (
-                  {Math.round((1 - product.salePrice / product.price) * 100)}%
-                  off)
-                </p>
-              </>
-            ) : (
-              <p className="mt-1 font-medium text-sm">
-                {formatPrice(product.price)}
-              </p>
+  if (isVisible && product) {
+    return (
+      <div
+        className={cn("relative w-full cursor-pointer group/main", {
+          "animate-in fade-in-5 slide-in-from-top-8": isVisible,
+        })}
+      >
+        <div className="flex flex-col w-full">
+          <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
+            <ImageSlider urls={validUrls} />
+            {user && (
+              <button
+                onClick={handleFavoriteClick}
+                className="absolute top-2 right-2 z-10 bg-white p-1.5 rounded-full shadow-md"
+              >
+                <Heart
+                  className={cn("h-5 w-5", {
+                    "text-red-500 fill-red-500": isFavorited,
+                    "text-gray-400": !isFavorited,
+                  })}
+                />
+              </button>
             )}
+            <div className="absolute bottom-2 right-2 z-10 bg-white px-2 py-1 rounded-full shadow-md flex items-center">
+              <Heart className="h-4 w-4 text-gray-500 mr-1" />
+              <span className="text-sm font-semibold text-gray-700">
+                {favoriteCount}
+              </span>
+            </div>
+          </div>
 
-<button
-  onClick={(e) => {
-    e.preventDefault();
-    toggleFavorite(product.id);
-  }}
-  className="absolute top-4 right-4 z-10"
->
-  <Heart
-    className="w-6 h-6"
-    fill={favorites.has(product.id) ? "red" : "none"}
-    stroke={favorites.has(product.id) ? "red" : "currentColor"}
-  />
-</button> 
-          </>
-
-        )}
+          <Link href={`/product/${product.id}`}>
+            <h3 className="mt-4 font-medium text-sm text-gray-700 dark:text-white">
+              {product.name}
+            </h3>
+          </Link>
+          <div className="flex items-center justify-between">
+            <p className="mt-1 text-sm text-gray-500 dark:text-white">
+              {product.size}
+            </p>
+            <p className="mt-1 font-medium text-sm text-gray-900 dark:text-white">
+              {formatPrice(product.price)}
+            </p>
+          </div>
+        </div>
       </div>
-    </Link>
-  );
+    );
+  }
+
+  return null;
 };
 
 const ProductPlaceholder = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
-        <Skeleton className="w-full h-full" />
+        <Skeleton className="h-full w-full" />
       </div>
-      <Skeleton className="h-5 w-4/6 mt-4" />
-      <Skeleton className="h-5 w-3/6 mt-2" />
-      <Skeleton className="h-5 w-2/6 mt-2" />
+      <Skeleton className="mt-4 w-2/3 h-4 rounded-lg" />
+      <Skeleton className="mt-2 w-16 h-4 rounded-lg" />
+      <Skeleton className="mt-2 w-12 h-4 rounded-lg" />
     </div>
   );
 };

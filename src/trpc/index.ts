@@ -14,6 +14,8 @@ import { QueryValidator } from "../lib/validators/query-validator";
 import { authRouter } from "./auth-router";
 import { paymentRouter } from "./payment-router";
 import { productRouter } from "./routers/product-router";
+import { favoritesRouter } from './routers/favorites-router';
+import { favoritesDataRouter } from './routers/favorites-data-router';
 import { publicProcedure, router } from "./trpc";
 
 // 1) Egen prosedyre for "fritt søk"
@@ -63,6 +65,8 @@ export const appRouter = router({
   auth: authRouter,
   payment: paymentRouter,
   product: productRouter,
+  favorites: favoritesRouter,
+  favoritesData: favoritesDataRouter,
 
   // 2) Din eksisterende rute for å hente et uendelig antall produkter med filtrering
   getInfiniteProducts: publicProcedure

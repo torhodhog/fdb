@@ -71,7 +71,6 @@ const start = async () => {
         false,
         false,
         undefined,
-        null,
         "default"
       );
       process.exit();
