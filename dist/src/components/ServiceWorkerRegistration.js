@@ -5,13 +5,14 @@ exports.default = ServiceWorkerRegistration;
 const react_1 = require("react");
 function ServiceWorkerRegistration() {
     (0, react_1.useEffect)(() => {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/sw.js")
                 .then((registration) => {
-                console.log('Service Worker registered successfully:', registration);
+                console.log("Service Worker registered successfully:", registration);
             })
                 .catch((error) => {
-                console.log('Service Worker registration failed:', error);
+                console.log("Service Worker registration failed:", error);
             });
         }
     }, []);

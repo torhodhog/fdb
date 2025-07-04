@@ -260,37 +260,49 @@ const ProductsPage = ({ searchParams }: ProductsPageProps) => {
             href={{ pathname: "/products", query: { nation: "England" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇬🇧</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇬🇧
+            </span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Spania" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇪🇸</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇪🇸
+            </span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Norge" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇳🇴</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇳🇴
+            </span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Italia" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇮🇹</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇮🇹
+            </span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Frankrike" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇫🇷</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇫🇷
+            </span>
           </Link>
           <Link
             href={{ pathname: "/products", query: { nation: "Tyskland" } }}
             className="text-black text-lg font-semibold hover:underline"
           >
-            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">🇩🇪</span>
+            <span style={{ fontSize: "1.5rem" }} className="sm:text-3xl">
+              🇩🇪
+            </span>
           </Link>
 
           <Link

@@ -12,7 +12,10 @@ const ProductListing_1 = __importDefault(require("./ProductListing"));
 const LottieAnimation_1 = __importDefault(require("@/components/LottieAnimation"));
 const ProductReel = (props) => {
     const { title, subtitle, href, query, sortBy = "createdAt", sortOrder = "desc", hideSoldItems = false, loadMore = false, showSaleItems = false, } = props;
-    const { data: userData } = client_1.trpc.auth.getMe.useQuery();
+    const { data: userData, isLoading: userLoading } = client_1.trpc.auth.getMe.useQuery(undefined, {
+        retry: 2,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
     const user = userData?.user;
     const [loadedProducts, setLoadedProducts] = (0, react_1.useState)([]);
     const [isLoading, setIsLoading] = (0, react_1.useState)(true);
@@ -26,7 +29,9 @@ const ProductReel = (props) => {
         productIds: productIds ?? [],
         userId: user?.id,
     }, {
-        enabled: !!productIds && productIds.length > 0,
+        enabled: !!productIds && productIds.length > 0 && !userLoading,
+        staleTime: 0, // No caching for favorites to ensure fresh data
+        refetchOnWindowFocus: true,
     });
     (0, react_1.useEffect)(() => {
         if (queryResults && queryResults.items) {

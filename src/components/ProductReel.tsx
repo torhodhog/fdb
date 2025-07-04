@@ -75,7 +75,8 @@ const ProductReel = (props: ProductReelProps) => {
     },
     {
       enabled: !!productIds && productIds.length > 0 && !userLoading,
-      staleTime: 1000 * 60 * 2, // 2 minutes
+      staleTime: 0, // No caching for favorites to ensure fresh data
+      refetchOnWindowFocus: true,
     }
   );
 

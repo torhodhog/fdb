@@ -39,9 +39,12 @@ const ProductListing = ({
   const { mutate: toggleFavorite } = trpc.favorites.toggleFavorite.useMutation({
     onSuccess: () => {
       console.log("Favorite toggled successfully");
-      // Invalidate both the favorites data and any other related queries
+      // Invalidate all related queries more aggressively
       queryClient.invalidateQueries({ queryKey: ["favoritesData"] });
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      queryClient.invalidateQueries(); // Invalidate all queries as fallback
+      // Force re-fetch
+      queryClient.refetchQueries({ queryKey: ["favoritesData"] });
     },
     onError: (error) => {
       console.error("Error toggling favorite:", error);
@@ -50,6 +53,7 @@ const ProductListing = ({
   });
 
   const handleFavoriteClick = () => {
+    console.log("Favorite click - User:", user, "Product:", product?.id);
     if (!user) {
       alert("Du må være logget inn for å legge til favoritter");
       return;
@@ -68,6 +72,8 @@ const ProductListing = ({
         userId: user.id,
         isFavorited: isFavorited,
       });
+    } else {
+      console.error("Missing user or product data", { user, product });
     }
   };
 
