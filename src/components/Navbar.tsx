@@ -48,34 +48,16 @@ const Navbar = async () => {
                   {user ? (
                     <UserAccountNav user={user} />
                   ) : (
-                    <>
-                      <div className="hidden lg:flex">
-                        <Link
-                          href="/sign-in"
-                          className={buttonVariants({
-                            variant: "ghost",
-                          })}
-                        >
-                          Logg inn
-                        </Link>
-                      </div>
-
-                      <span
-                        className="h-6 w-px bg-gray-200"
-                        aria-hidden="true"
-                      />
-
-                      <div className="hidden lg:flex">
-                        <Link
-                          href="/sign-up"
-                          className={buttonVariants({
-                            variant: "ghost",
-                          })}
-                        >
-                          Opprett konto
-                        </Link>
-                      </div>
-                    </>
+                    <div className="hidden lg:flex">
+                      <Link
+                        href="/sign-in"
+                        className={buttonVariants({
+                          variant: "ghost",
+                        })}
+                      >
+                        Logg inn
+                      </Link>
+                    </div>
                   )}
 
                   {user && (
