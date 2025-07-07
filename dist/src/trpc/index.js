@@ -32,6 +32,7 @@ exports.searchProducts = trpc_1.publicProcedure
             collection: "products",
             where: {
                 approvedForSale: { equals: "approved" },
+                isSold: { equals: false },
                 name: {
                     contains: term,
                 },
@@ -106,6 +107,9 @@ exports.appRouter = (0, trpc_1.router)({
                 where: {
                     approvedForSale: {
                         equals: "approved",
+                    },
+                    isSold: {
+                        equals: false,
                     },
                     ...parsedQueryOpts,
                 },
