@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Download, Check, Smartphone } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Download, Check, Smartphone } from "lucide-react";
 
 const InstallAppButton = () => {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
@@ -11,11 +11,13 @@ const InstallAppButton = () => {
 
   useEffect(() => {
     // Only run on client side
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     // Sjekk om appen allerede er installert
     const checkIfStandalone = () => {
-      const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches;
+      const isStandaloneMode = window.matchMedia(
+        "(display-mode: standalone)"
+      ).matches;
       const isIosStandalone = (window.navigator as any).standalone === true;
       setIsStandalone(isStandaloneMode || isIosStandalone);
     };
@@ -34,25 +36,28 @@ const InstallAppButton = () => {
       setInstallPrompt(null);
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
   const handleInstallClick = async () => {
     if (!installPrompt) return;
-    
+
     installPrompt.prompt();
     const { outcome } = await installPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
+
+    if (outcome === "accepted") {
       setIsInstalled(true);
     }
-    
+
     setInstallPrompt(null);
   };
 
@@ -84,7 +89,10 @@ const InstallAppButton = () => {
   }
 
   // Fallback for iOS Safari (som ikke støtter installPrompt)
-  if (typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+  if (
+    typeof window !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent)
+  ) {
     return (
       <div className="relative">
         <button
@@ -95,7 +103,7 @@ const InstallAppButton = () => {
           <Smartphone className="h-3 w-3" />
           <span className="hidden sm:inline text-xs">App</span>
         </button>
-        
+
         {showIOSInstructions && (
           <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg p-4 shadow-lg z-50 w-64 text-sm text-gray-700">
             <div className="font-semibold mb-2">Installer på iOS:</div>
@@ -104,7 +112,7 @@ const InstallAppButton = () => {
               <li>Scroll ned og velg &quot;Legg til på hjemmeskjermen&quot;</li>
               <li>Trykk &quot;Legg til&quot; øverst til høyre</li>
             </ol>
-            <button 
+            <button
               onClick={() => setShowIOSInstructions(false)}
               className="mt-3 text-blue-600 hover:text-blue-800 text-xs"
             >
@@ -117,7 +125,7 @@ const InstallAppButton = () => {
   }
 
   // Vis alltid en knapp for testing (i utviklingsmodus)
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     return (
       <button
         className="flex items-center gap-1 px-2 py-1.5 text-xs bg-orange-600 hover:bg-orange-700 text-white rounded-md transition-colors"

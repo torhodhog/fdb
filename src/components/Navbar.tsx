@@ -88,7 +88,10 @@ const Navbar = () => {
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   )}
 
-                  <div className="ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6" suppressHydrationWarning>
+                  <div
+                    className="ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6"
+                    suppressHydrationWarning
+                  >
                     <InstallAppButton />
                     <Cart />
                     <ModeToggle />

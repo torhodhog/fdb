@@ -16,6 +16,10 @@ import { AuthCredentialsValidator, SignInCredentialsValidator } from "../lib/val
 import { publicProcedure, router } from "./trpc";
 
 export const authRouter = router({
+  getMe: publicProcedure.query(() => {
+    return { user: null };
+  }),
+
   createPayloadUser: publicProcedure
     .input(AuthCredentialsValidator)
     .mutation(async ({ input }) => {
@@ -94,37 +98,4 @@ export const authRouter = router({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
     }),
-
-  getMe: publicProcedure.query(async ({ ctx }) => {
-    try {
-      // Parse cookies from the request headers
-      const cookieHeader = (ctx.req as any).headers?.get?.('cookie') || 
-                          (ctx.req as any).headers?.cookie || '';
-      
-      // Create a simple cookie parser
-      const cookies = new Map();
-      if (cookieHeader) {
-        cookieHeader.split(';').forEach((cookie: string) => {
-          const [name, value] = cookie.trim().split('=');
-          if (name && value) {
-            cookies.set(name, value);
-          }
-        });
-      }
-
-      // Create a cookie object compatible with getServerSideUser
-      const cookieObj = {
-        get: (name: string) => ({
-          value: cookies.get(name)
-        })
-      };
-
-      const { user } = await getServerSideUser(cookieObj as any);
-      return { user };
-    } catch (error) {
-      // No authenticated user or error
-      console.log('getMe error:', error);
-      return { user: null };
-    }
-  }),
 });

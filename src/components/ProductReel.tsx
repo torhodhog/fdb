@@ -71,7 +71,7 @@ const ProductReel = (props: ProductReelProps) => {
   const { data: favoritesData } = trpc.favoritesData.getFavoritesData.useQuery(
     {
       productIds: productIds ?? [],
-      userId: user?.id,
+      userId: (user as any)?.id,
     },
     {
       enabled: !!productIds && productIds.length > 0 && !userLoading,
@@ -170,7 +170,7 @@ const ProductReel = (props: ProductReelProps) => {
                   key={`product-${i}`}
                   product={product}
                   index={i}
-                  user={user as User}
+                  user={user as any}
                   isFavorited={isFavorited}
                   favoriteCount={favoriteCount}
                 />

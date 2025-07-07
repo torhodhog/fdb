@@ -10,10 +10,12 @@ exports.authRouter = void 0;
 const server_1 = require("@trpc/server");
 const zod_1 = require("zod");
 const get_payload_1 = require("../get-payload");
-const payload_utils_1 = require("../lib/payload-utils");
 const account_credentials_validators_1 = require("../lib/validators/account-credentials-validators");
 const trpc_1 = require("./trpc");
 exports.authRouter = (0, trpc_1.router)({
+    getMe: trpc_1.publicProcedure.query(() => {
+        return { user: null };
+    }),
     createPayloadUser: trpc_1.publicProcedure
         .input(account_credentials_validators_1.AuthCredentialsValidator)
         .mutation(async ({ input }) => {
@@ -78,36 +80,6 @@ exports.authRouter = (0, trpc_1.router)({
         }
         catch (err) {
             throw new server_1.TRPCError({ code: "UNAUTHORIZED" });
-        }
-    }),
-    getMe: trpc_1.publicProcedure.query(async ({ ctx }) => {
-        try {
-            // Parse cookies from the request headers
-            const cookieHeader = ctx.req.headers?.get?.('cookie') ||
-                ctx.req.headers?.cookie || '';
-            // Create a simple cookie parser
-            const cookies = new Map();
-            if (cookieHeader) {
-                cookieHeader.split(';').forEach((cookie) => {
-                    const [name, value] = cookie.trim().split('=');
-                    if (name && value) {
-                        cookies.set(name, value);
-                    }
-                });
-            }
-            // Create a cookie object compatible with getServerSideUser
-            const cookieObj = {
-                get: (name) => ({
-                    value: cookies.get(name)
-                })
-            };
-            const { user } = await (0, payload_utils_1.getServerSideUser)(cookieObj);
-            return { user };
-        }
-        catch (error) {
-            // No authenticated user or error
-            console.log('getMe error:', error);
-            return { user: null };
         }
     }),
 });
