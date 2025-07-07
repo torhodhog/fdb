@@ -59,7 +59,7 @@ export default function Searchbar() {
   const hasMore = data?.hasMore || false;
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-md ml-20 mt-">
       <div className="relative">
         {/* Søkefeltet */}
         <input
@@ -67,7 +67,7 @@ export default function Searchbar() {
           placeholder="Søk etter drakt..."
           value={term}
           onChange={(e) => setTerm(e.target.value)}
-          className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 rounded-md border border-gray-300 focus:outline-none"
         />
 
         {/* Spinner vises når isFetching === true */}
@@ -89,11 +89,11 @@ export default function Searchbar() {
             top-full 
             mt-1
             w-full
-            z-[70]
-            bg-white dark:bg-gray-800
+            z-50
+            bg-white
             rounded-md
             shadow-lg
-            border border-gray-200 dark:border-gray-600
+            border border-gray-200
             max-h-72        
             overflow-y-auto 
           "
@@ -104,7 +104,7 @@ export default function Searchbar() {
                 <Link
                   key={product.id}
                   href={`/product/${product.id}`}
-                  className="flex items-center p-2 border-b border-gray-200 dark:border-gray-600 last:border-none hover:bg-gray-50 dark:hover:bg-gray-700"
+                  className="flex items-center p-2 border-b border-gray-200 last:border-none hover:bg-gray-50"
                   onClick={() => setTerm("")} // Nullstill søketeksten når man klikker
                 >
                   {imageUrl && (
@@ -148,11 +148,11 @@ export default function Searchbar() {
             top-full
             mt-1
             w-full
-            z-[70]
-            bg-white dark:bg-gray-800
+            z-50
+            bg-white
             rounded-md
             shadow-lg
-            border border-gray-200 dark:border-gray-600
+            border border-gray-200
             p-2
           "
           >

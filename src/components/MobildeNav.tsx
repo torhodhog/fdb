@@ -5,18 +5,10 @@ import { Home, ShoppingCart, Percent, Box, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { User as UserType } from "@/payload-types";
 import InstallAppButton from "./InstallAppButton";
-import Cart from "./Cart";
-import { trpc } from "@/trpc/client";
-import { useAuth } from "@/hooks/use-auth";
 
-const MobileNav = ({ user: initialUser }: { user: UserType | null }) => {
+const MobileNav = ({ user }: { user: UserType | null }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { signOut } = useAuth();
-
-  // Hent brukerinfo fra tRPC for å få oppdateringer
-  const { data: meData } = trpc.auth.getMe.useQuery();
-  const currentUser = meData?.user || initialUser;
-  const isLoggedIn = Boolean(currentUser);
+  const isLoggedIn = Boolean(user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -26,22 +18,24 @@ const MobileNav = ({ user: initialUser }: { user: UserType | null }) => {
     <div className="lg:hidden">
       {" "}
       {/* Ensure this div is only shown on mobile devices */}
-      <div className="fixed  top-0 w-full bg-white dark:bg-gray-900 bg-opacity-95 dark:bg-opacity-95 z-[60] shadow-sm">
-        <div className="flex items-center justify-between px-1 py-3 text-black dark:text-white min-h-[56px]">
-          <button
-            onClick={toggleMenu}
-            className="text-black dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Åpne meny"
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-          <div className="flex items-center space-x-1 mr-10">
-            <Cart />
+      <div className="fixed top-0 w-full bg-white bg-opacity-95 z-[60] shadow-sm">
+        <div className="flex justify-between items-center px-4 py-4 text-black min-h-[60px]">
+          <Link href="/" className="flex items-center">
+            <Home className="h-6 w-6" />
+          </Link>
+          <div className="flex items-center space-x-2">
             <InstallAppButton />
+            <button
+              onClick={toggleMenu}
+              className="text-black p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Åpne meny"
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -60,20 +54,9 @@ const MobileNav = ({ user: initialUser }: { user: UserType | null }) => {
             Kontakt oss
           </Link>
           {isLoggedIn ? (
-            <>
-              <Link href="/cart" onClick={toggleMenu} className="text-xl">
-                Handlekurv
-              </Link>
-              <button
-                onClick={() => {
-                  signOut();
-                  toggleMenu();
-                }}
-                className="text-xl"
-              >
-                Logg ut
-              </button>
-            </>
+            <Link href="/cart" onClick={toggleMenu} className="text-xl">
+              Handlekurv
+            </Link>
           ) : (
             <>
               <Link href="/sign-in" onClick={toggleMenu} className="text-xl">

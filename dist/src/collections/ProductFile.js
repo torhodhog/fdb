@@ -66,8 +66,8 @@ exports.ProductFiles = {
     },
     access: {
         read: yourOwnAndPurchased,
-        update: ({ req }) => req.user.role === "admin",
-        delete: ({ req }) => req.user.role === "admin",
+        update: ({ req }) => req.user?.role === "admin",
+        delete: ({ req }) => req.user?.role === "admin",
     },
     upload: {
         staticURL: "/product_files",
@@ -118,7 +118,7 @@ exports.ProductFiles = {
             type: "checkbox",
             defaultValue: false,
             admin: {
-                condition: ({ req }) => req.user.role === "admin",
+                condition: ({ req }) => req.user?.role === "admin",
             },
         },
     ],

@@ -59,7 +59,12 @@ export default function Home() {
 
       <MaxWidthWrapper className="overflow-visible">
         <div className="z-0">
-          
+          <div className="bg-transparent py-4">
+            <div className="flex justify-center space-x-8">
+              {/* Flag Links */}
+              {/* Dine lenker her */}
+            </div>
+          </div>
           <div className="z-0">
             <div className="bg-transparent rounded-br-[10px] rounded-bl-[10px]">
               <div className="flex justify-center space-x-8">

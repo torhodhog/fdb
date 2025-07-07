@@ -7,16 +7,16 @@ import { usePathname } from "next/navigation";
 
 // Importer next/image for å vise flagg
 import Cart from "./Cart";
-import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { Icons } from "./Icons";
-import InstallAppButton from "./InstallAppButton";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import MobileNav from "./MobildeNav";
 // Sørg for at importen er korrekt her
 import { ModeToggle } from "./ModeToggle";
 import NavItems from "./NavItems";
+import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
+import InstallAppButton from "./InstallAppButton";
 
 const Navbar = async () => {
   const nextCookies = cookies();
@@ -48,16 +48,34 @@ const Navbar = async () => {
                   {user ? (
                     <UserAccountNav user={user} />
                   ) : (
-                    <div className="hidden lg:flex">
-                      <Link
-                        href="/sign-in"
-                        className={buttonVariants({
-                          variant: "ghost",
-                        })}
-                      >
-                        Logg inn
-                      </Link>
-                    </div>
+                    <>
+                      <div className="hidden lg:flex">
+                        <Link
+                          href="/sign-in"
+                          className={buttonVariants({
+                            variant: "ghost",
+                          })}
+                        >
+                          Logg inn
+                        </Link>
+                      </div>
+
+                      <span
+                        className="h-6 w-px bg-gray-200"
+                        aria-hidden="true"
+                      />
+
+                      <div className="hidden lg:flex">
+                        <Link
+                          href="/sign-up"
+                          className={buttonVariants({
+                            variant: "ghost",
+                          })}
+                        >
+                          Opprett konto
+                        </Link>
+                      </div>
+                    </>
                   )}
 
                   {user && (

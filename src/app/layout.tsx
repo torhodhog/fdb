@@ -12,7 +12,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import StripeComponent from "@/components/StripeComponent"; // Importer stripe komponenten
 import WeglotSwitcher from "@/components/WeglotSwitcher"; // Importer WeglotSwitcher-komponenten
 import Assistant from "@/components/Assistant";
-import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import "@/lib/error-handler"; // Import error handler to register global handlers
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +20,10 @@ export const metadata: Metadata = {
   title: "Fotballdraktbutikken AS",
   description: "Fdb.343",
   manifest: "/manifest.json",
+};
+
+export const viewport = {
   themeColor: "#000000",
-  other: {
-    "apple-mobile-web-app-capable": "yes",
-    "apple-mobile-web-app-status-bar-style": "default",
-  },
 };
 
 export default function RootLayout({
@@ -34,6 +33,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <script 
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `
+          }}
+        />
+      </head>
       <body
         className={cn(
           "relative h-full font-sans antialiased dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2]",
@@ -41,13 +54,12 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light">
-          <ServiceWorkerRegistration />
           <main className="relative flex flex-col h-screen">
             <Providers>
               <Navbar />
               {/* <WeglotSwitcher />  */}
               <StripeComponent /> {/* Legg til stripe komponenten her */}
-              <Assistant />
+              <Assistant /> 
               <div className="flex-grow flex-1">{children}</div>
               <Footer />
             </Providers>

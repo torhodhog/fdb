@@ -38,8 +38,8 @@ export const Users: CollectionConfig = {
   access: {
     read: adminsAndUser,
     create: () => true,
-    update: ({ req }) => req.user.role === 'admin',
-    delete: ({ req }) => req.user.role === 'admin',
+    update: ({ req }) => req.user?.role === 'admin',
+    delete: ({ req }) => req.user?.role === 'admin',
   },
   admin: {
     hidden: ({ user }) => user.role !== 'admin',
