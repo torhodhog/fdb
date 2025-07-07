@@ -37,6 +37,7 @@ export const searchProducts = publicProcedure
         collection: "products",
         where: {
           approvedForSale: { equals: "approved" },
+          isSold: { equals: false },
           name: {
             contains: term,
           },
@@ -139,6 +140,9 @@ export const appRouter = router({
           where: {
             approvedForSale: {
               equals: "approved",
+            },
+            isSold: {
+              equals: false,
             },
             ...parsedQueryOpts,
           },

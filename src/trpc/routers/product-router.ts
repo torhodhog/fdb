@@ -50,6 +50,8 @@ export const productRouter = router({
         } = await payload.find({
           collection: 'products',
           where: {
+            isSold: { equals: false }, // Only show unsold products
+            approvedForSale: { equals: "approved" }, // Only show approved products
             ...query,
           },
           sort: `${sortOrder}createdAt`,
