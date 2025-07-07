@@ -17,10 +17,12 @@ import {
 import { trpc } from "@/trpc/client";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const Page = () => {
+const SignInContent = () => {
   const searchParams = useSearchParams() || new URLSearchParams();
   const router = useRouter();
+  const utils = trpc.useUtils();
   const isSeller = searchParams.get("as") === "seller";
   const origin = searchParams.get("origin");
 
@@ -40,6 +42,9 @@ const Page = () => {
     onSuccess: async () => {
       toast.success("Logget inn uten feil");
 
+      // Invalidate cache for user data to update navbar
+      await utils.auth.getMe.invalidate();
+
       router.refresh();
 
       if (origin) {
@@ -57,9 +62,9 @@ const Page = () => {
   });
 
   const onSubmit = ({ email, password }: TSignInCredentialsValidator) => {
-    signIn({ 
-      email, 
-      password
+    signIn({
+      email,
+      password,
     });
   };
 
@@ -161,11 +166,19 @@ const Page = () => {
               >
                 Fortsett som kjøper
               </Button>
-            ): null}
+            ) : null}
           </div>
         </div>
       </div>
     </>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   );
 };
 

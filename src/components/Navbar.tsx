@@ -1,6 +1,6 @@
-import { getServerSideUser } from "@/lib/payload-utils";
+"use client";
+
 import { User as UserType } from "@/payload-types";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,11 +17,11 @@ import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 import InstallAppButton from "./InstallAppButton";
+import { trpc } from "@/trpc/client";
 
-const Navbar = async () => {
-  const nextCookies = cookies();
-  const { user }: { user: UserType | null } =
-    await getServerSideUser(nextCookies);
+const Navbar = () => {
+  const { data: userResponse } = trpc.auth.getMe.useQuery();
+  const user = userResponse?.user;
 
   return (
     <div className="top-0 inset-x-0 z-50 sticky bg-white">

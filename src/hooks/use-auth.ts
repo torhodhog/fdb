@@ -1,8 +1,10 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { trpc } from "@/trpc/client";
 
 export const useAuth = () => {
   const router = useRouter();
+  const utils = trpc.useUtils();
 
   const signOut = async () => {
     try {
@@ -20,6 +22,9 @@ export const useAuth = () => {
       if (!res.ok) throw new Error();
 
       toast.success("Logget ut uten feil");
+
+      // Invalidate cache for user data to update navbar
+      await utils.auth.getMe.invalidate();
 
       router.push("/sign-in");
       router.refresh();

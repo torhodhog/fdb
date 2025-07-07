@@ -8,7 +8,7 @@ const input_1 = require("@/components/ui/input");
 const label_1 = require("@/components/ui/label");
 const sonner_1 = require("sonner");
 const navigation_1 = require("next/navigation");
-const ResetPasswordPage = () => {
+const ResetPasswordContent = () => {
     const [password, setPassword] = (0, react_1.useState)("");
     const [confirmPassword, setConfirmPassword] = (0, react_1.useState)("");
     const [isLoading, setIsLoading] = (0, react_1.useState)(false);
@@ -44,5 +44,8 @@ const ResetPasswordPage = () => {
         }
     };
     return ((0, jsx_runtime_1.jsxs)("div", { className: "container flex flex-col items-center justify-center min-h-screen", children: [(0, jsx_runtime_1.jsx)("h1", { className: "text-2xl font-semibold mb-4", children: "Tilbakestill passord" }), (0, jsx_runtime_1.jsxs)("form", { onSubmit: handleSubmit, className: "w-full max-w-md space-y-4", children: [(0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)(label_1.Label, { htmlFor: "password", children: "Nytt passord" }), (0, jsx_runtime_1.jsx)(input_1.Input, { id: "password", type: "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Nytt passord", required: true })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)(label_1.Label, { htmlFor: "confirmPassword", children: "Bekreft passord" }), (0, jsx_runtime_1.jsx)(input_1.Input, { id: "confirmPassword", type: "password", value: confirmPassword, onChange: (e) => setConfirmPassword(e.target.value), placeholder: "Bekreft passord", required: true })] }), (0, jsx_runtime_1.jsx)(button_1.Button, { type: "submit", disabled: isLoading, className: "w-full", children: isLoading ? "Oppdaterer..." : "Oppdater passord" })] })] }));
+};
+const ResetPasswordPage = () => {
+    return ((0, jsx_runtime_1.jsx)(react_1.Suspense, { fallback: (0, jsx_runtime_1.jsx)("div", { children: "Loading..." }), children: (0, jsx_runtime_1.jsx)(ResetPasswordContent, {}) }));
 };
 exports.default = ResetPasswordPage;

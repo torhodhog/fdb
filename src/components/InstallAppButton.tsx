@@ -10,6 +10,9 @@ const InstallAppButton = () => {
   const [showIOSInstructions, setShowIOSInstructions] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Sjekk om appen allerede er installert
     const checkIfStandalone = () => {
       const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches;
@@ -81,7 +84,7 @@ const InstallAppButton = () => {
   }
 
   // Fallback for iOS Safari (som ikke støtter installPrompt)
-  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+  if (typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
     return (
       <div className="relative">
         <button

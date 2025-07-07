@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <script 
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
@@ -43,7 +43,7 @@ export default function RootLayout({
                   navigator.serviceWorker.register('/sw.js');
                 });
               }
-            `
+            `,
           }}
         />
       </head>
@@ -59,7 +59,7 @@ export default function RootLayout({
               <Navbar />
               {/* <WeglotSwitcher />  */}
               <StripeComponent /> {/* Legg til stripe komponenten her */}
-              <Assistant /> 
+              <Assistant />
               <div className="flex-grow flex-1">{children}</div>
               <Footer />
             </Providers>
