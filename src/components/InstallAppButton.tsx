@@ -74,11 +74,11 @@ const InstallAppButton = () => {
     return (
       <button
         onClick={handleInstallClick}
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        className="flex items-center gap-1 px-2 py-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
         title="Installer appen på enheten din"
       >
-        <Download className="h-4 w-4" />
-        <span className="hidden sm:inline">Installer app</span>
+        <Download className="h-3 w-3" />
+        <span className="hidden sm:inline text-xs">App</span>
       </button>
     );
   }
@@ -89,11 +89,11 @@ const InstallAppButton = () => {
       <div className="relative">
         <button
           onClick={() => setShowIOSInstructions(!showIOSInstructions)}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+          className="flex items-center gap-1 px-2 py-1.5 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors"
           title="Se hvordan du installerer på iOS"
         >
-          <Smartphone className="h-4 w-4" />
-          <span className="hidden sm:inline">Installer</span>
+          <Smartphone className="h-3 w-3" />
+          <span className="hidden sm:inline text-xs">App</span>
         </button>
         
         {showIOSInstructions && (
@@ -120,11 +120,11 @@ const InstallAppButton = () => {
   if (process.env.NODE_ENV === 'development') {
     return (
       <button
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
+        className="flex items-center gap-1 px-2 py-1.5 text-xs bg-orange-600 hover:bg-orange-700 text-white rounded-md transition-colors"
         title="PWA ikke tilgjengelig i dev-mode"
       >
-        <Download className="h-4 w-4" />
-        <span className="hidden sm:inline">Installer (dev)</span>
+        <Download className="h-3 w-3" />
+        <span className="hidden sm:inline text-xs">Dev</span>
       </button>
     );
   }

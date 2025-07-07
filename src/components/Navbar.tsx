@@ -20,8 +20,32 @@ import InstallAppButton from "./InstallAppButton";
 import { trpc } from "@/trpc/client";
 
 const Navbar = () => {
-  const { data: userResponse } = trpc.auth.getMe.useQuery();
+  const { data: userResponse, isLoading } = trpc.auth.getMe.useQuery();
   const user = userResponse?.user;
+
+  // Prevent hydration mismatch by showing loading state initially
+  if (isLoading) {
+    return (
+      <div className="top-0 inset-x-0 z-50 sticky bg-white">
+        <header className="relative bg-transparent lg:bg-background">
+          <MaxWidthWrapper>
+            <div className="border-b border-gray-200">
+              <div className="flex h-28 items-center">
+                <div className="ml-4 hidden lg:flex lg:ml-0">
+                  <Link href="/">
+                    <Icons.logo className="h-8 w-10" />
+                  </Link>
+                </div>
+                <div className="ml-auto flex items-center">
+                  <div className="w-20 h-8 bg-gray-200 animate-pulse rounded"></div>
+                </div>
+              </div>
+            </div>
+          </MaxWidthWrapper>
+        </header>
+      </div>
+    );
+  }
 
   return (
     <div className="top-0 inset-x-0 z-50 sticky bg-white">
@@ -48,41 +72,23 @@ const Navbar = () => {
                   {user ? (
                     <UserAccountNav user={user} />
                   ) : (
-                    <>
-                      <div className="hidden lg:flex">
-                        <Link
-                          href="/sign-in"
-                          className={buttonVariants({
-                            variant: "ghost",
-                          })}
-                        >
-                          Logg inn
-                        </Link>
-                      </div>
-
-                      <span
-                        className="h-6 w-px bg-gray-200"
-                        aria-hidden="true"
-                      />
-
-                      <div className="hidden lg:flex">
-                        <Link
-                          href="/sign-up"
-                          className={buttonVariants({
-                            variant: "ghost",
-                          })}
-                        >
-                          Opprett konto
-                        </Link>
-                      </div>
-                    </>
+                    <div className="hidden lg:flex">
+                      <Link
+                        href="/sign-in"
+                        className={buttonVariants({
+                          variant: "ghost",
+                        })}
+                      >
+                        Logg inn
+                      </Link>
+                    </div>
                   )}
 
                   {user && (
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
                   )}
 
-                  <div className="ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6">
+                  <div className="ml-8 hidden lg:flex flex-row flex-auto space-x-4 lg:ml-6" suppressHydrationWarning>
                     <InstallAppButton />
                     <Cart />
                     <ModeToggle />
