@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import HeroImage from "@/components/HeroImage";
 import Info from "@/components/Info";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
@@ -33,20 +33,6 @@ const perks = [
 ];
 
 export default function Home() {
-  useEffect(() => {
-    // Legg til Elfsight script
-    const script = document.createElement("script");
-    script.src = "https://static.elfsight.com/platform/platform.js";
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    // Rydd opp ved avmontering
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   return (
     <>
       <Head>
@@ -144,9 +130,6 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
       </section>
-
-      {/* Elfsight Widget */}
-      <div className="elfsight-app-53532613-f584-410e-a796-a8297c07e17c"></div>
     </>
   );
 }

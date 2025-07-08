@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { User as UserType } from "@/payload-types";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,33 +21,19 @@ import InstallAppButton from "./InstallAppButton";
 import { trpc } from "@/trpc/client";
 
 const Navbar = () => {
-  const { data: userResponse, isLoading } = trpc.auth.getMe.useQuery();
+  const {
+    data: userResponse,
+    isLoading,
+    error,
+  } = trpc.auth.getMe.useQuery(undefined, {
+    retry: 1,
+    retryDelay: 1000,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
   const user = userResponse?.user;
 
-  // Prevent hydration mismatch by showing loading state initially
-  if (isLoading) {
-    return (
-      <div className="top-0 inset-x-0 z-50 sticky bg-white">
-        <header className="relative bg-transparent lg:bg-background">
-          <MaxWidthWrapper>
-            <div className="border-b border-gray-200">
-              <div className="flex h-28 items-center">
-                <div className="ml-4 hidden lg:flex lg:ml-0">
-                  <Link href="/">
-                    <Icons.logo className="h-8 w-10" />
-                  </Link>
-                </div>
-                <div className="ml-auto flex items-center">
-                  <div className="w-20 h-8 bg-gray-200 animate-pulse rounded"></div>
-                </div>
-              </div>
-            </div>
-          </MaxWidthWrapper>
-        </header>
-      </div>
-    );
-  }
-
+  // Skip loading state - always render the navbar
   return (
     <div className="top-0 inset-x-0 z-50 sticky bg-white">
       <header className="relative bg-transparent lg:bg-background">
@@ -65,12 +52,17 @@ const Navbar = () => {
                 <NavItems />
               </div>
 
-              <ClientSearchbarWrapper />
+              {/* Hide search on mobile for cleaner look */}
+              <div className="hidden lg:block">
+                <ClientSearchbarWrapper />
+              </div>
 
               <div className="ml-auto flex items-center">
                 <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? (
-                    <UserAccountNav user={user} />
+                    <div className="hidden lg:block">
+                      <UserAccountNav user={user} />
+                    </div>
                   ) : (
                     <div className="hidden lg:flex">
                       <Link
