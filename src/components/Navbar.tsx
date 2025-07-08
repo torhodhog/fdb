@@ -1,10 +1,8 @@
-"use client";
-
-import React from "react";
+import { getServerSideUser } from "@/lib/payload-utils";
 import { User as UserType } from "@/payload-types";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 // Importer next/image for å vise flagg
 import Cart from "./Cart";
@@ -18,16 +16,10 @@ import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 import InstallAppButton from "./InstallAppButton";
-import { useAuthFallback } from "@/hooks/use-auth-fallback";
 
-const Navbar = () => {
-  // Use fallback auth instead of tRPC to avoid 404 spam
-  const {
-    data: userResponse,
-    isLoading,
-    error,
-  } = useAuthFallback();
-  const user = userResponse?.user;
+const Navbar = async () => {
+  const nextCookies = cookies();
+  const { user }: { user: UserType | null } = await getServerSideUser(nextCookies);
 
   // Skip loading state - always render the navbar
   return (
@@ -36,7 +28,7 @@ const Navbar = () => {
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-28 items-center">
-              <MobileNav user={user as UserType | null} />
+              <MobileNav user={user} />
 
               <div className="ml-4 hidden lg:flex lg:ml-0">
                 <Link href="/">
