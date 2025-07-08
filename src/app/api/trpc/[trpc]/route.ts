@@ -1,17 +1,13 @@
 import { appRouter } from "@/trpc";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
-const handler = async (req: Request) => {
+const handler = (req: Request) => {
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
-    createContext: async () => {
-      return { 
-        req: req as any, 
-        res: {} as any 
-      };
-    },
+    // @ts-expect-error context already exists
+    createContext: () => ({ req, res: {} }),
   });
 };
 

@@ -23,11 +23,8 @@ export const useAuth = () => {
 
       toast.success("Logget ut uten feil");
 
-      // Invalidate cache for user data to update navbar
-      await utils.auth.getMe.invalidate();
-
-      router.push("/sign-in");
-      router.refresh();
+      // Force a hard refresh to update server components
+      window.location.href = "/sign-in";
     } catch (err) {
       toast.error("Kunne ikke logge ut, prøv igjen senere");
     }

@@ -19,7 +19,11 @@ import InstallAppButton from "./InstallAppButton";
 
 const Navbar = async () => {
   const nextCookies = cookies();
-  const { user }: { user: UserType | null } = await getServerSideUser(nextCookies);
+  const { user }: { user: UserType | null } =
+    await getServerSideUser(nextCookies);
+
+  // Debug: Log user status (remove after testing)
+  console.log('Navbar user:', user ? `Logged in as ${user.email}` : 'Not logged in');
 
   // Skip loading state - always render the navbar
   return (

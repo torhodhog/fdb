@@ -63,19 +63,17 @@ const ProductReel = (props: ProductReelProps) => {
 
   const productIds = queryResults?.items.map((p: Product) => p.id);
 
-  // Temporarily disable favorites to prevent 404 errors
-  const favoritesData = null;
-  // const { data: favoritesData } = trpc.favoritesData.getFavoritesData.useQuery(
-  //   {
-  //     productIds: productIds ?? [],
-  //     userId: (user as any)?.id,
-  //   },
-  //   {
-  //     enabled: !!productIds && productIds.length > 0 && !userLoading,
-  //     staleTime: 0, // No caching for favorites to ensure fresh data
-  //     refetchOnWindowFocus: true,
-  //   }
-  // );
+  const { data: favoritesData } = trpc.favoritesData.getFavoritesData.useQuery(
+    {
+      productIds: productIds ?? [],
+      userId: (user as any)?.id,
+    },
+    {
+      enabled: !!productIds && productIds.length > 0 && !userLoading,
+      staleTime: 0, // No caching for favorites to ensure fresh data
+      refetchOnWindowFocus: true,
+    }
+  );
 
   useEffect(() => {
     if (queryResults && queryResults.items) {
@@ -157,11 +155,10 @@ const ProductReel = (props: ProductReelProps) => {
         <div className="mt-6 flex items-center w-full">
           <div className="w-full grid grid-cols-2 gap-x-3 gap-y-4 px-2 sm:px-0 sm:grid-cols-3 sm:gap-x-4 md:grid-cols-4 lg:grid-cols-4 md:gap-y-6 lg:gap-x-6">
             {filteredProducts.map((product, i) => {
-              // Temporarily disable favorites to prevent errors
-              const favoriteCount = 0;
-              const isFavorited = false;
-              // const favoriteCount = favoritesData?.favoriteCounts[product.id] ?? 0;
-              // const isFavorited = favoritesData?.userFavorites[product.id] ?? false;
+              const favoriteCount =
+                favoritesData?.favoriteCounts[product.id] ?? 0;
+              const isFavorited =
+                favoritesData?.userFavorites[product.id] ?? false;
 
               return (
                 <ProductListing
