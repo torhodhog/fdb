@@ -18,19 +18,15 @@ import ClientSearchbarWrapper from "./ClientSearchbarWrapper";
 import { buttonVariants } from "./ui/button";
 import UserAccountNav from "./UserAccountNav";
 import InstallAppButton from "./InstallAppButton";
-import { trpc } from "@/trpc/client";
+import { useAuthFallback } from "@/hooks/use-auth-fallback";
 
 const Navbar = () => {
+  // Use fallback auth instead of tRPC to avoid 404 spam
   const {
     data: userResponse,
     isLoading,
     error,
-  } = trpc.auth.getMe.useQuery(undefined, {
-    retry: 1,
-    retryDelay: 1000,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  } = useAuthFallback();
   const user = userResponse?.user;
 
   // Skip loading state - always render the navbar

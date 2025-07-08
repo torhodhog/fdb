@@ -18,14 +18,10 @@ const ClientSearchbarWrapper_1 = __importDefault(require("./ClientSearchbarWrapp
 const button_1 = require("./ui/button");
 const UserAccountNav_1 = __importDefault(require("./UserAccountNav"));
 const InstallAppButton_1 = __importDefault(require("./InstallAppButton"));
-const client_1 = require("@/trpc/client");
+const use_auth_fallback_1 = require("@/hooks/use-auth-fallback");
 const Navbar = () => {
-    const { data: userResponse, isLoading, error, } = client_1.trpc.auth.getMe.useQuery(undefined, {
-        retry: 1,
-        retryDelay: 1000,
-        refetchOnWindowFocus: false,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-    });
+    // Use fallback auth instead of tRPC to avoid 404 spam
+    const { data: userResponse, isLoading, error, } = (0, use_auth_fallback_1.useAuthFallback)();
     const user = userResponse?.user;
     // Skip loading state - always render the navbar
     return ((0, jsx_runtime_1.jsx)("div", { className: "top-0 inset-x-0 z-50 sticky bg-white", children: (0, jsx_runtime_1.jsx)("header", { className: "relative bg-transparent lg:bg-background", children: (0, jsx_runtime_1.jsx)(MaxWidthWrapper_1.default, { children: (0, jsx_runtime_1.jsx)("div", { className: "border-b border-gray-200", children: (0, jsx_runtime_1.jsxs)("div", { className: "flex h-28 items-center", children: [(0, jsx_runtime_1.jsx)(MobildeNav_1.default, { user: user }), (0, jsx_runtime_1.jsx)("div", { className: "ml-4 hidden lg:flex lg:ml-0", children: (0, jsx_runtime_1.jsx)(link_1.default, { href: "/", children: (0, jsx_runtime_1.jsx)(Icons_1.Icons.logo, { className: "h-8 w-10" }) }) }), (0, jsx_runtime_1.jsx)("div", { className: "hidden z-50 lg:ml-8 lg:block lg:self-stretch", children: (0, jsx_runtime_1.jsx)(NavItems_1.default, {}) }), (0, jsx_runtime_1.jsx)("div", { className: "hidden lg:block", children: (0, jsx_runtime_1.jsx)(ClientSearchbarWrapper_1.default, {}) }), (0, jsx_runtime_1.jsx)("div", { className: "ml-auto flex items-center", children: (0, jsx_runtime_1.jsxs)("div", { className: "lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6", children: [user ? ((0, jsx_runtime_1.jsx)("div", { className: "hidden lg:block", children: (0, jsx_runtime_1.jsx)(UserAccountNav_1.default, { user: user }) })) : ((0, jsx_runtime_1.jsx)("div", { className: "hidden lg:flex", children: (0, jsx_runtime_1.jsx)(link_1.default, { href: "/sign-in", className: (0, button_1.buttonVariants)({
