@@ -97,46 +97,33 @@ export const authRouter = router({
 
   getMe: publicProcedure.query(async ({ ctx }) => {
     try {
-      // Handle both Next.js App Router Request and regular requests
-      let cookieHeader = '';
-      
-      if (ctx.req) {
-        // Try different ways to get cookies based on request type
-        cookieHeader = (ctx.req as any).headers?.get?.('cookie') || 
-                      (ctx.req as any).headers?.cookie || 
-                      (ctx.req as any).cookie || '';
-      }
-      
-      // If no cookies at all, return early
-      if (!cookieHeader) {
-        return { user: null };
-      }
+      // Parse cookies from the request headers
+      const cookieHeader = (ctx.req as any).headers?.get?.('cookie') || 
+                          (ctx.req as any).headers?.cookie || '';
       
       // Create a simple cookie parser
       const cookies = new Map();
-      cookieHeader.split(';').forEach((cookie: string) => {
-        const [name, value] = cookie.trim().split('=');
-        if (name && value) {
-          try {
-            cookies.set(name, decodeURIComponent(value));
-          } catch {
-            cookies.set(name, value); // Fallback if decoding fails
+      if (cookieHeader) {
+        cookieHeader.split(';').forEach((cookie: string) => {
+          const [name, value] = cookie.trim().split('=');
+          if (name && value) {
+            cookies.set(name, value);
           }
-        }
-      });
+        });
+      }
 
       // Create a cookie object compatible with getServerSideUser
       const cookieObj = {
-        get: (name: string) => {
-          const value = cookies.get(name);
-          return value ? { value } : undefined;
-        }
+        get: (name: string) => ({
+          value: cookies.get(name)
+        })
       };
 
       const { user } = await getServerSideUser(cookieObj as any);
       return { user };
     } catch (error) {
-      // No authenticated user or error - this is expected behavior
+      // No authenticated user or error
+      console.log('getMe error:', error);
       return { user: null };
     }
   }),

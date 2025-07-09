@@ -165,12 +165,13 @@ const Page = async ({ params, searchParams }: PageProps) => {
         </div>
       </div>
 
-      <ProductReel
+      {/* ProductReel temporarily removed to improve performance */}
+      {/* <ProductReel
         href="/products"
         query={{ liga_system: product.liga_system || undefined, limit: 4 }}
         title={`Lignende produkter`}
         subtitle={`Finn lignende kvalitetsdrakter som '${product.name}' `}
-      />
+      /> */}
     </MaxWidthWrapper>
   );
 };

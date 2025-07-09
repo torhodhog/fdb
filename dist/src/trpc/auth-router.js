@@ -82,43 +82,31 @@ exports.authRouter = (0, trpc_1.router)({
     }),
     getMe: trpc_1.publicProcedure.query(async ({ ctx }) => {
         try {
-            // Handle both Next.js App Router Request and regular requests
-            let cookieHeader = '';
-            if (ctx.req) {
-                // Try different ways to get cookies based on request type
-                cookieHeader = ctx.req.headers?.get?.('cookie') ||
-                    ctx.req.headers?.cookie ||
-                    ctx.req.cookie || '';
-            }
-            // If no cookies at all, return early
-            if (!cookieHeader) {
-                return { user: null };
-            }
+            // Parse cookies from the request headers
+            const cookieHeader = ctx.req.headers?.get?.('cookie') ||
+                ctx.req.headers?.cookie || '';
             // Create a simple cookie parser
             const cookies = new Map();
-            cookieHeader.split(';').forEach((cookie) => {
-                const [name, value] = cookie.trim().split('=');
-                if (name && value) {
-                    try {
-                        cookies.set(name, decodeURIComponent(value));
+            if (cookieHeader) {
+                cookieHeader.split(';').forEach((cookie) => {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name && value) {
+                        cookies.set(name, value);
                     }
-                    catch {
-                        cookies.set(name, value); // Fallback if decoding fails
-                    }
-                }
-            });
+                });
+            }
             // Create a cookie object compatible with getServerSideUser
             const cookieObj = {
-                get: (name) => {
-                    const value = cookies.get(name);
-                    return value ? { value } : undefined;
-                }
+                get: (name) => ({
+                    value: cookies.get(name)
+                })
             };
             const { user } = await (0, payload_utils_1.getServerSideUser)(cookieObj);
             return { user };
         }
         catch (error) {
-            // No authenticated user or error - this is expected behavior
+            // No authenticated user or error
+            console.log('getMe error:', error);
             return { user: null };
         }
     }),

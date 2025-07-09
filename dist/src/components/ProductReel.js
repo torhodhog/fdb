@@ -8,13 +8,13 @@ const jsx_runtime_1 = require("react/jsx-runtime");
 const react_1 = require("react");
 const link_1 = __importDefault(require("next/link"));
 const client_1 = require("@/trpc/client");
-const use_auth_fallback_1 = require("@/hooks/use-auth-fallback");
 const ProductListing_1 = __importDefault(require("./ProductListing"));
 const LottieAnimation_1 = __importDefault(require("@/components/LottieAnimation"));
 const ProductReel = (props) => {
-    const { title, subtitle, href, query, sortBy = "createdAt", sortOrder = "desc", hideSoldItems = false, loadMore = false, showSaleItems = false, } = props;
-    const { data: userData, isLoading: userLoading } = (0, use_auth_fallback_1.useAuthFallback)();
-    const user = userData?.user;
+    const { title, subtitle, href, query, sortBy = "createdAt", sortOrder = "desc", hideSoldItems = false, loadMore = false, showSaleItems = false, user = null, // Get user from props instead of hook
+     } = props;
+    // Remove the useAuthFallback hook since we get user as prop
+    const userLoading = false; // No loading since user comes from prop
     const [loadedProducts, setLoadedProducts] = (0, react_1.useState)([]);
     const [isLoading, setIsLoading] = (0, react_1.useState)(true);
     const { data: queryResults, isLoading: isQueryLoading, isError, error, } = client_1.trpc.getInfiniteProducts.useQuery({
@@ -23,19 +23,14 @@ const ProductReel = (props) => {
         query: { ...query, sortBy, sortOrder },
     });
     const productIds = queryResults?.items.map((p) => p.id);
-    // Temporarily disable favorites to prevent 404 errors
-    const favoritesData = null;
-    // const { data: favoritesData } = trpc.favoritesData.getFavoritesData.useQuery(
-    //   {
-    //     productIds: productIds ?? [],
-    //     userId: (user as any)?.id,
-    //   },
-    //   {
-    //     enabled: !!productIds && productIds.length > 0 && !userLoading,
-    //     staleTime: 0, // No caching for favorites to ensure fresh data
-    //     refetchOnWindowFocus: true,
-    //   }
-    // );
+    const { data: favoritesData } = client_1.trpc.favoritesData.getFavoritesData.useQuery({
+        productIds: productIds ?? [],
+        userId: user?.id,
+    }, {
+        enabled: !!productIds && productIds.length > 0 && !userLoading,
+        staleTime: 0, // No caching for favorites to ensure fresh data
+        refetchOnWindowFocus: true,
+    });
     (0, react_1.useEffect)(() => {
         if (queryResults && queryResults.items) {
             setLoadedProducts(queryResults.items);
@@ -52,10 +47,13 @@ const ProductReel = (props) => {
         return (0, jsx_runtime_1.jsx)("div", { className: "mt-8", children: "Vent litt, drakter lastes..." });
     }
     const filteredProducts = (loadedProducts || []).filter((product) => {
+        // ALWAYS hide sold products - they should never be shown
+        if (product.isSold) {
+            return false;
+        }
         const sizeMatch = !query.size || product.size === query.size;
         const searchTermMatch = !query.searchTerm ||
             product.name.toLowerCase().includes(query.searchTerm.toLowerCase());
-        const soldMatch = !product.isSold || !hideSoldItems;
         const saleMatch = !props.showSaleItems || product.onSale;
         const namesMatch = !query.names || query.names.includes(product.name);
         const teamMatch = !query.team || product.name === query.team;
@@ -66,7 +64,6 @@ const ProductReel = (props) => {
         const nationMatch = !query.nation || product.nasjon === query.nation;
         const matches = sizeMatch &&
             searchTermMatch &&
-            soldMatch &&
             saleMatch &&
             namesMatch &&
             teamMatch &&
@@ -78,11 +75,8 @@ const ProductReel = (props) => {
     return ((0, jsx_runtime_1.jsxs)("section", { id: "product-reel-section", className: "py-12", children: [(0, jsx_runtime_1.jsxs)("div", { className: "md:flex md:items-center md:justify-between mb-4", children: [(0, jsx_runtime_1.jsxs)("div", { className: "max-w-2xl px-4 lg:max-w-4xl lg:px-0", children: [title ? ((0, jsx_runtime_1.jsx)("h1", { className: "text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl", children: title })) : null, subtitle ? ((0, jsx_runtime_1.jsx)("p", { className: "mt-2 text-sm text-muted-foreground", children: subtitle })) : null] }), href ? ((0, jsx_runtime_1.jsxs)(link_1.default, { href: href, className: "hidden text-sm font-extrabold text-gray-600 hover:text-blue-500 md:block", children: [props.showSaleItems
                                 ? "Se alle salgsvarer"
                                 : "Se hele kolleksjonen", " ", (0, jsx_runtime_1.jsx)("span", { "aria-hidden": "true", children: "\u2192" })] })) : null] }), (0, jsx_runtime_1.jsx)("div", { className: "relative", children: (0, jsx_runtime_1.jsx)("div", { className: "mt-6 flex items-center w-full", children: (0, jsx_runtime_1.jsx)("div", { className: "w-full grid grid-cols-2 gap-x-3 gap-y-4 px-2 sm:px-0 sm:grid-cols-3 sm:gap-x-4 md:grid-cols-4 lg:grid-cols-4 md:gap-y-6 lg:gap-x-6", children: filteredProducts.map((product, i) => {
-                            // Temporarily disable favorites to prevent errors
-                            const favoriteCount = 0;
-                            const isFavorited = false;
-                            // const favoriteCount = favoritesData?.favoriteCounts[product.id] ?? 0;
-                            // const isFavorited = favoritesData?.userFavorites[product.id] ?? false;
+                            const favoriteCount = favoritesData?.favoriteCounts[product.id] ?? 0;
+                            const isFavorited = favoritesData?.userFavorites[product.id] ?? false;
                             return ((0, jsx_runtime_1.jsx)(ProductListing_1.default, { product: product, index: i, user: user, isFavorited: isFavorited, favoriteCount: favoriteCount }, `product-${i}`));
                         }) }) }) })] }));
 };

@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { trpc } from "@/trpc/client";
-import { useAuthFallback } from "@/hooks/use-auth-fallback";
 import ProductListing from "./ProductListing";
 import { TQueryValidator } from "@/lib/validators/query-validator";
 import { Product, User } from "@/payload-types";
@@ -29,6 +28,7 @@ interface ProductReelProps {
   finalSale?: boolean;
   productCode?: string;
   nasjon?: string;
+  user?: User | null; // Add user as optional prop
 }
 
 const ProductReel = (props: ProductReelProps) => {
@@ -42,10 +42,11 @@ const ProductReel = (props: ProductReelProps) => {
     hideSoldItems = false,
     loadMore = false,
     showSaleItems = false,
+    user = null, // Get user from props instead of hook
   } = props;
 
-  const { data: userData, isLoading: userLoading } = useAuthFallback();
-  const user = userData?.user;
+  // Remove the useAuthFallback hook since we get user as prop
+  const userLoading = false; // No loading since user comes from prop
 
   const [loadedProducts, setLoadedProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,11 +96,15 @@ const ProductReel = (props: ProductReelProps) => {
   }
 
   const filteredProducts = (loadedProducts || []).filter((product: Product) => {
+    // ALWAYS hide sold products - they should never be shown
+    if (product.isSold) {
+      return false;
+    }
+    
     const sizeMatch = !query.size || product.size === query.size;
     const searchTermMatch =
       !query.searchTerm ||
       product.name.toLowerCase().includes(query.searchTerm.toLowerCase());
-    const soldMatch = !product.isSold || !hideSoldItems;
     const saleMatch = !props.showSaleItems || product.onSale;
     const namesMatch = !query.names || query.names.includes(product.name);
     const teamMatch = !query.team || product.name === query.team;
@@ -113,7 +118,6 @@ const ProductReel = (props: ProductReelProps) => {
     const matches =
       sizeMatch &&
       searchTermMatch &&
-      soldMatch &&
       saleMatch &&
       namesMatch &&
       teamMatch &&

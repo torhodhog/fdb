@@ -1,6 +1,6 @@
+import { trpc } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { trpc } from "@/trpc/client";
 
 export const useAuth = () => {
   const router = useRouter();

@@ -53,7 +53,7 @@ const HeroImage = () => {
         {/* Stats eller features */}
         <div className="grid grid-cols-3 gap-4 mt-8 w-full max-w-sm text-center">
           <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-green-900">500+</div>
+            <div className="text-2xl font-bold text-green-900">300+</div>
             <div className="text-xs text-gray-600">Drakter</div>
           </div>
           <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm">

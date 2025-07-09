@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useAuth = void 0;
+const client_1 = require("@/trpc/client");
 const navigation_1 = require("next/navigation");
 const sonner_1 = require("sonner");
-const client_1 = require("@/trpc/client");
 const useAuth = () => {
     const router = (0, navigation_1.useRouter)();
     const utils = client_1.trpc.useUtils();
@@ -19,10 +19,8 @@ const useAuth = () => {
             if (!res.ok)
                 throw new Error();
             sonner_1.toast.success("Logget ut uten feil");
-            // Invalidate cache for user data to update navbar
-            await utils.auth.getMe.invalidate();
-            router.push("/sign-in");
-            router.refresh();
+            // Force a hard refresh to update server components
+            window.location.href = "/sign-in";
         }
         catch (err) {
             sonner_1.toast.error("Kunne ikke logge ut, prøv igjen senere");

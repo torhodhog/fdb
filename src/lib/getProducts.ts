@@ -15,6 +15,8 @@ export const fetchProduct = async (productId: string) => {
         equals: "approved",
       },
     },
+    // Optimize by only fetching necessary fields
+    depth: 1, // Reduce depth to speed up query
   });
 
   const [product] = products;

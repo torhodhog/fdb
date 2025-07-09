@@ -26,6 +26,7 @@ const ProductListing = ({
   favoriteCount,
 }: ProductListingProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -92,6 +93,11 @@ const ProductListing = ({
       >
         <div className="flex flex-col w-full">
           <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
+            {isNavigating && (
+              <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              </div>
+            )}
             <ImageSlider urls={validUrls} />
             <button
               onClick={handleFavoriteClick}
@@ -117,7 +123,13 @@ const ProductListing = ({
             </div>
           </div>
 
-          <Link href={`/product/${product.id}`}>
+          <Link 
+            href={`/product/${product.id}`}
+            onClick={() => setIsNavigating(true)}
+            className={cn("block", {
+              "pointer-events-none opacity-70": isNavigating
+            })}
+          >
             <h3 className="mt-2 sm:mt-4 font-medium text-xs sm:text-sm text-gray-700 dark:text-white line-clamp-2">
               {product.name}
             </h3>

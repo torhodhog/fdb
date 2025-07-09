@@ -34,14 +34,8 @@ const SignInContent = () => {
     const { mutate: signIn, isLoading } = client_1.trpc.auth.signIn.useMutation({
         onSuccess: async () => {
             sonner_1.toast.success("Logget inn uten feil");
-            // Invalidate cache for user data to update navbar
-            await utils.auth.getMe.invalidate();
-            router.refresh();
-            if (origin) {
-                router.push(`/${origin}`);
-                return;
-            }
-            router.push("/");
+            // Force a hard refresh to update server components
+            window.location.href = origin ? `/${origin}` : "/";
         },
         onError: (err) => {
             if (err.data?.code === "UNAUTHORIZED") {
