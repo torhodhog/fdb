@@ -3,6 +3,19 @@
 import { Product, User } from "@/payload-types";
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
+
+const ProductPlaceholder = () => {
+  return (
+    <div className="flex flex-col w-full">
+      <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
+        <Skeleton className="h-full w-full" />
+      </div>
+      <Skeleton className="mt-4 w-2/3 h-4 rounded-lg" />
+      <Skeleton className="mt-2 w-16 h-4 rounded-lg" />
+      <Skeleton className="mt-2 w-12 h-4 rounded-lg" />
+    </div>
+  );
+};
 import Link from "next/link";
 import { cn, formatPrice } from "@/lib/utils";
 import ImageSlider from "./ImageSlider";
@@ -115,52 +128,45 @@ const ProductListing = ({
                 })}
               />
             </button>
-            <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 z-10 bg-white dark:bg-gray-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full shadow-md flex items-center">
-              <Heart className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 mr-0.5 sm:mr-1" />
-              <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">
-                {favoriteCount}
-              </span>
-            </div>
           </div>
 
-          <Link 
+          <Link
             href={`/product/${product.id}`}
             onClick={() => setIsNavigating(true)}
             className={cn("block", {
-              "pointer-events-none opacity-70": isNavigating
+              "pointer-events-none opacity-70": isNavigating,
             })}
           >
             <h3 className="mt-2 sm:mt-4 font-medium text-xs sm:text-sm text-gray-700 dark:text-white line-clamp-2">
               {product.name}
             </h3>
           </Link>
+
           <div className="flex items-center justify-between mt-1 sm:mt-2">
             <p className="text-xs sm:text-sm text-gray-500 dark:text-white">
               {product.size}
             </p>
-            <p className="font-medium text-xs sm:text-sm text-gray-900 dark:text-white">
-              {formatPrice(product.price)}
-            </p>
+            <div className="flex items-center gap-2">
+              {product.salePrice && (
+                <span className="line-through text-gray-400 text-xs sm:text-sm">
+                  {formatPrice(product.price)}
+                </span>
+              )}
+              <span
+                className={
+                  product.salePrice
+                    ? "text-red-500 font-bold text-xs sm:text-sm"
+                    : "font-medium text-xs sm:text-sm text-gray-900 dark:text-white"
+                }
+              >
+                {formatPrice(product.salePrice || product.price)}
+              </span>
+            </div>
           </div>
         </div>
       </div>
     );
   }
-
-  return null;
-};
-
-const ProductPlaceholder = () => {
-  return (
-    <div className="flex flex-col w-full">
-      <div className="relative bg-zinc-100 aspect-square w-full overflow-hidden rounded-xl">
-        <Skeleton className="h-full w-full" />
-      </div>
-      <Skeleton className="mt-4 w-2/3 h-4 rounded-lg" />
-      <Skeleton className="mt-2 w-16 h-4 rounded-lg" />
-      <Skeleton className="mt-2 w-12 h-4 rounded-lg" />
-    </div>
-  );
 };
 
 export default ProductListing;

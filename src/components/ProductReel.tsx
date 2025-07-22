@@ -100,7 +100,7 @@ const ProductReel = (props: ProductReelProps) => {
     if (product.isSold) {
       return false;
     }
-    
+
     const sizeMatch = !query.size || product.size === query.size;
     const searchTermMatch =
       !query.searchTerm ||

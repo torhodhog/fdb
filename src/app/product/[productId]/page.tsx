@@ -88,10 +88,21 @@ const Page = async ({ params, searchParams }: PageProps) => {
               </h1>
             </div>
             <section className="mt-4">
-              <div className="flex items-center">
-                <p className={`font-medium ${isOnSale ? 'text-red-500' : 'text-gray-900'}`}>
-                  {formatPrice(price as number)}
-                </p>
+              <div className="flex items-center gap-2">
+                {isOnSale && (
+                  <span className="line-through text-gray-400 text-sm">
+                    {formatPrice(product.price)}
+                  </span>
+                )}
+                <span
+                  className={
+                    isOnSale
+                      ? "text-red-500 font-bold text-lg"
+                      : "text-gray-900 font-bold text-lg"
+                  }
+                >
+                  {formatPrice(price)}
+                </span>
                 <div className="ml-4 border-1 text-muted-foreground border-gray-300 pl-4">
                   {label}
                 </div>
@@ -112,13 +123,15 @@ const Page = async ({ params, searchParams }: PageProps) => {
                   Sendes innen 24 timer etter kjøp
                 </p>
               </div>
-              
+
               <div className="p-4 border border-gray-200 mt-4 rounded-md bg-gray-100">
                 <div className="mt-4">
                   <h2 className="text-lg font-bold">Tilstand</h2>
                   <StarRating rating={parseInt(product.tilstand || "0")} />
                   <div className="mt-4">
-                    <h2 className="text-lg font-bold">Størrelse: {product.size as string}</h2>
+                    <h2 className="text-lg font-bold">
+                      Størrelse: {product.size as string}
+                    </h2>
                   </div>
 
                   {/* Plasser merkelappen her */}
