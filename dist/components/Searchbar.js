@@ -1,11 +1,11 @@
 "use strict";
-"use client";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Searchbar;
 const jsx_runtime_1 = require("react/jsx-runtime");
+// "use client";
 const react_1 = require("react");
 const client_1 = require("@/trpc/client");
 const link_1 = __importDefault(require("next/link"));

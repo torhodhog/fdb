@@ -39,7 +39,7 @@ exports.Products = {
         useAsTitle: "name",
     },
     access: {
-        read: () => true, // Tillat alle brukere å lese produkter
+        read: () => true, // Alle kan lese produkter
         update: isAdmin, // Begrens oppdatering til admin
         delete: isAdmin, // Begrens sletting til admin
     },
@@ -177,9 +177,9 @@ exports.Products = {
             type: "select",
             defaultValue: "pending",
             access: {
-                create: ({ req }) => req.user.role === "admin",
-                read: ({ req }) => req.user.role === "admin",
-                update: ({ req }) => req.user.role === "admin",
+                create: ({ req }) => req.user?.role === "admin",
+                read: ({ req }) => req.user?.role === "admin",
+                update: ({ req }) => req.user?.role === "admin",
             },
             options: [
                 {

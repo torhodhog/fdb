@@ -22,9 +22,6 @@ const Navbar = async () => {
   const { user }: { user: UserType | null } =
     await getServerSideUser(nextCookies);
 
-  // Debug: Log user status (remove after testing)
-  console.log('Navbar user:', user ? `Logged in as ${user.email}` : 'Not logged in');
-
   // Skip loading state - always render the navbar
   return (
     <div className="top-0 inset-x-0 z-50 sticky bg-white">

@@ -52,7 +52,6 @@ const ProductListing = ({
 
   const { mutate: toggleFavorite } = trpc.favorites.toggleFavorite.useMutation({
     onSuccess: () => {
-      console.log("Favorite toggled successfully");
       // Invalidate all related queries more aggressively
       queryClient.invalidateQueries({ queryKey: ["favoritesData"] });
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
@@ -67,20 +66,11 @@ const ProductListing = ({
   });
 
   const handleFavoriteClick = () => {
-    console.log("Favorite click - User:", user, "Product:", product?.id);
     if (!user) {
       alert("Du må være logget inn for å legge til favoritter");
       return;
     }
     if (user && product) {
-      console.log(
-        "Toggling favorite for product:",
-        product.id,
-        "user:",
-        user.id,
-        "current status:",
-        isFavorited
-      );
       toggleFavorite({
         productId: product.id,
         userId: user.id,

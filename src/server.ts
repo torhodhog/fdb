@@ -62,7 +62,7 @@ const start = async () => {
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {
-      payload.logger.info("Next.js is building for production");
+      console.log("Next.js is building for production");
       await nextBuild(
         path.join(__dirname, "../"),
         false,

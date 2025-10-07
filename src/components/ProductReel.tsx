@@ -5,7 +5,7 @@ import { trpc } from "@/trpc/client";
 import ProductListing from "./ProductListing";
 import { TQueryValidator } from "@/lib/validators/query-validator";
 import { Product, User } from "@/payload-types";
-import LottieAnimation from "@/components/LottieAnimation";
+import ProductGridSkeleton from "@/components/ProductSkeleton";
 
 interface ProductReelProps {
   title: string;
@@ -57,8 +57,8 @@ const ProductReel = (props: ProductReelProps) => {
     isError,
     error,
   } = trpc.getInfiniteProducts.useQuery({
-    limit: 200, // Set a high limit to fetch all products
-    cursor: 1, // Start from the first page
+    limit: props.isHomePage ? 10 : 20, // Redusert fra 200 til 10/20 for bedre ytelse
+    cursor: 1,
     query: { ...query, sortBy, sortOrder },
   });
 
@@ -71,8 +71,8 @@ const ProductReel = (props: ProductReelProps) => {
     },
     {
       enabled: !!productIds && productIds.length > 0 && !userLoading,
-      staleTime: 0, // No caching for favorites to ensure fresh data
-      refetchOnWindowFocus: true,
+      staleTime: 5 * 60 * 1000, // Cache for 5 minutes instead of 0
+      refetchOnWindowFocus: false, // Disable automatic refetch
     }
   );
 
@@ -84,7 +84,27 @@ const ProductReel = (props: ProductReelProps) => {
   }, [queryResults]);
 
   if (isQueryLoading && isLoading) {
-    return <LottieAnimation />;
+    return (
+      <section className="py-12">
+        <div className="md:flex md:items-center md:justify-between mb-4">
+          <div className="max-w-2xl px-4 lg:max-w-4xl lg:px-0">
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              {title}
+            </h1>
+            {subtitle ? (
+              <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+            ) : null}
+          </div>
+        </div>
+        <div className="relative">
+          <div className="mt-6 flex items-center w-full">
+            <div className="w-full grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+              <ProductGridSkeleton count={8} />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (isError) {

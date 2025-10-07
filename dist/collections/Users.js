@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 const PrimaryActionEmail_1 = require("../components/emails/PrimaryActionEmail");
 const adminsAndUser = ({ req: { user } }) => {
+    if (!user)
+        return false;
     if (user.role === 'admin')
         return true;
     return {
@@ -36,8 +38,8 @@ exports.Users = {
     access: {
         read: adminsAndUser,
         create: () => true,
-        update: ({ req }) => req.user.role === 'admin',
-        delete: ({ req }) => req.user.role === 'admin',
+        update: ({ req }) => req.user?.role === 'admin',
+        delete: ({ req }) => req.user?.role === 'admin',
     },
     admin: {
         hidden: ({ user }) => user.role !== 'admin',
@@ -120,7 +122,6 @@ exports.Users = {
         beforeChange: [
             ({ data, operation }) => {
                 if (operation === 'update' && data && data._isForgotPassword) {
-                    // Skip validation for address, country, and postalCode during forgotPassword
                     data.address = undefined;
                     data.country = undefined;
                     data.postalCode = undefined;

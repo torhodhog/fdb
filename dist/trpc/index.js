@@ -1,12 +1,20 @@
 "use strict";
+// Definerer hovedrouteren for tRPC (appRouter) og eksporterer prosedyrene for:
+// - Autentisering (authRouter)
+// - Betaling (paymentRouter)
+// - Produktspørringer (productRouter)
+// Inkluderer også egen "searchProducts" for søk, og "getInfiniteProducts" for uendelig scroll.
+// Alt bruker Payload som database via getPayloadClient().
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.appRouter = exports.searchProducts = void 0;
-const zod_1 = require("zod");
+const zod_1 = require("zod"); // Zod validerer input og sørger for at vi bare henter produkter med riktig format.
 const get_payload_1 = require("../get-payload");
 const query_validator_1 = require("../lib/validators/query-validator");
 const auth_router_1 = require("./auth-router");
 const payment_router_1 = require("./payment-router");
 const product_router_1 = require("./routers/product-router");
+const favorites_router_1 = require("./routers/favorites-router");
+const favorites_data_router_1 = require("./routers/favorites-data-router");
 const trpc_1 = require("./trpc");
 // 1) Egen prosedyre for "fritt søk"
 exports.searchProducts = trpc_1.publicProcedure
@@ -17,13 +25,14 @@ exports.searchProducts = trpc_1.publicProcedure
     if (!term) {
         return { docs: [], hasMore: false };
     }
-    // Øk limit til f.eks. 11, slik at vi kan se om det finnes "flere enn 10"
+    // Øker limit til  11, sånn at vi kan se om det finnes "flere enn 10"
     const LIMIT = 11;
     try {
         const { docs, totalDocs } = await payload.find({
             collection: "products",
             where: {
                 approvedForSale: { equals: "approved" },
+                isSold: { equals: false },
                 name: {
                     contains: term,
                 },
@@ -49,6 +58,8 @@ exports.appRouter = (0, trpc_1.router)({
     auth: auth_router_1.authRouter,
     payment: payment_router_1.paymentRouter,
     product: product_router_1.productRouter,
+    favorites: favorites_router_1.favoritesRouter,
+    favoritesData: favorites_data_router_1.favoritesDataRouter,
     // 2) Din eksisterende rute for å hente et uendelig antall produkter med filtrering
     getInfiniteProducts: trpc_1.publicProcedure
         .input(zod_1.z.object({
@@ -57,14 +68,13 @@ exports.appRouter = (0, trpc_1.router)({
         query: query_validator_1.QueryValidator.extend({
             sortBy: zod_1.z.string().optional(),
             sortOrder: zod_1.z.enum(["asc", "desc"]).optional(),
-            names: zod_1.z.array(zod_1.z.string()).optional(), // Add names to query schema
+            names: zod_1.z.array(zod_1.z.string()).optional(),
         }),
     }))
         .query(async ({ input }) => {
-        console.log("Input received:", input); // Log the input
+        console.log("Input received:", input);
         const { cursor, query } = input;
-        const { sortBy = "createdAt", sortOrder = "desc", limit, searchTerm, liga_system, names, // Add names from input
-        ...queryOpts } = query;
+        const { sortBy = "createdAt", sortOrder = "desc", limit, searchTerm, liga_system, names, ...queryOpts } = query;
         const payload = await (0, get_payload_1.getPayloadClient)();
         const page = cursor ?? 1;
         const parsedQueryOpts = {};
@@ -97,6 +107,9 @@ exports.appRouter = (0, trpc_1.router)({
                 where: {
                     approvedForSale: {
                         equals: "approved",
+                    },
+                    isSold: {
+                        equals: false,
                     },
                     ...parsedQueryOpts,
                 },
